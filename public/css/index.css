@@ -1,0 +1,300 @@
+body {
+  width: 100%;
+}
+#copy_alert,
+#pickup_alert {
+  z-index: 999;
+  position: fixed;
+  width: 60%;
+  height: 50px;
+  background-color: #645596;
+  border-radius: 10px;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  left: 50%;
+  top: -100px;
+  transform: translate3d(-50%, 0, 0);
+  transition: 0.5s ease;
+}
+#copy_alert.on,
+#pickup_alert.on {
+  transform: translate3d(-50%, 500%, 0);
+  opacity: 1;
+}
+#header .titleArea h1 {
+  border-bottom: none;
+  background-color: #00000b;
+}
+#mCafe24Order.typeHeader {
+  padding-top: 120px;
+}
+#mCafe24Order #ec-jigsaw-area-productdetail {
+  margin: 0px;
+}
+#search_store {
+  padding: 24px 12px;
+  background-color: #fefefe;
+}
+.search_store_pkup_ct {
+  width: 100%;
+}
+#search_store .head {
+  display: flex;
+  width: 100%;
+}
+#search_store .search_type {
+  width: 50%;
+  height: 50px;
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  color: #000;
+  align-items: center;
+  font-size: 16px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+#search_store .search_type.on {
+  background-color: #645596;
+  color: #fff;
+}
+#search_store .head .search_type:nth-child(1) {
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+}
+#search_store .head .search_type:nth-last-child(1) {
+  border-top: 1px solid #eee;
+  border-right: 1px solid #eee;
+}
+#search_store .search_box {
+  display: flex;
+  position: relative;
+  font-size: 0px;
+}
+#search_store #address {
+  height: 42px;
+  width: 100%;
+  padding: 10px 11px 10px 10px;
+  border: none;
+  border-bottom: 1px solid #eee;
+  font-size: 16px;
+  margin-top: 12px;
+  outline-style: none;
+  line-height: 14px;
+  color: #000;
+  font-weight: 400;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#search_store #submit {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22px;
+}
+#search_store #map_title {
+  display: none;
+  width: 100%;
+  background-color: #645596;
+  color: #fff;
+  margin-top: 24px;
+}
+#search_store #map_title .title {
+  padding: 14px 12px;
+}
+#search_store #store_name {
+  margin-left: 4px;
+}
+#search_store #store_address {
+  font-size: 14px;
+  color: #e1e1e1;
+}
+#orderFixItem {
+  position: relative;
+}
+#orderFixItem:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+#orderFixItem.accept:before {
+  display: none;
+}
+
+#search_store .store_list_ct {
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  background: #fff;
+  transition: all 0.25s linear;
+  display: none;
+}
+#search_store .store_list_ct.on {
+  height: 300px;
+  overflow-y: scroll;
+  display: initial;
+}
+#search_store .store_list_ct .store-info-container div.swiper-slide {
+  margin: 12px 0 12px;
+  overflow-y: scroll;
+  opacity: 0 !important;
+}
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide.swiper-slide-active {
+  opacity: 1 !important;
+}
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide::-webkit-scrollbar {
+  width: 6px; /* 스크롤바의 너비 */
+}
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #fd6768; /* 스크롤바의 색상 */
+  border-radius: 10px;
+}
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.5); /*스크롤바 뒷 배경 색상*/
+}
+#search_store .store_list_ct .store-info-container div.swiper-slide > div {
+  padding: 20px 4%;
+  border-top: 1px solid #ededed;
+}
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide
+  > div:nth-last-child(1) {
+  margin-bottom: 20px;
+}
+#search_store .store_list_ct .swiper-button-next,
+#search_store .store_list_ct .swiper-button-prev {
+  top: initial;
+  bottom: 20px;
+  height: initial;
+  position: initial;
+  margin: 0;
+}
+#search_store .store_list_ct .swiper-button-next:after,
+#search_store .store_list_ct .swiper-button-prev:after {
+  font-size: 10px;
+}
+#search_store .store_list_ct .swiper-button-prev,
+#search_store .store_list_ct .swiper-rtl .swiper-button-next {
+  left: 33%;
+  color: #666;
+}
+#search_store .store_list_ct .swiper-button-next,
+#search_store .store_list_ct .swiper-rtl .swiper-button-prev {
+  right: 33%;
+  color: #666;
+}
+#search_store
+  .store_list_ct
+  .swiper-pagination-horizontal
+  .swiper-pagination-bullet:nth-child(n + 11) {
+  display: none;
+}
+.swiper-pagination-lock {
+  display: none !important;
+}
+body #search_store .store_list_ct .swiper-pagination {
+  position: initial;
+  width: auto;
+}
+#search_store .store_list_ct .swiper-pagination-bullet {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  font-size: 12px;
+  color: #151515;
+  opacity: 1;
+  background: #fff;
+}
+#search_store .store_list_ct .swiper-pagination-bullet-active {
+  color: #fff;
+  background: #645596;
+}
+#search_store .store_list_ct .cont {
+  position: fxied;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+#lShippingCompanyLists {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+}
+
+#search_store #search_list_ct {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 52px;
+  width: 100%;
+  background-color: #fff;
+  z-index: 101;
+  padding: 0 10px;
+  box-sizing: border-box;
+  -webkit-box-shadow: 0px 15px 15px -5px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 15px 15px -5px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 15px 15px -5px rgba(0, 0, 0, 0.15);
+}
+#search_store #search_list_ct .store {
+  padding: 10px 0;
+  border-top: 1px solid #ededed;
+  cursor: pointer;
+}
+#search_store #search_list_ct .store > div {
+  transition: all 0.3s;
+}
+#search_store #search_list_ct .store:hover > div {
+  transform: scale(1.005);
+}
+#search_store #search_list_ct .store:hover > .store_name h1 {
+  color: #645596;
+}
+#search_store #search_list_ct .store:hover > .store_addr span {
+  color: #9987cd;
+}
+#search_store #search_list_ct .store:nth-last-child(1) {
+  border-bottom: 1px solid #ededed;
+}
+#search_store #search_list_ct .store_name h1,
+#search_store #search_list_ct .store_addr span {
+  font-size: 14px;
+}
+#search_store #search_list_ct .store_name h1 {
+  color: #666;
+  padding-bottom: 6px;
+  box-sizing: border-box;
+}
+#search_store #search_list_ct .store_addr span {
+  color: #979797;
+}
