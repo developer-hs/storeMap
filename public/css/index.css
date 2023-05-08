@@ -21,7 +21,7 @@ body {
 }
 #copy_alert.on,
 #pickup_alert.on {
-  transform: translate3d(-50%, 500%, 0);
+  transform: translate3d(-50%, 450%, 0);
   opacity: 1;
 }
 #header .titleArea h1 {

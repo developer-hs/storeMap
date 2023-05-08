@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const fs = require("fs");
+const cheerio = require("cheerio");
 const app = express();
 
 const allowlist = ["http://localhost:8080", "https://rlagudtjq2016.cafe24.com"];
@@ -51,6 +53,15 @@ db.mongoose
   });
 
 app.get("/", (req, res) => {
+  fs.readFile(__dirname + "/routes/index.html", "utf8", (err, data) => {
+    if (err) throw err;
+    const $ = cheerio.load(data);
+    const body = $("body").html();
+    res.send(body);
+  });
+});
+
+app.get("/test", (req, res) => {
   res.sendFile(__dirname + "/routes/index.html");
 });
 
