@@ -687,13 +687,15 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const quickSearch = (addr) => {
     // 이전에 검색한 결과가 있다면 초기화
-    const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
+
+    const searchListCt = getSearchListCtElm();
+    const storesLen = searchListCt.querySelectorAll(".store").length;
+
     searchListCt.innerHTML = "";
 
-    // 검색결과가 없을 경우, 검색결과 영역 숨김
-    if (storesLen === 0) HideQuickSearch();
-
-    // 검색어가 없을 경우, 검색결과 영역 숨김
+    if (storesLen === 0) {
+      HideQuickSearch();
+    }
     if (!addr.value) {
       HideQuickSearch();
       return;
