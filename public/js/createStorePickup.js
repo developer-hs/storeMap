@@ -685,80 +685,94 @@ window.addEventListener("DOMContentLoaded", () => {
    * @param {HTMLInputElement} addr - 검색어가 입력된 input 엘리먼트
    */
 
-  const quickSearch = (addr) => {
-    // 이전에 검색한 결과가 있다면 초기화
-
-    const searchListCt = getSearchListCtElm();
+  const quickSearch = (searchStore) => {
+    const searchListCt = document.getElementById("search_list_ct");
     const storesLen = searchListCt.querySelectorAll(".store").length;
 
     searchListCt.innerHTML = "";
-
     if (storesLen === 0) {
       HideQuickSearch();
     }
-    if (!addr.value) {
+    if (!searchStore.value) {
       HideQuickSearch();
       return;
     }
 
-    const value = addr.value;
-    const searchType = getSearchType();
+    let searchStoreArray = [];
+    const value = searchStore.value;
 
-    // 검색어를 포함한 매장 정보를 검색하고, 최대 7개까지만 추출
-    const searchStoreArray = sortedStoreList
-      .filter((store) => {
-        let storeOrAddr = "";
-        if (searchType === "store") {
-          storeOrAddr = store.sc_name;
-        } else if (searchType === "dong") {
-          storeOrAddr = store.receive_addr;
+    for (let key in sortedStoreList) {
+      let condition;
+
+      if (getSearchType() === "store") {
+        condition = sortedStoreList[key].sc_name
+          .replaceAll(" ", "")
+          .includes(value.replaceAll(" ", ""));
+      } else {
+        condition = sortedStoreList[key].receive_addr
+          .replaceAll(" ", "")
+          .includes(value.replaceAll(" ", ""));
+      }
+
+      if (condition) {
+        searchListCt.style.display = "block";
+        if (searchStoreArray.length < 7) {
+          searchStoreArray.push(sortedStoreList[key]);
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (getSearchType() === "store") {
+      searchStoreArray = Object.values(searchStoreArray).sort((a, b) => {
+        if (value === a.sc_name[0]) {
+          return -1;
+        }
+        if (value === b.sc_name[0]) {
+          return -1;
         }
 
-        // 대소문자를 무시하고 검색어와 일치하는 결과를 찾음
-        const regex = new RegExp(value.replaceAll(" ", ""), "i");
-        return regex.test(storeOrAddr.replaceAll(" ", ""));
-      })
-      .slice(0, 7);
-
-    // 검색결과가 없을 경우, 검색결과 영역 숨김
-    if (searchStoreArray.length === 0) {
-      HideQuickSearch();
-      return;
+        if (a.sc_name[0] < b.sc_name[0]) {
+          return -1;
+        }
+        if (a.sc_name[0] > b.sc_name[0]) {
+          return 1;
+        }
+      });
     }
 
-    // 검색결과가 존재할 경우, 검색결과 영역을 보여주고 결과를 출력
-    searchListCt.style.display = "initial";
-    searchStoreArray.forEach((store) => {
-      const storeName = store.sc_name;
-      const storeAddr = store.receive_addr;
+    for (let key in searchStoreArray) {
+      let quickValue;
+      const storeName = searchStoreArray[key].sc_name;
+      const storeAddr = searchStoreArray[key].receive_addr;
 
-      // 검색 결과를 클릭하면, 해당 매장 정보를 기반으로 지도상의 위치를 표시
-      const quickValue = searchType === "store" ? storeName : storeAddr;
-      const result = paintSearchStore(storeName, storeAddr);
+      if (getSearchType() === "store") {
+        quickValue = storeName;
+      } else if (getSearchType() === "dong") {
+        quickValue = storeAddr;
+      }
 
-      result.addEventListener("click", () => {
-        const mapOpened = mapOpenChk();
+      const store = paintSearchStore(storeName, storeAddr);
 
-        if (mapOpened) {
+      store.addEventListener("click", () => {
+        if (mapOpenChk()) {
           firstOpenMap(quickValue);
         } else {
           searchAddressToCoordinate(quickValue);
         }
 
-        addr.value = quickValue;
-
-        // 주소 검색일 경우, 검색결과를 최대 한개만 보여줌
-        if (searchType === "store") {
+        searchStore.value = quickValue;
+        if (getSearchType() === "store") {
           HideQuickSearch();
-        } else if (searchType === "dong") {
-          showQuickSearchJustOne();
-          paintSearchStore(storeName, storeAddr);
+        } else if (getSearchType() === "dong") {
+          showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정
+          paintSearchStore(storeName, storeAddr); // 서치리스트를 그려줌
         }
       });
-    });
+    }
 
-    // 검색결과의 개수에 따라 검색결과 영역의 높이를 조절
-    searchListCt.style.height = `${searchStoreArray.length * height + 10}px`;
+    searchListCt.style.height = searchStoreArray.length * height + 10 + "px";
   };
 
   const searching = () => {
