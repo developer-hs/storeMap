@@ -644,16 +644,23 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  /**
+   * @returns {Element} - 생성된 주소 문자열
+   **/
+  const getSearchListCtElm = () => {
+    return document.getElementById("search_list_ct"); // 서치리스트 컨테이너 요소를 가져옴
+  };
+
   // 검색 결과를 숨기는 함수
   const HideQuickSearch = () => {
-    const searchListCt = document.getElementById("search_list_ct"); // 서치리스트 컨테이너 요소를 가져옴
+    const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
     searchListCt.style.display = "none"; // 서치리스트를 숨김
     searchListCt.innerHTML = ""; // 서치리스트 내용을 비움
     searchListCt.style.height = "0px"; // 서치리스트 높이를 0으로 설정
   };
   // 서치리스트에 검색 결과를 하나만 표시하는 함수
   const showQuickSearchJustOne = () => {
-    const searchListCt = document.getElementById("search_list_ct"); // 서치리스트 컨테이너 요소를 가져옴
+    const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
     searchListCt.style.display = "initial"; // 서치리스트를 보이게 함
     searchListCt.innerHTML = ""; // 서치리스트 내용을 비움
     searchListCt.style.height = height + 10 + "px"; // 서치리스트 높이를 설정
@@ -661,7 +668,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   // 검색 결과를 표시하는 함수
   const paintSearchStore = (name, addr) => {
-    const searchListCt = document.getElementById("search_list_ct"); // 서치리스트 컨테이너 요소를 가져옴
+    const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
     const store = document.createElement("div"); // 검색 결과를 담을 div 요소를 생성
     store.classList.add("store"); // div 요소에 store 클래스를 추가
     store.innerHTML =
@@ -680,6 +687,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const quickSearch = (addr) => {
     // 이전에 검색한 결과가 있다면 초기화
+    const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
     searchListCt.innerHTML = "";
 
     // 검색결과가 없을 경우, 검색결과 영역 숨김

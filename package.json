@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "store_map",
   "version": "1.0.0",
   "description": "Create a map that pins the locations of stores",
@@ -9,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@adminjs/express": "^6.0.0",
+    "@adminjs/mongoose": "^4.0.0",
+    "adminjs": "^7.0.0",
     "axios": "^1.4.0",
     "body-parser": "^1.20.2",
     "cheerio": "^1.0.0-rc.12",
@@ -16,6 +20,10 @@
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "mongoose": "^7.1.0"
+    "express-formidable": "^1.2.0",
+    "express-sanitizer": "^1.0.6",
+    "express-session": "^1.17.3",
+    "mongoose": "^7.1.0",
+    "tslib": "^2.5.0"
   }
 }

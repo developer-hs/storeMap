@@ -185,6 +185,7 @@ body {
   .store-info-container
   div.swiper-slide
   > div:nth-last-child(1) {
+  border-bottom: 1px solid #ebebeb;
   margin-bottom: 20px;
 }
 #search_store .store_list_ct .swiper-button-next,
