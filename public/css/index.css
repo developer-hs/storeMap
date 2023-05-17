@@ -176,9 +176,21 @@ body {
   div.swiper-slide::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.5); /*스크롤바 뒷 배경 색상*/
 }
-#search_store .store_list_ct .store-info-container div.swiper-slide > div {
+#search_store .store_list_ct .store-info-container div.swiper-slide > .store {
+  display: flex;
+  justify-content: space-between;
   padding: 20px 4%;
   border-top: 1px solid #ededed;
+}
+
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide
+  > .store
+  .right {
+  display: flex;
+  align-items: center;
 }
 #search_store
   .store_list_ct

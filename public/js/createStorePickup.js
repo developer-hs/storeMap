@@ -1,56 +1,13 @@
-window.addEventListener("DOMContentLoaded", () => {
-  let sortedStoreList = {
-    1: {
-      sc_name: "대학로점",
-      receive_addr:
-        "서울특별시 종로구 창경궁로 240-7 (명륜4가) 1층 오늘,와인한잔 대학로점",
-    },
-    2: {
-      sc_name: "예술의전당점",
-      receive_addr:
-        "서울특별시 서초구 반포대로 38 (서초동) 1층 오늘,와인한잔 예술의전당점",
-    },
-    3: {
-      sc_name: "교대점",
-      receive_addr:
-        "서울특별시 서초구 반포대로26길 75 (서초동) 오늘,와인한잔 교대점",
-    },
-    4: {
-      sc_name: "방배점",
-      receive_addr:
-        "서울특별시 서초구 효령로31길 23 (방배동) 오늘,와인한잔 방배점",
-    },
-    5: {
-      sc_name: "당산역점",
-      receive_addr:
-        "서울특별시 영등포구 당산로 205 (당산동5가) 당산역해링턴타워 1층 오늘,와인한잔 당산역점",
-    },
-    6: {
-      sc_name: "사당점",
-      receive_addr:
-        "서울특별시 서초구 방배천로4길 15 (방배동) 오늘,와인한잔 사당점",
-    },
-    7: {
-      sc_name: "대학로점",
-      receive_addr:
-        "서울특별시 종로구 창경궁로 240-7 (명륜4가) 1층 오늘,와인한잔 대학로점",
-    },
-    8: {
-      sc_name: "예술의전당점",
-      receive_addr:
-        "서울특별시 서초구 반포대로 38 (서초동) 1층 오늘,와인한잔 예술의전당점",
-    },
-    9: {
-      sc_name: "교대점",
-      receive_addr:
-        "서울특별시 서초구 반포대로26길 75 (서초동) 오늘,와인한잔 교대점",
-    },
-    10: {
-      sc_name: "방배점",
-      receive_addr:
-        "서울특별시 서초구 효령로31길 23 (방배동) 오늘,와인한잔 방배점",
-    },
-  };
+window.addEventListener("DOMContentLoaded", async () => {
+  let sortedStoreList = await axios
+    .get("http://localhost:8080/api/stores?userId=64632e83047e3a37e41b212b")
+    .then((response) => {
+      console.log(response.data); // 응답 데이터 출력
+      return response.data;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   let PREV_MARKER;
   let map;
 
@@ -369,10 +326,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
       const store =
         `<div class="store">` +
-        `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${storeList[key].sc_name}</h1>` +
-        `<div class="middle_box" style="position: relative; max-width: 90%; display:flex; align-items:center;">` +
-        `<span style="color: rgb(151, 151, 151);">${storeList[key].receive_addr}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
-        `<img class="store_pick_btn" src="https://oneulwineshop.cafe24.com/web/icons/store_select.svg" style="position: absolute; width: 30px; height: 30px; right: -28px; top: -8px; cursor: pointer;">` +
+        `<div class="left">` +
+        `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${storeList[key].name}</h1>` +
+        `<div class="addr_ct">` +
+        `<span style="color: rgb(151, 151, 151);">${storeList[key].addr}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
+        `</div>` +
+        `</div>` +
+        `<div class="right">` +
+        `<img class="store_pick_btn" src="https://oneulwineshop.cafe24.com/web/icons/store_select.svg" style="width: 30px; height: 30px;">` +
         `</div>` +
         `</div>`;
 
@@ -569,7 +530,7 @@ window.addEventListener("DOMContentLoaded", () => {
     for (let key in sortedStoreList) {
       switch (searchType) {
         case "store":
-          storeOrAddr = sortedStoreList[key].sc_name; // 매장 이름을 가져옴
+          storeOrAddr = sortedStoreList[key].name; // 매장 이름을 가져옴
           if (
             storeOrAddr.replaceAll(" ", "").replaceAll("&amp;", "&") ===
               address.replaceAll(" ", "") ||
@@ -581,7 +542,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
           break;
         case "dong":
-          storeOrAddr = sortedStoreList[key].receive_addr; // 매장 주소를 가져옴
+          storeOrAddr = sortedStoreList[key].addr; // 매장 주소를 가져옴
           if (
             storeOrAddr.replaceAll(" ", "").replaceAll("&amp;", "&") ===
             address.replaceAll(" ", "")
@@ -613,7 +574,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     naver.maps.Service.geocode(
       {
-        query: storeInfo.receive_addr, // 매장 주소로 좌표를 검색
+        query: storeInfo.addr, // 매장 주소로 좌표를 검색
       },
       function (status, response) {
         if (status === naver.maps.Service.Status.ERROR) {
@@ -705,11 +666,11 @@ window.addEventListener("DOMContentLoaded", () => {
       let condition;
 
       if (getSearchType() === "store") {
-        condition = sortedStoreList[key].sc_name
+        condition = sortedStoreList[key].name
           .replaceAll(" ", "")
           .includes(value.replaceAll(" ", ""));
       } else {
-        condition = sortedStoreList[key].receive_addr
+        condition = sortedStoreList[key].addr
           .replaceAll(" ", "")
           .includes(value.replaceAll(" ", ""));
       }
@@ -726,17 +687,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (getSearchType() === "store") {
       searchStoreArray = Object.values(searchStoreArray).sort((a, b) => {
-        if (value === a.sc_name[0]) {
+        if (value === a.name[0]) {
           return -1;
         }
-        if (value === b.sc_name[0]) {
+        if (value === b.name[0]) {
           return -1;
         }
 
-        if (a.sc_name[0] < b.sc_name[0]) {
+        if (a.name[0] < b.name[0]) {
           return -1;
         }
-        if (a.sc_name[0] > b.sc_name[0]) {
+        if (a.name[0] > b.name[0]) {
           return 1;
         }
       });
@@ -744,8 +705,8 @@ window.addEventListener("DOMContentLoaded", () => {
 
     for (let key in searchStoreArray) {
       let quickValue;
-      const storeName = searchStoreArray[key].sc_name;
-      const storeAddr = searchStoreArray[key].receive_addr;
+      const storeName = searchStoreArray[key].name;
+      const storeAddr = searchStoreArray[key].addr;
 
       if (getSearchType() === "store") {
         quickValue = storeName;

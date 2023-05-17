@@ -4,14 +4,27 @@ import fs from "fs";
 import cheerio from "cheerio";
 import path from "path";
 import expressSanitizer from "express-sanitizer";
+import cookieParser from "cookie-parser";
 
 import getAdminJs from "./admin.js";
-import db from "./app/mongodb/model/index.js";
+import db from "./app/mongodb/models/index.js";
+import userRoutes from "./app/users/routes/index.js";
+import storeRoutes from "./app/stores/routes/index.js";
+
+process.env.NODE_ENV =
+  process.env.NODE_ENV &&
+  process.env.NODE_ENV.trim().toLowerCase() == "production"
+    ? "production"
+    : "development";
 
 export const app = express();
 const __dirname = path.resolve();
 
-const allowlist = ["http://localhost:8080", "https://rlagudtjq2016.cafe24.com"];
+const allowlist = [
+  "http://localhost:8080",
+  "https://localhost:8000",
+  "https://rlagudtjq2016.cafe24.com",
+];
 
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
@@ -24,16 +37,17 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 const appInit = async () => {
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json()); //body parser
+  app.use(express.urlencoded({ extended: true })); // body parser
   app.use(expressSanitizer());
-  app.use(express.static("public"));
-  app.use(cors(corsOptionsDelegate));
+  app.use(express.static("public")); // apply css , js
+  app.use(cors(corsOptionsDelegate)); // cors setting
+  app.use(cookieParser());
   const adminJs = await getAdminJs();
   app.use(adminJs.admin.options.rootPath, adminJs.adminRouter);
 };
 
-const connectDB = () => {
+const connectDB = async () => {
   db.mongoose
     .connect(db.url, {
       useNewUrlParser: true,
@@ -49,9 +63,91 @@ const connectDB = () => {
       console.log("Database Connection Failure.", err);
       process.exit();
     });
+
+  // const storeList = {
+  //   1: {
+  //     sc_name: "대학로점",
+  //     receive_addr:
+  //       "서울특별시 종로구 창경궁로 240-7 (명륜4가) 1층 오늘,와인한잔 대학로점",
+  //   },
+  //   2: {
+  //     sc_name: "예술의전당점",
+  //     receive_addr:
+  //       "서울특별시 서초구 반포대로 38 (서초동) 1층 오늘,와인한잔 예술의전당점",
+  //   },
+  //   3: {
+  //     sc_name: "교대점",
+  //     receive_addr:
+  //       "서울특별시 서초구 반포대로26길 75 (서초동) 오늘,와인한잔 교대점",
+  //   },
+  //   4: {
+  //     sc_name: "방배점",
+  //     receive_addr:
+  //       "서울특별시 서초구 효령로31길 23 (방배동) 오늘,와인한잔 방배점",
+  //   },
+  //   5: {
+  //     sc_name: "당산역점",
+  //     receive_addr:
+  //       "서울특별시 영등포구 당산로 205 (당산동5가) 당산역해링턴타워 1층 오늘,와인한잔 당산역점",
+  //   },
+  //   6: {
+  //     sc_name: "사당점",
+  //     receive_addr:
+  //       "서울특별시 서초구 방배천로4길 15 (방배동) 오늘,와인한잔 사당점",
+  //   },
+  //   7: {
+  //     sc_name: "대학로점",
+  //     receive_addr:
+  //       "서울특별시 종로구 창경궁로 240-7 (명륜4가) 1층 오늘,와인한잔 대학로점",
+  //   },
+  //   8: {
+  //     sc_name: "예술의전당점",
+  //     receive_addr:
+  //       "서울특별시 서초구 반포대로 38 (서초동) 1층 오늘,와인한잔 예술의전당점",
+  //   },
+  //   9: {
+  //     sc_name: "교대점",
+  //     receive_addr:
+  //       "서울특별시 서초구 반포대로26길 75 (서초동) 오늘,와인한잔 교대점",
+  //   },
+  //   10: {
+  //     sc_name: "방배점",
+  //     receive_addr:
+  //       "서울특별시 서초구 효령로31길 23 (방배동) 오늘,와인한잔 방배점",
+  //   },
+  // };
+
+  const userId = "64632e83047e3a37e41b212b";
+
+  // try {
+  //   const user = await User.findById(userId);
+  //   if (!user) {
+  //     throw new Error("User not found");
+  //   }
+
+  //   for (let key in storeList) {
+  //     const newStore = new Store({
+  //       name: storeList[key].sc_name,
+  //       addr: storeList[key].receive_addr,
+  //       useStatus: true,
+  //       user: user._id,
+  //     });
+
+  //     try {
+  //       const store = await newStore.save();
+  //       console.log("Store created successfully:", store);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   }
+  // } catch (err) {
+  //   console.error(err);
+  // }
 };
 
 const appRouting = () => {
+  userRoutes(app);
+  storeRoutes(app);
   app.get("/", (req, res) => {
     fs.readFile(__dirname + "/routes/index.html", "utf8", (err, data) => {
       if (err) throw err;
@@ -72,8 +168,8 @@ const appRouting = () => {
 
 app.listen();
 
-const appStart = () => {
-  appInit();
+const appStart = async () => {
+  await appInit();
   connectDB();
   appRouting();
 };

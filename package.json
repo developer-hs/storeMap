@@ -5,7 +5,9 @@
   "description": "Create a map that pins the locations of stores",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "NODE_ENV=development nodemon index.js",
+    "prod": "NODE_ENV=production node index.js",
+    "prod:compress": "NODE_ENV=production USE_COMPRESS=1 node index.js"
   },
   "author": "",
   "license": "ISC",
@@ -14,8 +16,9 @@
     "@adminjs/mongoose": "^4.0.0",
     "adminjs": "^7.0.0",
     "axios": "^1.4.0",
-    "body-parser": "^1.20.2",
+    "bcrypt": "^5.1.0",
     "cheerio": "^1.0.0-rc.12",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
@@ -23,6 +26,7 @@
     "express-formidable": "^1.2.0",
     "express-sanitizer": "^1.0.6",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.0",
     "tslib": "^2.5.0"
   }
