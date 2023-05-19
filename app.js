@@ -1,34 +1,38 @@
-import express from "express";
-import cors from "cors";
-import fs from "fs";
-import cheerio from "cheerio";
-import path from "path";
-import expressSanitizer from "express-sanitizer";
-import cookieParser from "cookie-parser";
+import express from 'express';
+import cors from 'cors';
+import fs from 'fs';
+import cheerio from 'cheerio';
+import expressSanitizer from 'express-sanitizer';
+import cookieParser from 'cookie-parser';
+import expressLayouts from 'express-ejs-layouts';
+import path from 'path';
 
-import getAdminJs from "./admin.js";
-import db from "./app/mongodb/models/index.js";
-import userRoutes from "./app/users/routes/index.js";
-import storeRoutes from "./app/stores/routes/index.js";
+import getAdminJs from './admin.js';
+import db from './app/mongodb/models/index.js';
+import userRoutes from './app/users/routes/index.js';
+import storeRoutes from './app/stores/routes/index.js';
+import { __dirname } from './api/utils.js';
+
+import { User } from './app/users/models/user.js';
+import { Store } from './app/stores/models/store.js';
 
 process.env.NODE_ENV =
   process.env.NODE_ENV &&
-  process.env.NODE_ENV.trim().toLowerCase() == "production"
-    ? "production"
-    : "development";
+  process.env.NODE_ENV.trim().toLowerCase() == 'production'
+    ? 'production'
+    : 'development';
 
 export const app = express();
-const __dirname = path.resolve();
 
 const allowlist = [
-  "http://localhost:8080",
-  "https://localhost:8000",
-  "https://rlagudtjq2016.cafe24.com",
+  'http://localhost:8080',
+  'https://localhost:8000',
+  'https://rlagudtjq2016.cafe24.com',
 ];
 
 const corsOptionsDelegate = function (req, callback) {
   let corsOptions;
-  if (allowlist.indexOf(req.header("Origin")) !== -1) {
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
     corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
   } else {
     corsOptions = { origin: false }; // disable CORS for this request
@@ -37,10 +41,18 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 const appInit = async () => {
+  app.use(expressLayouts); // EJS LAYOUT
+  app.set('view engine', 'ejs'); // 템플릿 엔진 설정
+  app.set('views', path.join(__dirname, 'views'));
+  // 레이아웃 파일 경로 설정 (선택사항)
+  app.set('layout', 'layouts/index'); // 레이아웃 파일은 "views/layouts/index.ejs"에 위치해야 합니다.
+  app.set('layout extractScripts', true);
+  app.set('layout extractStyles', true);
   app.use(express.json()); //body parser
   app.use(express.urlencoded({ extended: true })); // body parser
   app.use(expressSanitizer());
-  app.use(express.static("public")); // apply css , js
+  // 정적 파일 경로 설정 (선택사항)
+  app.use(express.static('public')); // apply css , js
   app.use(cors(corsOptionsDelegate)); // cors setting
   app.use(cookieParser());
   const adminJs = await getAdminJs();
@@ -57,10 +69,10 @@ const connectDB = async () => {
       // console.log("db.url", db.url);
       // console.log("db.mongoose", db.mongoose);
       // console.log("db.tutorial.db", db.tutorial.db);
-      console.log("Database Connection Success.");
+      console.log('Database Connection Success.');
     })
     .catch((err) => {
-      console.log("Database Connection Failure.", err);
+      console.log('Database Connection Failure.', err);
       process.exit();
     });
 
@@ -117,10 +129,11 @@ const connectDB = async () => {
   //   },
   // };
 
-  const userId = "64632e83047e3a37e41b212b";
+  // const userId = "6465a7704164eac2ff0c2c43";
 
   // try {
   //   const user = await User.findById(userId);
+  //   console.log(user);
   //   if (!user) {
   //     throw new Error("User not found");
   //   }
@@ -148,21 +161,29 @@ const connectDB = async () => {
 const appRouting = () => {
   userRoutes(app);
   storeRoutes(app);
-  app.get("/", (req, res) => {
-    fs.readFile(__dirname + "/routes/index.html", "utf8", (err, data) => {
-      if (err) throw err;
-      const $ = cheerio.load(data);
-      const body = $("body").html();
-      res.send(body);
-    });
+  app.get('/', (req, res) => {
+    fs.readFile(
+      __dirname + '/routes/stores/store_pickup.html',
+      'utf8',
+      (err, data) => {
+        if (err) throw err;
+        const $ = cheerio.load(data);
+        const body = $('body').html();
+        res.send(body);
+      }
+    );
   });
 
-  app.get("/test", (req, res) => {
-    res.sendFile(__dirname + "/routes/index.html");
+  app.get('/test', (req, res) => {
+    res.sendFile(__dirname + '/routes/stores/store_pickup.html');
   });
 
-  app.get("/oauth", (req, res) => {
+  app.get('/oauth', (req, res) => {
     console.log(req);
+  });
+
+  app.get('/store_map', (req, res) => {
+    res.render('stores/store_map.ejs', { title: 'StoreMap' });
   });
 };
 

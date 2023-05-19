@@ -1,13 +1,26 @@
 window.addEventListener("DOMContentLoaded", async () => {
+  const UISetting = async () => {
+    await axios
+      .get("http://localhost:8080/api/users/ui/color")
+      .then((res) => {
+        document.documentElement.style.setProperty("--ui-color", res.data);
+        return res.data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   let sortedStoreList = await axios
-    .get("http://localhost:8080/api/stores?userId=64632e83047e3a37e41b212b")
-    .then((response) => {
-      console.log(response.data); // 응답 데이터 출력
-      return response.data;
+    .get("http://localhost:8080/api/stores")
+    .then((res) => {
+      console.log(res.data); // 응답 데이터 출력
+      return res.data;
     })
-    .catch((error) => {
-      console.error(error);
+    .catch((err) => {
+      console.error(err);
     });
+
   let PREV_MARKER;
   let map;
 
@@ -333,7 +346,18 @@ window.addEventListener("DOMContentLoaded", async () => {
         `</div>` +
         `</div>` +
         `<div class="right">` +
-        `<img class="store_pick_btn" src="https://oneulwineshop.cafe24.com/web/icons/store_select.svg" style="width: 30px; height: 30px;">` +
+        `<svg 
+            class="chk_btn
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 30 30"
+            width="30"
+            height="30"
+          >` +
+        `<g>` +
+        `<path d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z" />` +
+        `<path d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z" />` +
+        `</g>` +
+        `</svg>` +
         `</div>` +
         `</div>`;
 
@@ -744,6 +768,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   };
 
   const init = () => {
+    UISetting();
+
     document.getElementById("search_store").style.display = "block";
     onSearchType(); // 검색타입 변경 시 작동하는 함수
     storeListUp();

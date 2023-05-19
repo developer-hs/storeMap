@@ -1,3 +1,6 @@
+:root {
+  --ui-color: #000;
+}
 body {
   width: 100%;
 }
@@ -7,7 +10,7 @@ body {
   position: fixed;
   width: 60%;
   height: 50px;
-  background-color: #645596;
+  background-color: var(--ui-color);
   border-radius: 10px;
   color: #fff;
   display: flex;
@@ -58,7 +61,7 @@ body {
   cursor: pointer;
 }
 #search_store .search_type.on {
-  background-color: #645596;
+  background-color: var(--ui-color);
   color: #fff;
 }
 #search_store .head .search_type:nth-child(1) {
@@ -103,7 +106,7 @@ body {
 #search_store #map_title {
   display: none;
   width: 100%;
-  background-color: #645596;
+  background-color: var(--ui-color);
   color: #fff;
   margin-top: 24px;
 }
@@ -188,6 +191,14 @@ body {
   .store-info-container
   div.swiper-slide
   > .store
+  .chk_btn {
+  fill: var(--ui-color);
+}
+#search_store
+  .store_list_ct
+  .store-info-container
+  div.swiper-slide
+  > .store
   .right {
   display: flex;
   align-items: center;
@@ -247,7 +258,7 @@ body #search_store .store_list_ct .swiper-pagination {
 }
 #search_store .store_list_ct .swiper-pagination-bullet-active {
   color: #fff;
-  background: #645596;
+  background: var(--ui-color);
 }
 #search_store .store_list_ct .cont {
   position: fxied;
@@ -291,7 +302,7 @@ body #search_store .store_list_ct .swiper-pagination {
   transform: scale(1.005);
 }
 #search_store #search_list_ct .store:hover > .store_name h1 {
-  color: #645596;
+  color: var(--ui-color);
 }
 #search_store #search_list_ct .store:hover > .store_addr span {
   color: #9987cd;
