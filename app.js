@@ -11,7 +11,7 @@ import getAdminJs from './admin.js';
 import db from './app/mongodb/models/index.js';
 import userRoutes from './app/users/routes/index.js';
 import storeRoutes from './app/stores/routes/index.js';
-import { __dirname } from './api/utils.js';
+import { __dirname } from './utils/utils.js';
 
 import { User } from './app/users/models/user.js';
 import { Store } from './app/stores/models/store.js';
@@ -41,10 +41,10 @@ const corsOptionsDelegate = function (req, callback) {
 };
 
 const appInit = async () => {
-  app.use(expressLayouts); // EJS LAYOUT
   app.set('view engine', 'ejs'); // 템플릿 엔진 설정
   app.set('views', path.join(__dirname, 'views'));
   // 레이아웃 파일 경로 설정 (선택사항)
+  app.use(expressLayouts); // EJS LAYOUT
   app.set('layout', 'layouts/index'); // 레이아웃 파일은 "views/layouts/index.ejs"에 위치해야 합니다.
   app.set('layout extractScripts', true);
   app.set('layout extractStyles', true);
@@ -169,21 +169,17 @@ const appRouting = () => {
         if (err) throw err;
         const $ = cheerio.load(data);
         const body = $('body').html();
-        res.send(body);
+        return res.send(body);
       }
     );
   });
 
   app.get('/test', (req, res) => {
-    res.sendFile(__dirname + '/routes/stores/store_pickup.html');
+    return res.sendFile(__dirname + '/routes/stores/store_pickup.html');
   });
 
   app.get('/oauth', (req, res) => {
-    console.log(req);
-  });
-
-  app.get('/store_map', (req, res) => {
-    res.render('stores/store_map.ejs', { title: 'StoreMap' });
+    return console.log(req);
   });
 };
 

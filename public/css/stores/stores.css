@@ -1,0 +1,9 @@
+.store {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px 0;
+}
+
+.store .btn_area > div {
+  width: 80px;
+}

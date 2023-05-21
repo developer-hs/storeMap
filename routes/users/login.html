@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="/css/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/css/common/reset.css" />
     <link rel="stylesheet" type="text/css" href="/css/users/login.css" />
     <link rel="stylesheet" type="text/css" href="/css/common/index.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -26,18 +26,18 @@
             <div class="placeholder">PW</div>
           </div>
         </div>
-        <div id="login_btn" class="md-btn">로그인</div>
+        <div id="login_btn" class="md-btn bg-primary">로그인</div>
       </div>
     </div>
   </body>
   <script>
-    const loginBtn = document.getElementById("login_btn");
+    const loginBtn = document.getElementById('login_btn');
 
     const getEmail = () => {
-      return document.getElementById("store_map_email").value;
+      return document.getElementById('store_map_email').value;
     };
     const getPW = () => {
-      return document.getElementById("store_map_pw").value;
+      return document.getElementById('store_map_pw').value;
     };
 
     const onLogin = async () => {
@@ -45,22 +45,22 @@
       const password = getPW();
       const form = { email, password };
       await axios
-        .post("http://localhost:8080/api/users/login", form)
+        .post('http://localhost:8080/api/users/login', form)
         .then((res) => {
-          return (window.location.href = "http://localhost:8080/test");
+          return (window.location.href = 'http://localhost:8080/store_map');
         })
         .catch((err) => {
-          const alertModal = document.querySelector(".alert_modal");
-          const alertContent = document.querySelector(".alert_content");
-          alertContent.innerText = "잘못된 비밀번호 입니다.";
-          alertModal.classList.add("on");
+          const alertModal = document.querySelector('.alert_modal');
+          const alertContent = document.querySelector('.alert_content');
+          alertContent.innerText = '잘못된 비밀번호 입니다.';
+          alertModal.classList.add('on');
 
           setTimeout(() => {
-            alertModal.classList.remove("on");
+            alertModal.classList.remove('on');
           }, 1300);
         });
     };
 
-    loginBtn.addEventListener("click", onLogin);
+    loginBtn.addEventListener('click', onLogin);
   </script>
 </html>

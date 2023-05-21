@@ -1,10 +1,10 @@
-import AdminJS from "adminjs";
-import AdminJSExpress from "@adminjs/express";
-import * as AdminJSMongoose from "@adminjs/mongoose";
-import mongoose from "mongoose";
-import { User } from "./app/users/models/user.js";
-import { Store } from "./app/stores/models/store.js";
-import dbConfig from "./app/mongodb/config/key.js";
+import AdminJS from 'adminjs';
+import AdminJSExpress from '@adminjs/express';
+import * as AdminJSMongoose from '@adminjs/mongoose';
+import mongoose from 'mongoose';
+import { User } from './app/users/models/user.js';
+import { Store } from './app/stores/models/store.js';
+import dbConfig from './app/mongodb/config/key.js';
 
 AdminJS.registerAdapter({
   Resource: AdminJSMongoose.Resource,

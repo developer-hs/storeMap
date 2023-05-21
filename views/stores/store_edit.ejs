@@ -1,0 +1,26 @@
+<link rel="stylesheet" type="text/css" href="/css/stores/store_edit.css" />
+<div id="store" data-store-id="<%- store._id %>">
+  <div>
+    <label for="storeName">매장명</label>
+    <input id="storeName" value="<%- store.name %>" />
+  </div>
+  <div>
+    <label for="storeAddr">매장주소</label>
+    <input id="storeAddr" value="<%- store.addr %>" />
+  </div>
+  <div>
+    <label for="storeUseStatus">노출여부</label>
+    <% if (store.useStatus === true) { %>
+    <input type="checkbox" id="storeUseStatus" checked />
+    <% } else { %>
+    <input type="checkbox" id="storeUseStatus" />
+    <% } %>
+  </div>
+
+  <div class="btn_area">
+    <div class="md-btn bg-primary" id="updateBtn">수정</div>
+    <div class="md-btn bg-white" id="cancelBtn">취소</div>
+  </div>
+</div>
+
+<script src="/js/stores/store_edit.js"></script>

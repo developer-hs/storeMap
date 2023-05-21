@@ -105,11 +105,15 @@ section {
 html {
   width: 100%;
   height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 body {
   width: 100%;
   height: 100%;
   line-height: 1;
+  margin: 0px;
+  padding: 0px;
 }
 ol,
 ul {
@@ -126,7 +130,7 @@ blockquote:after,
 q:before,
 q:after {
   box-sizing: border-box;
-  content: "";
+  content: '';
   content: none;
 }
 table {
@@ -138,4 +142,10 @@ table {
 input {
   padding: 0px;
   box-sizing: border-box;
+}
+
+a,
+a:visited {
+  color: initial;
+  text-decoration: none;
 }

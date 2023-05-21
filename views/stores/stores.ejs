@@ -1,0 +1,24 @@
+<link rel="stylesheet" type="text/css" href="/css/stores/stores.css" />
+<!--<a
+      href="https://drive.google.com/uc?export=download&id=1IaRQlVe7bQDYJQE_B85dnOGVcL-mO--C"
+      download
+    >
+      download
+    </a>-->
+
+<% for(var i = 0; i < stores.length; i++){ %>
+
+<div class="store">
+  <div class="left">
+    <div class="store_name"><%- stores[i].name %></div>
+    <div class="store_addr"><%- stores[i].addr %></div>
+  </div>
+  <div class="right">
+    <div class="btn_area">
+      <div class="store_edit_btn md-btn bg-primary">
+        <a href="/stores/<%- stores[i]._id %>">수정</a>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
