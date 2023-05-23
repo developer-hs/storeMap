@@ -12,8 +12,11 @@
     <%- style %>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/js/utils/api.js"></script>
+    <script src="/js/utils/utils.js"></script>
   </head>
   <body>
+      <%- include("./alert.ejs") %>
       <%- include("./top_nav.ejs") %>
       <div id="content_ct">
         <%- include("./side_nav.ejs") %>

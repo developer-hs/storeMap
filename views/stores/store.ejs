@@ -1,4 +1,5 @@
-<link rel="stylesheet" type="text/css" href="/css/stores/store_edit.css" />
+<link rel="stylesheet" type="text/css" href="/css/stores/store.css" />
+
 <div id="store" data-store-id="<%- store._id %>">
   <div>
     <label for="storeName">매장명</label>
@@ -18,9 +19,14 @@
   </div>
 
   <div class="btn_area">
-    <div class="md-btn bg-primary" id="updateBtn">수정</div>
+    <% if (store._id) { %>
+    <div class="md-btn bg-primary" id="submitBtn">수정</div>
+    <% } else { %>
+    <div class="md-btn bg-primary" id="submitBtn">추가</div>
+    <% } %>
+
     <div class="md-btn bg-white" id="cancelBtn">취소</div>
   </div>
 </div>
 
-<script src="/js/stores/store_edit.js"></script>
+<script src="/js/stores/store.js"></script>
