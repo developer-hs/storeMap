@@ -7,3 +7,7 @@ const onAlertModal = (message) => {
     alertModal.classList.remove('on');
   }, 1300);
 };
+
+const reload = () => {
+  window.location.reload();
+};

@@ -6,24 +6,146 @@
       download
     </a>-->
 
-<div class="md-btn bg-white">
-  <a href="/stores/store?type=c">매장 생성</a>
-</div>
+<style>
+  .content_head {
+    margin: 32px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-<% for(var i = 0; i < stores.length; i++){ %>
-
-<div class="store">
-  <div class="left">
-    <div class="store_name"><%- stores[i].name %></div>
-    <div class="store_addr"><%- stores[i].addr %></div>
-  </div>
-  <div class="right">
-    <div class="btn_area">
-      <div class="store_edit_btn md-btn bg-primary">
-        <a href="/stores/<%- stores[i]._id %>?type=e">수정</a>
+  .content_head .title span {
+    font-size: 38px;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+  #storeCreateBtn {
+    border-radius: var(--lg-radius);
+    background-color: var(--color-primary);
+    width: 200px;
+    height: 50px;
+    -webkit-box-shadow: 0px 23px 15px -10px rgba(134, 133, 239, 0.2);
+    box-shadow: 0px 23px 15px -10px rgba(134, 133, 239, 0.2);
+  }
+  #storeCreateBtn a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 1.125rem;
+    color: #fff;
+  }
+</style>
+<div id="content">
+  <div class="content_head">
+    <div class="title"><span>매장관리</span></div>
+    <div>
+      <div id="storeCreateBtn">
+        <a href="/stores/store?type=c">매장 생성</a>
       </div>
-      <div class="md-btn bg-danger">삭제</div>
+    </div>
+  </div>
+  <div class="store_table">
+    <div class="table_head">
+      <div class="check_btn_area">
+        <input id="allCheckBtn" type="checkbox" />
+      </div>
+      <div class="name">
+        <span>매장명</span>
+      </div>
+      <div class="addr">
+        <span>매장주소</span>
+      </div>
+      <div class="use_status">
+        <span>노출여부</span>
+      </div>
+      <div class="btn_area"></div>
+    </div>
+
+    <div id="stores">
+      <% for(var i = 0; i < stores.length; i++){ %>
+
+      <div class="store" data-store-id="<%- stores[i]._id %>">
+        <div class="check_btn_area">
+          <input class="check_btn" type="checkbox" />
+        </div>
+        <a class="name" href="/stores/store/<%- stores[i]._id %>?type=u">
+          <div class="store_name"><%- stores[i].name %></div>
+        </a>
+        <a class="addr" href="/stores/store/<%- stores[i]._id %>?type=u">
+          <div class="store_addr"><%- stores[i].addr %></div>
+        </a>
+        <% if (stores[i].useStatus === true) { %>
+        <div class="use_status on"><%- stores[i].useStatus %></div>
+        <% } else { %>
+        <div class="use_status off"><%- stores[i].useStatus %></div>
+        <% } %>
+      </div>
+      <% } %>
+      <div class="btn_area">
+        <div class="md-btn bg-danger" id="deleteBtn">삭제</div>
+      </div>
     </div>
   </div>
 </div>
-<% } %>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const deleteBtn = document.getElementById('deleteBtn');
+    const allChkBtn = document.getElementById('allCheckBtn');
+    const chkBtns = document.querySelectorAll('input.check_btn');
+
+    deleteBtn.addEventListener('click', async () => {
+      let storesId = 'storesId=';
+      const checkStores = Array.from(chkBtns)
+        .filter((chkBtn) => {
+          return chkBtn.checked;
+        })
+        .map((data) => {
+          return data.parentNode.parentNode.dataset.storeId;
+        });
+
+      if (checkStores.length === 1) {
+        try {
+          console.log('one del');
+          const res = await remove(`/stores/store/${checkStores[0]}`);
+          if (res.status === 200) {
+            reload();
+          }
+        } catch (err) {
+          console.error(err);
+          return;
+        }
+      } else {
+        try {
+          for (let i = 0; i < checkStores.length; i++) {
+            storesId += checkStores[i];
+            if (i !== checkStores.length - 1) {
+              storesId += ',';
+            }
+          }
+          const res = await remove(`/stores/many?${storesId}`);
+          if (res.status === 200) {
+            onAlertModal('매장이 삭제되었습니다.');
+            reload();
+          }
+        } catch (err) {
+          console.error(err);
+          return;
+        }
+      }
+    });
+
+    allChkBtn.addEventListener('click', () => {
+      if (allChkBtn.checked) {
+        chkBtns.forEach((chkBtn) => {
+          chkBtn.checked = true;
+        });
+      } else {
+        chkBtns.forEach((chkBtn) => {
+          chkBtn.checked = false;
+        });
+      }
+    });
+  });
+</script>

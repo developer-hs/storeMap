@@ -1,9 +1,9 @@
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const UISetting = async () => {
     await axios
-      .get("http://localhost:8080/api/users/ui/color")
+      .get('http://localhost:8080/api/users/ui/color')
       .then((res) => {
-        document.documentElement.style.setProperty("--ui-color", res.data);
+        document.documentElement.style.setProperty('--ui-color', res.data);
         return res.data;
       })
       .catch((err) => {
@@ -11,32 +11,35 @@ window.addEventListener("DOMContentLoaded", async () => {
       });
   };
 
-  let sortedStoreList = await axios
-    .get("http://localhost:8080/api/stores")
-    .then((res) => {
-      console.log(res.data); // 응답 데이터 출력
-      return res.data;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  const getStoreList = async () => {
+    const res = await axios
+      .get('http://localhost:8080/api/stores')
+      .then((res) => {
+        return res.data;
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
-  let PREV_MARKER;
-  let map;
+    return res;
+  };
+
+  let V_STORE_LIST;
+  let PREV_MARKER, map;
 
   const height = 80;
 
   // 네이버 지도를 생성하는 함수
   const createNaverMap = (quick_search) => {
     // 지도를 생성하고 기본적인 설정을 한다
-    map = new naver.maps.Map("map", {
+    map = new naver.maps.Map('map', {
       center: new naver.maps.LatLng(37.3595316, 127.1052133),
       zoom: 5,
       mapTypeControl: true,
     });
 
     // 커서를 포인터로 변경한다
-    map.setCursor("pointer");
+    map.setCursor('pointer');
 
     // 검색어를 받아 좌표를 검색하는 함수를 실행한다
     initGeocoder(quick_search);
@@ -53,26 +56,26 @@ window.addEventListener("DOMContentLoaded", async () => {
   function initGeocoder(quick_search) {
     // 검색어 입력창에서 Enter 키를 눌렀을 때 좌표 검색 함수를 실행한다
     document
-      .getElementById("address")
-      .addEventListener("keydown", function (e) {
+      .getElementById('address')
+      .addEventListener('keydown', function (e) {
         const keyCode = e.which;
 
         if (keyCode === 13) {
-          searchAddressToCoordinate(document.getElementById("address").value);
+          searchAddressToCoordinate(document.getElementById('address').value);
         }
       });
 
     // 검색 버튼을 클릭했을 때 좌표 검색 함수를 실행한다
-    document.getElementById("submit").addEventListener("click", function (e) {
+    document.getElementById('submit').addEventListener('click', function (e) {
       e.preventDefault();
-      searchAddressToCoordinate(document.getElementById("address").value);
+      searchAddressToCoordinate(document.getElementById('address').value);
     });
 
     // 페이지 로딩 시 검색어가 있으면 좌표 검색 함수를 실행하고, 없으면 검색어 입력창에 포커스를 준다
     if (quick_search) {
       searchAddressToCoordinate(quick_search);
     } else {
-      document.getElementById("address").focus();
+      document.getElementById('address').focus();
     }
   }
 
@@ -88,13 +91,13 @@ window.addEventListener("DOMContentLoaded", async () => {
     }
 
     // 변수 초기화
-    let sido = "",
-      sigugun = "",
-      dongmyun = "",
-      ri = "",
-      rest = "";
+    let sido = '',
+      sigugun = '',
+      dongmyun = '',
+      ri = '',
+      rest = '';
     // 지번 주소 여부를 판단하기 위한 변수
-    const isRoadAddress = item.name === "roadaddr";
+    const isRoadAddress = item.name === 'roadaddr';
 
     // 각 지역 정보가 존재하면 해당 변수에 값을 할당
     if (hasArea(item.region.area1)) {
@@ -119,8 +122,8 @@ window.addEventListener("DOMContentLoaded", async () => {
       // 지번 정보가 존재하는 경우
       if (hasData(land.number1)) {
         // 지번 유형이 '산'일 경우 rest 변수에 '산' 추가
-        if (hasData(land.type) && land.type === "2") {
-          rest += "산";
+        if (hasData(land.type) && land.type === '2') {
+          rest += '산';
         }
 
         // 지번 번호 추가
@@ -128,29 +131,29 @@ window.addEventListener("DOMContentLoaded", async () => {
 
         // 지번 부가 번호가 존재하는 경우 '-'를 이용하여 추가
         if (hasData(land.number2)) {
-          rest += "-" + land.number2;
+          rest += '-' + land.number2;
         }
       }
 
       // 도로명 주소인 경우
       if (isRoadAddress === true) {
         // 동/면/읍에 해당하는 변수의 값을 조정
-        if (checkLastString(dongmyun, "면")) {
+        if (checkLastString(dongmyun, '면')) {
           ri = land.name;
         } else {
           dongmyun = land.name;
-          ri = "";
+          ri = '';
         }
 
         // 건물명이 존재하는 경우 rest 변수에 추가
         if (hasAddition(land.addition0)) {
-          rest += " " + land.addition0.value;
+          rest += ' ' + land.addition0.value;
         }
       }
     }
 
     // 생성된 주소 문자열 반환
-    return [sido, sigugun, dongmyun, ri, rest].join(" ");
+    return [sido, sigugun, dongmyun, ri, rest].join(' ');
   }
 
   /**
@@ -159,7 +162,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {boolean} - 유효한 값인 경우 true, 그렇지 않은 경우 false 반환
    */
   function hasArea(area) {
-    return !!(area && area.name && area.name !== "");
+    return !!(area && area.name && area.name !== '');
   }
 
   /**
@@ -168,7 +171,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {boolean} - 유효한 값인 경우 true, 그렇지 않은 경우 false 반환
    */
   function hasData(data) {
-    return !!(data && data !== "");
+    return !!(data && data !== '');
   }
 
   /**
@@ -178,7 +181,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {boolean} - 입력받은 문자열이 특정 문자열로 끝나는 경우 true, 그렇지 않은 경우 false 반환
    */
   function checkLastString(word, lastString) {
-    return new RegExp(lastString + "$").test(word);
+    return new RegExp(lastString + '$').test(word);
   }
 
   /**
@@ -199,12 +202,12 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   const showMap = () => {
-    const map = document.getElementById("map");
-    const mapTitle = document.getElementById("map_title");
-    mapTitle.style.display = "block";
-    map.style.display = "initial";
-    map.style.display = "block";
-    map.style.visibility = "visible";
+    const map = document.getElementById('map');
+    const mapTitle = document.getElementById('map_title');
+    mapTitle.style.display = 'block';
+    map.style.display = 'initial';
+    map.style.display = 'block';
+    map.style.visibility = 'visible';
     map.style.opacity = 1;
   };
 
@@ -213,10 +216,10 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   const createStoreGuardOpt = () => {
-    const storeSelectElm = document.getElementById("delivstore");
-    const guard = document.createElement("option");
-    guard.value = "-1";
-    guard.innerText = "매장을 선택해 주세요";
+    const storeSelectElm = document.getElementById('delivstore');
+    const guard = document.createElement('option');
+    guard.value = '-1';
+    guard.innerText = '매장을 선택해 주세요';
     storeSelectElm.prepend(guard);
 
     storeSelectElm[0].selected = true;
@@ -228,9 +231,9 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {boolean} - 지도가 열려 있는 경우 true, 그렇지 않은 경우 false 반환
    */
   const mapOpenChk = () => {
-    const pendingMap = document.getElementById("map");
+    const pendingMap = document.getElementById('map');
     // pendingMap 요소에 'off' 클래스가 포함되어 있지 않은 경우 false 반환
-    if (!pendingMap.classList.contains("off")) return false;
+    if (!pendingMap.classList.contains('off')) return false;
 
     return true;
   };
@@ -247,7 +250,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       addr = storeSearch(quick_search);
     } else {
       // quick_search 값이 존재하지 않는 경우 address input 요소의 값을 이용하여 검색 수행
-      addr = storeSearch(document.getElementById("address").value);
+      addr = storeSearch(document.getElementById('address').value);
     }
 
     // 검색 결과가 존재하는 경우 지도, 정보창 생성 함수 호출
@@ -257,7 +260,7 @@ window.addEventListener("DOMContentLoaded", async () => {
       createInfoWindow();
     } else {
       // 검색 결과가 존재하지 않는 경우 알림창 출력
-      alert("해당하는 매장이 존재하지 않습니다.");
+      alert('해당하는 매장이 존재하지 않습니다.');
     }
   };
 
@@ -267,18 +270,18 @@ window.addEventListener("DOMContentLoaded", async () => {
    */
   const onSearchType = () => {
     // 검색 타입 변경 버튼 이벤트 추가
-    const searchTypes = document.querySelectorAll(".search_type");
+    const searchTypes = document.querySelectorAll('.search_type');
     searchTypes.forEach((searchType) => {
-      searchType.addEventListener("click", () => {
-        if (searchType.classList.contains("on")) {
+      searchType.addEventListener('click', () => {
+        if (searchType.classList.contains('on')) {
           return;
         }
 
-        const dongList = document.querySelector(".store_list_ct");
+        const dongList = document.querySelector('.store_list_ct');
 
         // 현재 선택된 검색 타입 버튼의 on 클래스 제거, 클릭한 검색 타입 버튼에 on 클래스 추가
-        document.querySelector(".search_type.on").classList.remove("on");
-        searchType.classList.add("on");
+        document.querySelector('.search_type.on').classList.remove('on');
+        searchType.classList.add('on');
 
         // 검색 타입에 따라 동 리스트 영역의 on 클래스 추가/제거
         // if (getSearchType() === "store") {
@@ -289,7 +292,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         HideQuickSearch();
 
         // 검색어 input 요소 초기화
-        document.getElementById("address").value = "";
+        document.getElementById('address').value = '';
       });
     });
   };
@@ -298,7 +301,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {HTMLElement} - 매장 리스트 요소를 감싸는 div 요소 반환
    */
   const getStoreListWrapper = () => {
-    return document.querySelector(".store-info-container");
+    return document.querySelector('.store-info-container');
   };
 
   /**
@@ -315,8 +318,8 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {HTMLElement} - 새로운 swiper 슬라이드 요소 반환
    */
   const createNewSlide = () => {
-    let swiperSlide = document.createElement("div");
-    swiperSlide.classList.add("swiper-slide");
+    let swiperSlide = document.createElement('div');
+    swiperSlide.classList.add('swiper-slide');
 
     return swiperSlide;
   };
@@ -378,16 +381,16 @@ window.addEventListener("DOMContentLoaded", async () => {
    */
   const createPagination = () => {
     const paging = 10; // 한 페이지에 표시할 매장 수
-    new Swiper(".store_list_ct .swiper-container", {
+    new Swiper('.store_list_ct .swiper-container', {
       slidesPerView: 1,
       allowTouchMove: false,
-      effect: "fade",
+      effect: 'fade',
       draggable: false,
       speed: 400,
       pagination: {
-        el: ".store_list_ct .swiper-pagination",
+        el: '.store_list_ct .swiper-pagination',
         clickable: true,
-        type: "bullets",
+        type: 'bullets',
         renderBullet: function (index, className) {
           return `<span data-index=${index} class=${className}> ${
             index + 1
@@ -395,23 +398,23 @@ window.addEventListener("DOMContentLoaded", async () => {
         },
       },
       navigation: {
-        nextEl: ".store_list_ct .swiper-button-next",
-        prevEl: ".store_list_ct .swiper-button-prev",
+        nextEl: '.store_list_ct .swiper-button-next',
+        prevEl: '.store_list_ct .swiper-button-prev',
       },
       on: {
         slideChange: function () {
           const lastNum = document.querySelector(
-            ".swiper-pagination-bullets span:nth-last-child(1)"
+            '.swiper-pagination-bullets span:nth-last-child(1)'
           ).dataset.index;
           const activePage = document.querySelector(
-            ".swiper-pagination-bullet-active"
+            '.swiper-pagination-bullet-active'
           );
           const activeIndex = activePage.dataset.index;
           if (activeIndex % paging === 0) {
             for (let i = 0; i < activeIndex; i++) {
               document.querySelector(
                 `.swiper-pagination-bullet[data-index="${i}"]`
-              ).style.display = "none";
+              ).style.display = 'none';
             }
             for (let o = 0; o < paging; o++) {
               if (parseInt(activeIndex) + o > lastNum) {
@@ -421,7 +424,7 @@ window.addEventListener("DOMContentLoaded", async () => {
                 `.swiper-pagination-bullet[data-index="${
                   parseInt(activeIndex) + o
                 }"]`
-              ).style.display = "inline-block";
+              ).style.display = 'inline-block';
             }
           } else if (Number(activePage.innerText) % paging === 0) {
             for (
@@ -431,7 +434,7 @@ window.addEventListener("DOMContentLoaded", async () => {
             ) {
               document.querySelector(
                 `.swiper-pagination-bullet[data-index="${i}"]`
-              ).style.display = "inline-block";
+              ).style.display = 'inline-block';
             }
             for (
               let i = parseInt(activePage.innerText);
@@ -443,7 +446,7 @@ window.addEventListener("DOMContentLoaded", async () => {
               }
               document.querySelector(
                 `.swiper-pagination-bullet[data-index="${i}"]`
-              ).style.display = "none";
+              ).style.display = 'none';
             }
           }
         },
@@ -455,7 +458,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {HTMLElement} 코드 복사 알림 요소
    */
   const getCodeCopyAlert = () => {
-    return document.getElementById("copy_alert");
+    return document.getElementById('copy_alert');
   };
 
   /**
@@ -463,7 +466,7 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {HTMLElement} 매장 픽업 완료 알림 요소
    */
   const getPickupAlert = () => {
-    return document.getElementById("pickup_alert");
+    return document.getElementById('pickup_alert');
   };
 
   /**
@@ -482,9 +485,9 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   const copyAlert = () => {
-    getCodeCopyAlert().classList.add("on");
+    getCodeCopyAlert().classList.add('on');
     setTimeout(() => {
-      getCodeCopyAlert().classList.remove("on");
+      getCodeCopyAlert().classList.remove('on');
     }, 1500);
   };
 
@@ -493,32 +496,32 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {void}
    */
   const StorePickupAlert = () => {
-    getPickupAlert().classList.add("on");
+    getPickupAlert().classList.add('on');
     setTimeout(() => {
-      getPickupAlert().classList.remove("on");
+      getPickupAlert().classList.remove('on');
     }, 1500);
   };
 
   // 매장 리스트를 업데이트하고 페이징을 생성하며, 복사 버튼과 픽업 버튼을 클릭 시의 기능을 수행하는 함수
   const storeListUp = () => {
-    paintStoreList(sortedStoreList); // 매장 리스트를 표시하는 함수
+    paintStoreList(V_STORE_LIST); // 매장 리스트를 표시하는 함수
     createPagination(); // 페이징을 생성하는 함수
 
     // 복사 버튼과 픽업 버튼에 이벤트 리스너 등록
-    const addrCopyBtns = document.querySelectorAll(".copy_addr");
-    const storePickUpBtns = document.querySelectorAll(".store_pick_btn");
+    const addrCopyBtns = document.querySelectorAll('.copy_addr');
+    const storePickUpBtns = document.querySelectorAll('.store_pick_btn');
 
     addrCopyBtns.forEach((addrCopyBtn) => {
-      addrCopyBtn.addEventListener("click", () => {
+      addrCopyBtn.addEventListener('click', () => {
         copyAddr(addrCopyBtn.previousElementSibling.innerText); // 주소 복사 기능을 수행하는 함수
       });
     });
 
     storePickUpBtns.forEach((storePickUpBtn) => {
-      storePickUpBtn.addEventListener("click", () => {
-        const addr = storePickUpBtn.parentNode.querySelector("span").innerText; // 매장 주소를 가져옴
+      storePickUpBtn.addEventListener('click', () => {
+        const addr = storePickUpBtn.parentNode.querySelector('span').innerText; // 매장 주소를 가져옴
         const storeName =
-          storePickUpBtn.parentNode.parentNode.querySelector("h1").innerText; // 매장 이름을 가져옴
+          storePickUpBtn.parentNode.parentNode.querySelector('h1').innerText; // 매장 이름을 가져옴
 
         showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정하는 함수
         paintSearchStore(storeName, addr); // 서치리스트에 매장 정보를 표시하는 함수
@@ -526,22 +529,22 @@ window.addEventListener("DOMContentLoaded", async () => {
         const searchType = getSearchType(); // 검색 타입을 가져오는 함수
 
         switch (searchType) {
-          case "store":
-            document.getElementById("address").value = storeName; // 검색 타입이 '매장 이름'일 경우 검색 창에 매장 이름을 설정
+          case 'store':
+            document.getElementById('address').value = storeName; // 검색 타입이 '매장 이름'일 경우 검색 창에 매장 이름을 설정
             break;
-          case "dong":
-            document.getElementById("address").value = addr; // 검색 타입이 '동 이름'일 경우 검색 창에 매장 주소를 설정
+          case 'dong':
+            document.getElementById('address').value = addr; // 검색 타입이 '동 이름'일 경우 검색 창에 매장 주소를 설정
             break;
         }
 
-        document.getElementById("submit").click(); // 검색 버튼 클릭
+        document.getElementById('submit').click(); // 검색 버튼 클릭
       });
     });
   };
 
   // 현재 검색 타입을 가져오는 함수
   const getSearchType = () => {
-    return document.querySelector(".search_type.on").dataset.type;
+    return document.querySelector('.search_type.on').dataset.type;
   };
 
   // 입력된 주소와 일치하는 매장을 검색하여 반환하는 함수
@@ -551,28 +554,28 @@ window.addEventListener("DOMContentLoaded", async () => {
     let storeOrAddr;
     const searchType = getSearchType(); // 현재 검색 타입을 가져옴
 
-    for (let key in sortedStoreList) {
+    for (let key in V_STORE_LIST) {
       switch (searchType) {
-        case "store":
-          storeOrAddr = sortedStoreList[key].name; // 매장 이름을 가져옴
+        case 'store':
+          storeOrAddr = V_STORE_LIST[key].name; // 매장 이름을 가져옴
           if (
-            storeOrAddr.replaceAll(" ", "").replaceAll("&amp;", "&") ===
-              address.replaceAll(" ", "") ||
-            storeOrAddr.replaceAll(" ", "").replaceAll("&amp;", "&") ===
-              address.replaceAll(" ", "") + "점"
+            storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
+              address.replaceAll(' ', '') ||
+            storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
+              address.replaceAll(' ', '') + '점'
           ) {
             // 매장 이름이 검색어와 일치하면 해당 매장 정보 반환
-            return sortedStoreList[key];
+            return V_STORE_LIST[key];
           }
           break;
-        case "dong":
-          storeOrAddr = sortedStoreList[key].addr; // 매장 주소를 가져옴
+        case 'dong':
+          storeOrAddr = V_STORE_LIST[key].addr; // 매장 주소를 가져옴
           if (
-            storeOrAddr.replaceAll(" ", "").replaceAll("&amp;", "&") ===
-            address.replaceAll(" ", "")
+            storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
+            address.replaceAll(' ', '')
           ) {
             // 매장 주소가 검색어와 일치하면 해당 매장 정보 반환
-            return sortedStoreList[key];
+            return V_STORE_LIST[key];
           }
           break;
       }
@@ -592,7 +595,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     if (!storeInfo) {
       // 입력된 주소에 해당하는 매장이 없으면 알림창을 띄우고 리턴
-      alert("입력하신 매장명이 존재하지 않습니다.");
+      alert('입력하신 매장명이 존재하지 않습니다.');
       return;
     }
 
@@ -606,7 +609,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (response.v2.meta.totalCount === 0) {
-          return alert("검색결과가 존재하지 않습니다.");
+          return alert('검색결과가 존재하지 않습니다.');
         }
 
         const item = response.v2.addresses[0],
@@ -633,29 +636,29 @@ window.addEventListener("DOMContentLoaded", async () => {
    * @returns {Element} - 생성된 주소 문자열
    **/
   const getSearchListCtElm = () => {
-    return document.getElementById("search_list_ct"); // 서치리스트 컨테이너 요소를 가져옴
+    return document.getElementById('search_list_ct'); // 서치리스트 컨테이너 요소를 가져옴
   };
 
   // 검색 결과를 숨기는 함수
   const HideQuickSearch = () => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
-    searchListCt.style.display = "none"; // 서치리스트를 숨김
-    searchListCt.innerHTML = ""; // 서치리스트 내용을 비움
-    searchListCt.style.height = "0px"; // 서치리스트 높이를 0으로 설정
+    searchListCt.style.display = 'none'; // 서치리스트를 숨김
+    searchListCt.innerHTML = ''; // 서치리스트 내용을 비움
+    searchListCt.style.height = '0px'; // 서치리스트 높이를 0으로 설정
   };
   // 서치리스트에 검색 결과를 하나만 표시하는 함수
   const showQuickSearchJustOne = () => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
-    searchListCt.style.display = "initial"; // 서치리스트를 보이게 함
-    searchListCt.innerHTML = ""; // 서치리스트 내용을 비움
-    searchListCt.style.height = height + 10 + "px"; // 서치리스트 높이를 설정
+    searchListCt.style.display = 'initial'; // 서치리스트를 보이게 함
+    searchListCt.innerHTML = ''; // 서치리스트 내용을 비움
+    searchListCt.style.height = height + 10 + 'px'; // 서치리스트 높이를 설정
   };
 
   // 검색 결과를 표시하는 함수
   const paintSearchStore = (name, addr) => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
-    const store = document.createElement("div"); // 검색 결과를 담을 div 요소를 생성
-    store.classList.add("store"); // div 요소에 store 클래스를 추가
+    const store = document.createElement('div'); // 검색 결과를 담을 div 요소를 생성
+    store.classList.add('store'); // div 요소에 store 클래스를 추가
     store.innerHTML =
       `<div class="store_name"><h1>${name}</h1></div>` + // 매장 이름을 표시하는 div 요소를 생성
       `<div class="store_addr"><span>${addr}</span></div>`; // 매장 주소를 표시하는 div 요소를 생성
@@ -671,10 +674,10 @@ window.addEventListener("DOMContentLoaded", async () => {
    */
 
   const quickSearch = (searchStore) => {
-    const searchListCt = document.getElementById("search_list_ct");
-    const storesLen = searchListCt.querySelectorAll(".store").length;
+    const searchListCt = document.getElementById('search_list_ct');
+    const storesLen = searchListCt.querySelectorAll('.store').length;
 
-    searchListCt.innerHTML = "";
+    searchListCt.innerHTML = '';
     if (storesLen === 0) {
       HideQuickSearch();
     }
@@ -686,30 +689,30 @@ window.addEventListener("DOMContentLoaded", async () => {
     let searchStoreArray = [];
     const value = searchStore.value;
 
-    for (let key in sortedStoreList) {
+    for (let key in V_STORE_LIST) {
       let condition;
 
-      if (getSearchType() === "store") {
-        condition = sortedStoreList[key].name
-          .replaceAll(" ", "")
-          .includes(value.replaceAll(" ", ""));
+      if (getSearchType() === 'store') {
+        condition = V_STORE_LIST[key].name
+          .replaceAll(' ', '')
+          .includes(value.replaceAll(' ', ''));
       } else {
-        condition = sortedStoreList[key].addr
-          .replaceAll(" ", "")
-          .includes(value.replaceAll(" ", ""));
+        condition = V_STORE_LIST[key].addr
+          .replaceAll(' ', '')
+          .includes(value.replaceAll(' ', ''));
       }
 
       if (condition) {
-        searchListCt.style.display = "block";
+        searchListCt.style.display = 'block';
         if (searchStoreArray.length < 7) {
-          searchStoreArray.push(sortedStoreList[key]);
+          searchStoreArray.push(V_STORE_LIST[key]);
         } else {
           break;
         }
       }
     }
 
-    if (getSearchType() === "store") {
+    if (getSearchType() === 'store') {
       searchStoreArray = Object.values(searchStoreArray).sort((a, b) => {
         if (value === a.name[0]) {
           return -1;
@@ -732,15 +735,15 @@ window.addEventListener("DOMContentLoaded", async () => {
       const storeName = searchStoreArray[key].name;
       const storeAddr = searchStoreArray[key].addr;
 
-      if (getSearchType() === "store") {
+      if (getSearchType() === 'store') {
         quickValue = storeName;
-      } else if (getSearchType() === "dong") {
+      } else if (getSearchType() === 'dong') {
         quickValue = storeAddr;
       }
 
       const store = paintSearchStore(storeName, storeAddr);
 
-      store.addEventListener("click", () => {
+      store.addEventListener('click', () => {
         if (mapOpenChk()) {
           firstOpenMap(quickValue);
         } else {
@@ -748,36 +751,37 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
 
         searchStore.value = quickValue;
-        if (getSearchType() === "store") {
+        if (getSearchType() === 'store') {
           HideQuickSearch();
-        } else if (getSearchType() === "dong") {
+        } else if (getSearchType() === 'dong') {
           showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정
           paintSearchStore(storeName, storeAddr); // 서치리스트를 그려줌
         }
       });
     }
 
-    searchListCt.style.height = searchStoreArray.length * height + 10 + "px";
+    searchListCt.style.height = searchStoreArray.length * height + 10 + 'px';
   };
 
   const searching = () => {
-    const addr = document.getElementById("address");
-    addr.addEventListener("input", () => {
+    const addr = document.getElementById('address');
+    addr.addEventListener('input', () => {
       quickSearch(addr);
     });
   };
 
-  const init = () => {
-    UISetting();
+  const init = async () => {
+    await UISetting();
+    V_STORE_LIST = await getStoreList();
 
-    document.getElementById("search_store").style.display = "block";
+    document.getElementById('search_store').style.display = 'block';
     onSearchType(); // 검색타입 변경 시 작동하는 함수
     storeListUp();
     searching();
 
     document
-      .getElementById("address")
-      .addEventListener("keydown", function (e) {
+      .getElementById('address')
+      .addEventListener('keydown', function (e) {
         const keyCode = e.which;
         if (keyCode === 13) {
           // Enter Key
@@ -787,7 +791,7 @@ window.addEventListener("DOMContentLoaded", async () => {
         }
       });
 
-    document.getElementById("submit").addEventListener("click", function (e) {
+    document.getElementById('submit').addEventListener('click', function (e) {
       e.preventDefault();
       if (mapOpenChk()) {
         firstOpenMap();

@@ -40,7 +40,7 @@ const put = async (url, data) => {
 };
 
 // DELETE 요청을 보내는 함수
-const remove = async (url) => {
+const remove = async (url, data) => {
   try {
     const response = await instance.delete(url);
     return response;

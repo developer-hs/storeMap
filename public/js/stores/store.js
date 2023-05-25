@@ -22,22 +22,17 @@ window.addEventListener('DOMContentLoaded', () => {
     let result;
     const name = document.getElementById('storeName').value;
     const addr = document.getElementById('storeAddr').value;
-    let useStatus = document.getElementById('storeUseStatus').value;
+    let useStatus = document.getElementById('storeUseStatus').checked;
 
-    if (useStatus === 'on') {
-      useStatus = true;
-    } else {
-      useStatus = false;
-    }
-
-    result = { name, addr, useStatus };
+    result = { name, addr, useStatus: useStatus };
 
     return result;
   };
 
   const storeUpdate = async (form) => {
     try {
-      const res = await put(`/stores/${getStoreId()}`, form);
+      const res = await put(`/stores/store/${getStoreId()}`, form);
+      console.log(res.status);
       if (res.status === 200) {
         window.location.href = '/stores';
       }
@@ -49,7 +44,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const storeCreate = async (form) => {
     try {
       const res = await post('/stores/store', form);
-      console.log(res.status);
       if (res.status === 200) {
         window.location.href = '/stores';
       }
@@ -64,7 +58,7 @@ window.addEventListener('DOMContentLoaded', () => {
   submitBtn.addEventListener('click', async () => {
     const form = getDatas();
     for (let key in form) {
-      if (!form[key]) {
+      if (!form[key] === '') {
         return;
       }
     }

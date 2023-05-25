@@ -1,3 +1,6 @@
+* {
+  font-family: 'Pretendard', sans-serif;
+}
 html,
 body,
 div,
@@ -142,6 +145,7 @@ table {
 input {
   padding: 0px;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 a,

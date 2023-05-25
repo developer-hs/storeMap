@@ -1,9 +1,77 @@
 .store {
   display: flex;
   justify-content: space-between;
-  margin: 12px 0;
+  position: relative;
+  height: 70px;
+  border-radius: var(--default-radius);
+  border: 1px solid #eee;
+  margin: 8px 0;
 }
 
 .store .btn_area > div {
   width: 80px;
+}
+
+.store.remove {
+  filter: blur(6px);
+}
+.store.remove::before {
+  border-radius: var(--default-radius);
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.store,
+.table_head {
+  padding: 0 18px;
+  box-sizing: border-box;
+}
+
+.store_table {
+  box-sizing: border-box;
+  border-radius: var(--lg-radius);
+  padding-bottom: 24px;
+  height: 100%;
+}
+
+.table_head .name,
+.table_head .addr,
+.table_head .use_status {
+  color: #000;
+}
+
+.check_btn_area {
+  display: flex;
+  align-items: center;
+  width: 5%;
+}
+.name {
+  display: flex;
+  align-items: center;
+  width: 20%;
+}
+.addr {
+  display: flex;
+  align-items: center;
+  width: 75%;
+}
+.use_status {
+  display: flex;
+  align-items: center;
+  width: 10%;
+}
+
+.store_name {
+  font-weight: 600;
+}
+.table_head .addr,
+.table_head .name,
+.table_head .use_status {
+  display: flex;
+  align-items: center;
 }
