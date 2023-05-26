@@ -6,13 +6,13 @@
 
 #side_nav_ct .cate {
   margin: 18px 0;
-  height: 48px;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
 #side_nav_ct .cate > a {
+  padding: 16px 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,6 +26,10 @@
   border-radius: var(--lg-radius);
 }
 
+#side_nav_ct .cate.on > a {
+  color: var(--color-primary);
+  font-weight: 600;
+}
 #side_nav_ct .cate.on::before {
   content: '';
   background: url('../../icons/side_nav_cover.svg') center / cover no-repeat;

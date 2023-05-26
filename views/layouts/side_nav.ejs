@@ -6,7 +6,12 @@
     >
       <a href="/stores">매장관리</a>
     </li>
-    <li class="cate"><a href="#">스타일 설정</a></li>
+    <li
+      class="cate <% if(cateId ==='styleCate') { %> on <% } %>"
+      id="styleCate"
+    >
+      <a href="/widgets/styles">스타일 설정</a>
+    </li>
     <li class="cate"><a href="#">카테고리</a></li>
     <li class="cate"><a href="#">카테고리</a></li>
   </ul>

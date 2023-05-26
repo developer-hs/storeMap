@@ -329,8 +329,30 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
+   * @param {HTMLElement, Object} 매장 정보를 받아옴
+   */
+  const onPickupBtnHandler = (storePickupBtnElm, store) => {
+    storePickupBtnElm.addEventListener('click', () => {
+      showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정하는 함수
+      paintSearchStore(store); // 서치리스트에 매장 정보를 표시하는 함수
+
+      const searchType = getSearchType(); // 검색 타입을 가져오는 함수
+
+      switch (searchType) {
+        case 'store':
+          document.getElementById('address').value = store.name; // 검색 타입이 '매장 이름'일 경우 검색 창에 매장 이름을 설정
+          break;
+        case 'dong':
+          document.getElementById('address').value = store.addr; // 검색 타입이 '동 이름'일 경우 검색 창에 매장 주소를 설정
+          break;
+      }
+
+      document.getElementById('submit').click(); // 검색 버튼 클릭
+    });
+  };
+  /**
    * @description 매장 리스트를 화면에 출력하는 함수
-   * @param {Object} storeList - 매장 리스트 객체
+   * @param {Object} storeList - 매장 리스트
    * @returns {void}
    */
   const paintStoreList = (storeList) => {
@@ -344,8 +366,9 @@ window.addEventListener('DOMContentLoaded', async () => {
         swiperSlide = createNewSlide();
       }
 
-      const store =
-        `<div class="store">` +
+      const store = document.createElement('div');
+      store.classList.add('store');
+      const storeChilds =
         `<div class="left">` +
         `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${storeList[key].name}</h1>` +
         `<div class="addr_ct">` +
@@ -354,7 +377,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         `</div>` +
         `<div class="right">` +
         `<svg 
-            class="chk_btn
+            class="store_pick_btn"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 30 30"
             width="30"
@@ -365,12 +388,13 @@ window.addEventListener('DOMContentLoaded', async () => {
         `<path d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z" />` +
         `</g>` +
         `</svg>` +
-        `</div>` +
         `</div>`;
 
-      swiperSlide.innerHTML += store;
+      store.innerHTML = storeChilds;
+      const storePickBtn = store.querySelector('.store_pick_btn');
+      onPickupBtnHandler(storePickBtn, storeList[key]);
 
-      console.log(cnt, storeLen - 1);
+      swiperSlide.appendChild(store);
       if (cnt - storeLen - 1 < 5 && cnt === storeLen - 1) {
         // 5개가 안찼고 마지막일 경우
         addSlide(swiperSlide);
@@ -513,35 +537,10 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     // 복사 버튼과 픽업 버튼에 이벤트 리스너 등록
     const addrCopyBtns = document.querySelectorAll('.copy_addr');
-    const storePickUpBtns = document.querySelectorAll('.store_pick_btn');
 
     addrCopyBtns.forEach((addrCopyBtn) => {
       addrCopyBtn.addEventListener('click', () => {
         copyAddr(addrCopyBtn.previousElementSibling.innerText); // 주소 복사 기능을 수행하는 함수
-      });
-    });
-
-    storePickUpBtns.forEach((storePickUpBtn) => {
-      storePickUpBtn.addEventListener('click', () => {
-        const addr = storePickUpBtn.parentNode.querySelector('span').innerText; // 매장 주소를 가져옴
-        const storeName =
-          storePickUpBtn.parentNode.parentNode.querySelector('h1').innerText; // 매장 이름을 가져옴
-
-        showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정하는 함수
-        paintSearchStore(storeName, addr); // 서치리스트에 매장 정보를 표시하는 함수
-
-        const searchType = getSearchType(); // 검색 타입을 가져오는 함수
-
-        switch (searchType) {
-          case 'store':
-            document.getElementById('address').value = storeName; // 검색 타입이 '매장 이름'일 경우 검색 창에 매장 이름을 설정
-            break;
-          case 'dong':
-            document.getElementById('address').value = addr; // 검색 타입이 '동 이름'일 경우 검색 창에 매장 주소를 설정
-            break;
-        }
-
-        document.getElementById('submit').click(); // 검색 버튼 클릭
       });
     });
   };
@@ -659,15 +658,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   // 검색 결과를 표시하는 함수
-  const paintSearchStore = (name, addr) => {
+  const paintSearchStore = (store) => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
-    const store = document.createElement('div'); // 검색 결과를 담을 div 요소를 생성
-    store.classList.add('store'); // div 요소에 store 클래스를 추가
-    store.innerHTML =
-      `<div class="store_name"><h1>${name}</h1></div>` + // 매장 이름을 표시하는 div 요소를 생성
-      `<div class="store_addr"><span>${addr}</span></div>`; // 매장 주소를 표시하는 div 요소를 생성
-    searchListCt.appendChild(store); // 서치리스트 컨테이너에 검색 결과 div 요소를 추가
-    return store; // 검색 결과 div 요소를 반환
+    const storeElm = document.createElement('div'); // 검색 결과를 담을 div 요소를 생성
+    storeElm.classList.add('store'); // div 요소에 store 클래스를 추가
+    storeElm.innerHTML =
+      `<div class="store_name"><h1>${store.name}</h1></div>` + // 매장 이름을 표시하는 div 요소를 생성
+      `<div class="store_addr"><span>${store.addr}</span></div>`; // 매장 주소를 표시하는 div 요소를 생성
+    searchListCt.appendChild(storeElm); // 서치리스트 컨테이너에 검색 결과 div 요소를 추가
+    return storeElm; // 검색 결과 div 요소를 반환
   };
 
   /**
@@ -745,7 +744,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         quickValue = storeAddr;
       }
 
-      const store = paintSearchStore(storeName, storeAddr);
+      const store = paintSearchStore(searchStoreArray[key]);
 
       store.addEventListener('click', () => {
         if (mapOpenChk()) {
@@ -759,7 +758,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           HideQuickSearch();
         } else if (getSearchType() === 'dong') {
           showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정
-          paintSearchStore(storeName, storeAddr); // 서치리스트를 그려줌
+          paintSearchStore(searchStoreArray[key]); // 서치리스트를 그려줌
         }
       });
     }
