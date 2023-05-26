@@ -1,11 +1,21 @@
 :root {
   --header-h: 60px;
+  --top-margin: 66px;
   --color-primary: #8685ef !important;
   --color-danger: #ff6969 !important;
   --color-success: #98eecc !important;
   --color-black: #262626 !important;
   --default-radius: 8px;
   --lg-radius: 20px;
+}
+
+body::after {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  z-index: -1;
+  content: url('icons/side_nav_cover.svg');
 }
 
 .md-btn {
@@ -85,18 +95,12 @@ div[class*='btn'] > a {
   top: 50px;
 }
 
-#content_ct {
+#content-ct {
   display: flex;
   height: calc(100% - var(--header-h));
 }
 
-#side_nav_ct {
-  padding: 0 24px;
-  width: 200px;
-  height: 100%;
-}
-
-#content_area {
+#content-area {
   overflow: scroll;
   box-shadow: -1px 20px 20px 0 rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -109,25 +113,41 @@ div[class*='btn'] > a {
   padding-right: 48px;
 }
 
-.table_head {
+.table-head {
   display: flex;
   border-radius: var(--default-radius);
+  background-color: rgba(0, 0, 0, 0.01);
   border: 1px solid #eee;
   height: 48px;
 }
-.btn_area {
+
+.content-head {
+  margin: var(--top-margin) 0 42px;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.btn_area > div[class*='btn']:first-child {
+.content-head .title span {
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+.btn-area {
+  display: flex;
+  justify-content: right;
+}
+
+.btn-area > div[class*='btn']:first-child {
   margin-left: 0px;
 }
 
-.btn_area > div[class*='btn']:last-child {
+.btn-area > div[class*='btn']:last-child {
   margin-right: 0px;
 }
 
-.btn_area > div[class*='btn'] {
+.btn-area > div[class*='btn'] {
   margin: 0 4px;
 }
 

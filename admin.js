@@ -2,9 +2,11 @@ import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import * as AdminJSMongoose from '@adminjs/mongoose';
 import mongoose from 'mongoose';
+import dbConfig from './app/mongodb/config/key.js';
+
 import { User } from './app/users/models/user.js';
 import { Store } from './app/stores/models/store.js';
-import dbConfig from './app/mongodb/config/key.js';
+import { Widget } from './app/widgets/models/widget.js';
 
 AdminJS.registerAdapter({
   Resource: AdminJSMongoose.Resource,
@@ -19,7 +21,7 @@ const getAdminJs = async () => {
   await mongoose.connect(dbConfig.url);
   const adminOptions = {
     // We pass Category to `resources`
-    resources: [User, Store],
+    resources: [User, Store, Widget],
   };
   // Please note that some plugins don't need you to create AdminJS instance manually,
   // instead you would just pass `adminOptions` into the plugin directly,

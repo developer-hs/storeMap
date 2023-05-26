@@ -145,6 +145,9 @@ table {
 input {
   padding: 0px;
   box-sizing: border-box;
+}
+
+input[type='checkbox'] {
   cursor: pointer;
 }
 

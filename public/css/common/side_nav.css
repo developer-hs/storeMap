@@ -1,0 +1,36 @@
+#side_nav_ct {
+  padding: var(--top-margin) 0 0 24px;
+  width: 200px;
+  height: 100%;
+}
+
+#side_nav_ct .cate {
+  margin: 18px 0;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+#side_nav_ct .cate > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 24px;
+  font-size: 1rem;
+}
+
+#side_nav_ct .cate.on {
+  position: relative;
+  box-shadow: -15px 0px 25px 0 rgba(1, 1, 1, 0.1);
+  border-radius: var(--lg-radius);
+}
+
+#side_nav_ct .cate.on::before {
+  content: '';
+  background: url('../../icons/side_nav_cover.svg') center / cover no-repeat;
+  position: absolute;
+  right: 0;
+  width: 24px;
+  height: 96px;
+}

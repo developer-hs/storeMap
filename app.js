@@ -15,6 +15,7 @@ import { __dirname } from './utils/utils.js';
 
 import { User } from './app/users/models/user.js';
 import { Store } from './app/stores/models/store.js';
+import widgetRoutes from './app/widgets/routes/index.js';
 
 process.env.NODE_ENV =
   process.env.NODE_ENV &&
@@ -80,6 +81,8 @@ const connectDB = async () => {
 const appRouting = () => {
   userRoutes(app);
   storeRoutes(app);
+  widgetRoutes(app);
+
   app.get('/', (req, res) => {
     fs.readFile(
       __dirname + '/routes/stores/store_pickup.html',

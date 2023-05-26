@@ -1,9 +1,13 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const UISetting = async () => {
     await axios
-      .get('http://localhost:8080/api/users/ui/color')
+      .get('http://localhost:8080/api/users/ui')
       .then((res) => {
-        document.documentElement.style.setProperty('--ui-color', res.data);
+        const ui = res.data;
+        document.documentElement.style.setProperty(
+          '--ui-color',
+          ui.backgroundColor
+        );
         return res.data;
       })
       .catch((err) => {
