@@ -4,6 +4,9 @@
 body {
   width: 100%;
 }
+.displaynone {
+  display: none !important;
+}
 #copy_alert,
 #pickup_alert {
   z-index: 999;
@@ -124,7 +127,7 @@ body {
   position: relative;
 }
 #orderFixItem:before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 0;

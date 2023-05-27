@@ -28,10 +28,16 @@ window.addEventListener('DOMContentLoaded', async () => {
     return res;
   };
 
-  let V_STORE_LIST;
+  let L_STORE_LIST;
   let PREV_MARKER, map;
 
   const height = 80;
+  /**
+   * @return {HTMLElement} 맵 엘리먼트를 가져옴
+   */
+  const getMapElm = () => {
+    return document.getElementById('map');
+  };
 
   // 네이버 지도를 생성하는 함수
   const createNaverMap = (quick_search) => {
@@ -65,21 +71,27 @@ window.addEventListener('DOMContentLoaded', async () => {
         const keyCode = e.which;
 
         if (keyCode === 13) {
-          searchAddressToCoordinate(document.getElementById('address').value);
+          searchAddrToCoord(document.getElementById('address').value);
         }
       });
 
     // 검색 버튼을 클릭했을 때 좌표 검색 함수를 실행한다
     document.getElementById('submit').addEventListener('click', function (e) {
       e.preventDefault();
-      searchAddressToCoordinate(document.getElementById('address').value);
+      searchAddrToCoord(document.getElementById('address').value);
     });
 
     // 페이지 로딩 시 검색어가 있으면 좌표 검색 함수를 실행하고, 없으면 검색어 입력창에 포커스를 준다
     if (quick_search) {
-      searchAddressToCoordinate(quick_search);
+      searchAddrToCoord(quick_search);
     } else {
       document.getElementById('address').focus();
+    }
+
+    if (mapOpenChk()) {
+      const map = getMapElm();
+      map.classList.remove('off');
+      searchAddrToCoord(document.getElementById('address').value);
     }
   }
 
@@ -235,7 +247,7 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @returns {boolean} - 지도가 열려 있는 경우 true, 그렇지 않은 경우 false 반환
    */
   const mapOpenChk = () => {
-    const pendingMap = document.getElementById('map');
+    const pendingMap = getMapElm();
     // pendingMap 요소에 'off' 클래스가 포함되어 있지 않은 경우 false 반환
     if (!pendingMap.classList.contains('off')) return false;
 
@@ -355,12 +367,12 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @param {Object} storeList - 매장 리스트
    * @returns {void}
    */
-  const paintStoreList = (storeList) => {
+  const paintStoreList = () => {
     let cnt = 0;
-    const storeLen = Object.keys(storeList).length; // 매장 갯수
+    const storeLen = Object.keys(L_STORE_LIST).length; // 매장 갯수
     let swiperSlide = createNewSlide(); // 슬라이더 생성
 
-    for (let key in storeList) {
+    for (let key in L_STORE_LIST) {
       if (cnt && cnt % 5 === 0) {
         addSlide(swiperSlide); // 5개 = 1페이지가 넘어갔을 때 슬라이드 삽입
         swiperSlide = createNewSlide();
@@ -370,9 +382,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       store.classList.add('store');
       const storeChilds =
         `<div class="left">` +
-        `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${storeList[key].name}</h1>` +
+        `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${L_STORE_LIST[key].name}</h1>` +
         `<div class="addr_ct">` +
-        `<span style="color: rgb(151, 151, 151);">${storeList[key].addr}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
+        `<span style="color: rgb(151, 151, 151);">${L_STORE_LIST[key].addr}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
         `</div>` +
         `</div>` +
         `<div class="right">` +
@@ -392,7 +404,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
       store.innerHTML = storeChilds;
       const storePickBtn = store.querySelector('.store_pick_btn');
-      onPickupBtnHandler(storePickBtn, storeList[key]);
+      onPickupBtnHandler(storePickBtn, L_STORE_LIST[key]);
 
       swiperSlide.appendChild(store);
       if (cnt - storeLen - 1 < 5 && cnt === storeLen - 1) {
@@ -532,7 +544,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   // 매장 리스트를 업데이트하고 페이징을 생성하며, 복사 버튼과 픽업 버튼을 클릭 시의 기능을 수행하는 함수
   const storeListUp = () => {
-    paintStoreList(V_STORE_LIST); // 매장 리스트를 표시하는 함수
+    paintStoreList(); // 매장 리스트를 표시하는 함수
     createPagination(); // 페이징을 생성하는 함수
 
     // 복사 버튼과 픽업 버튼에 이벤트 리스너 등록
@@ -557,10 +569,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     let storeOrAddr;
     const searchType = getSearchType(); // 현재 검색 타입을 가져옴
 
-    for (let key in V_STORE_LIST) {
+    for (let key in L_STORE_LIST) {
       switch (searchType) {
         case 'store':
-          storeOrAddr = V_STORE_LIST[key].name; // 매장 이름을 가져옴
+          storeOrAddr = L_STORE_LIST[key].name; // 매장 이름을 가져옴
           if (
             storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
               address.replaceAll(' ', '') ||
@@ -568,17 +580,17 @@ window.addEventListener('DOMContentLoaded', async () => {
               address.replaceAll(' ', '') + '점'
           ) {
             // 매장 이름이 검색어와 일치하면 해당 매장 정보 반환
-            return V_STORE_LIST[key];
+            return L_STORE_LIST[key];
           }
           break;
         case 'dong':
-          storeOrAddr = V_STORE_LIST[key].addr; // 매장 주소를 가져옴
+          storeOrAddr = L_STORE_LIST[key].addr; // 매장 주소를 가져옴
           if (
             storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
             address.replaceAll(' ', '')
           ) {
             // 매장 주소가 검색어와 일치하면 해당 매장 정보 반환
-            return V_STORE_LIST[key];
+            return L_STORE_LIST[key];
           }
           break;
       }
@@ -588,13 +600,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   // 입력된 주소에 해당하는 매장 정보를 반환하는 함수
-  const getStoreAddr = (address) => {
-    return storeSearch(address); // storeSearch 함수 호출하여 매장 정보 반환
+  const getStoreAddr = (addr) => {
+    return storeSearch(addr); // storeSearch 함수 호출하여 매장 정보 반환
   };
 
   // 입력된 주소로 좌표를 검색하고, 해당 좌표를 지도에 표시하는 함수
-  function searchAddressToCoordinate(address) {
-    const storeInfo = getStoreAddr(address); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
+  function searchAddrToCoord(addr) {
+    const storeInfo = getStoreAddr(addr); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
 
     if (!storeInfo) {
       // 입력된 주소에 해당하는 매장이 없으면 알림창을 띄우고 리턴
@@ -692,15 +704,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     let searchStoreArray = [];
     const value = searchStore.value;
 
-    for (let key in V_STORE_LIST) {
+    for (let key in L_STORE_LIST) {
       let condition;
 
       if (getSearchType() === 'store') {
-        condition = V_STORE_LIST[key].name
+        condition = L_STORE_LIST[key].name
           .replaceAll(' ', '')
           .includes(value.replaceAll(' ', ''));
       } else {
-        condition = V_STORE_LIST[key].addr
+        condition = L_STORE_LIST[key].addr
           .replaceAll(' ', '')
           .includes(value.replaceAll(' ', ''));
       }
@@ -708,7 +720,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (condition) {
         searchListCt.style.display = 'block';
         if (searchStoreArray.length < 7) {
-          searchStoreArray.push(V_STORE_LIST[key]);
+          searchStoreArray.push(L_STORE_LIST[key]);
         } else {
           break;
         }
@@ -750,7 +762,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         if (mapOpenChk()) {
           firstOpenMap(quickValue);
         } else {
-          searchAddressToCoordinate(quickValue);
+          searchAddrToCoord(quickValue);
         }
 
         searchStore.value = quickValue;
@@ -775,13 +787,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const init = async () => {
     await UISetting();
-    V_STORE_LIST = await getStoreList();
+    L_STORE_LIST = await getStoreList();
 
     document.getElementById('search_store').style.display = 'block';
     onSearchType(); // 검색타입 변경 시 작동하는 함수
     storeListUp();
     searching();
 
+    // document.querySelectorAll('store_pick_btn').forEach(storePickBtn => {
+    //   storePickBtn.addEventListener("click" , () => {
+
+    //   })
+    // });
     document
       .getElementById('address')
       .addEventListener('keydown', function (e) {
