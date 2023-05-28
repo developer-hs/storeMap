@@ -132,6 +132,7 @@ div[class*='btn'] > a {
   font-size: 38px;
   font-weight: 500;
   letter-spacing: 2px;
+  color: var(--color-black);
 }
 
 .btn-area {

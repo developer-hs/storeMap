@@ -6,7 +6,6 @@ window.addEventListener('DOMContentLoaded', () => {
     alert('잘못된 접근입니다.');
     window.location.href = '/stores';
   }
-  const submitBtn = document.getElementById('submitBtn');
 
   /**
    * @returns {String}
@@ -27,6 +26,45 @@ window.addEventListener('DOMContentLoaded', () => {
     result = { name, addr, useStatus: useStatus };
 
     return result;
+  };
+
+  /**
+   * @returns {HTMLElement}
+   */
+  const getSubmitBtn = () => {
+    return document.getElementById('submitBtn');
+  };
+  /**
+   * @returns {HTMLElement}
+   */
+  const getexcelUploadBtn = () => {
+    return document.getElementById('excelUploadBtn');
+  };
+
+  /**
+   * @description 엑셀을 이용한 매장생성
+   * @return {void}
+   */
+  const createManyHandler = () => {
+    storeManyCreate();
+  };
+
+  const storeManyCreate = async () => {
+    const fileInput = getexcelUploadBtn();
+    const file = fileInput.files[0];
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await axios.post('/stores/many', formData);
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const storeUpdate = async (form) => {
@@ -55,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
    * @returns {void}
    */
 
-  submitBtn.addEventListener('click', async () => {
+  const submitHandler = () => {
     const form = getDatas();
     for (let key in form) {
       if (!form[key] === '') {
@@ -69,5 +107,20 @@ window.addEventListener('DOMContentLoaded', () => {
       // 새로 생성할 경우
       storeCreate(form);
     }
-  });
+  };
+
+  const onSubmit = () => {
+    getSubmitBtn().addEventListener('click', submitHandler);
+  };
+
+  const storeCreateMany = () => {
+    getexcelUploadBtn().addEventListener('change', createManyHandler);
+  };
+
+  const init = () => {
+    onSubmit();
+    storeCreateMany();
+  };
+
+  init();
 });
