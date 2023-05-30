@@ -7,6 +7,10 @@ body {
 .displaynone {
   display: none !important;
 }
+
+.store_pick_btn {
+  cursor: pointer;
+}
 #copy_alert,
 #pickup_alert {
   z-index: 999;

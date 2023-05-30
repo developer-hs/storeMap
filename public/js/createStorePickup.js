@@ -1,37 +1,42 @@
 window.addEventListener('DOMContentLoaded', async () => {
-  const UISetting = async () => {
-    await axios
-      .get('http://localhost:8080/api/users/ui')
-      .then((res) => {
-        const ui = res.data;
-        document.documentElement.style.setProperty(
-          '--ui-color',
-          ui.backgroundColor
-        );
-        return res.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
-
-  const getStoreList = async () => {
-    const res = await axios
-      .get('http://localhost:8080/api/stores')
-      .then((res) => {
-        return res.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-
-    return res;
-  };
-
+  const L_HEIGHT = 80;
   let L_STORE_LIST;
   let PREV_MARKER, map;
 
-  const height = 80;
+  class StoreMapAPI {
+    constructor() {}
+
+    async UISetting() {
+      document.getElementById('search_store').style.display = 'block';
+      await axios
+        .get('http://localhost:8080/api/users/ui')
+        .then((res) => {
+          const ui = res.data;
+          document.documentElement.style.setProperty(
+            '--ui-color',
+            ui.backgroundColor
+          );
+          return res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    async getStoreList() {
+      const res = await axios
+        .get('http://localhost:8080/api/stores')
+        .then((res) => {
+          return res.data;
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+
+      return res;
+    }
+  }
+
   /**
    * @return {HTMLElement} 맵 엘리먼트를 가져옴
    */
@@ -39,279 +44,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     return document.getElementById('map');
   };
 
-  // 네이버 지도를 생성하는 함수
-  const createNaverMap = (quick_search) => {
-    // 지도를 생성하고 기본적인 설정을 한다
-    map = new naver.maps.Map('map', {
-      center: new naver.maps.LatLng(37.3595316, 127.1052133),
-      zoom: 5,
-      mapTypeControl: true,
-    });
-
-    // 커서를 포인터로 변경한다
-    map.setCursor('pointer');
-
-    // 검색어를 받아 좌표를 검색하는 함수를 실행한다
-    initGeocoder(quick_search);
-  };
-
-  // 인포윈도우를 생성하는 함수
-  const createInfoWindow = () => {
-    infoWindow = new naver.maps.InfoWindow({
-      anchorSkew: true,
-    });
-  };
-
-  // 검색어를 받아 좌표를 검색하는 함수
-  function initGeocoder(quick_search) {
-    // 검색어 입력창에서 Enter 키를 눌렀을 때 좌표 검색 함수를 실행한다
-    document
-      .getElementById('address')
-      .addEventListener('keydown', function (e) {
-        const keyCode = e.which;
-
-        if (keyCode === 13) {
-          searchAddrToCoord(document.getElementById('address').value);
-        }
-      });
-
-    // 검색 버튼을 클릭했을 때 좌표 검색 함수를 실행한다
-    document.getElementById('submit').addEventListener('click', function (e) {
-      e.preventDefault();
-      searchAddrToCoord(document.getElementById('address').value);
-    });
-
-    // 페이지 로딩 시 검색어가 있으면 좌표 검색 함수를 실행하고, 없으면 검색어 입력창에 포커스를 준다
-    if (quick_search) {
-      searchAddrToCoord(quick_search);
-    } else {
-      document.getElementById('address').focus();
-    }
-
-    if (mapOpenChk()) {
-      const map = getMapElm();
-      map.classList.remove('off');
-      searchAddrToCoord(document.getElementById('address').value);
-    }
-  }
-
-  /**
-   * @description 입력받은 item으로부터 주소 문자열을 생성하는 함수
-   * @param {object} item - 주소 정보가 담긴 객체
-   * @returns {string} - 생성된 주소 문자열
-   */
-  function makeAddress(item) {
-    // item이 falsy한 값일 경우 함수 종료
-    if (!item) {
-      return;
-    }
-
-    // 변수 초기화
-    let sido = '',
-      sigugun = '',
-      dongmyun = '',
-      ri = '',
-      rest = '';
-    // 지번 주소 여부를 판단하기 위한 변수
-    const isRoadAddress = item.name === 'roadaddr';
-
-    // 각 지역 정보가 존재하면 해당 변수에 값을 할당
-    if (hasArea(item.region.area1)) {
-      sido = item.region.area1.name;
-    }
-
-    if (hasArea(item.region.area2)) {
-      sigugun = item.region.area2.name;
-    }
-
-    if (hasArea(item.region.area3)) {
-      dongmyun = item.region.area3.name;
-    }
-
-    if (hasArea(item.region.area4)) {
-      ri = item.region.area4.name;
-    }
-
-    // 건물/지번 정보가 존재하면 해당 변수에 값을 할당
-    const land = item.land;
-    if (land) {
-      // 지번 정보가 존재하는 경우
-      if (hasData(land.number1)) {
-        // 지번 유형이 '산'일 경우 rest 변수에 '산' 추가
-        if (hasData(land.type) && land.type === '2') {
-          rest += '산';
-        }
-
-        // 지번 번호 추가
-        rest += land.number1;
-
-        // 지번 부가 번호가 존재하는 경우 '-'를 이용하여 추가
-        if (hasData(land.number2)) {
-          rest += '-' + land.number2;
-        }
-      }
-
-      // 도로명 주소인 경우
-      if (isRoadAddress === true) {
-        // 동/면/읍에 해당하는 변수의 값을 조정
-        if (checkLastString(dongmyun, '면')) {
-          ri = land.name;
-        } else {
-          dongmyun = land.name;
-          ri = '';
-        }
-
-        // 건물명이 존재하는 경우 rest 변수에 추가
-        if (hasAddition(land.addition0)) {
-          rest += ' ' + land.addition0.value;
-        }
-      }
-    }
-
-    // 생성된 주소 문자열 반환
-    return [sido, sigugun, dongmyun, ri, rest].join(' ');
-  }
-
-  /**
-   * @description 입력받은 지역 정보가 유효한 값인지 판단하는 함수
-   * @param {object} area - 지역 정보 객체
-   * @returns {boolean} - 유효한 값인 경우 true, 그렇지 않은 경우 false 반환
-   */
-  function hasArea(area) {
-    return !!(area && area.name && area.name !== '');
-  }
-
-  /**
-   * @description 입력받은 데이터가 유효한 값인지 판단하는 함수
-   * @param {any} data - 판단할 데이터
-   * @returns {boolean} - 유효한 값인 경우 true, 그렇지 않은 경우 false 반환
-   */
-  function hasData(data) {
-    return !!(data && data !== '');
-  }
-
-  /**
-   * @description 입력받은 문자열이 특정 문자열로 끝나는지 판단하는 함수
-   * @param {string} word - 판단할 문자열
-   * @param {string} lastString - 끝나는 문자열
-   * @returns {boolean} - 입력받은 문자열이 특정 문자열로 끝나는 경우 true, 그렇지 않은 경우 false 반환
-   */
-  function checkLastString(word, lastString) {
-    return new RegExp(lastString + '$').test(word);
-  }
-
-  /**
-   * @description 입력받은 객체의 value 프로퍼티가 유효한 값인지 판단하는 함수
-   * @param {object} addition - 판단할 객체
-   * @returns {boolean} - 유효한 값인 경우 true, 그렇지 않은 경우 false 반환
-   */
-  function hasAddition(addition) {
-    return !!(addition && addition.value);
-  }
-
-  // --------------------------------------------------------------------------------------------
-  // --------------------------------------------------------------------------------------------
-  // --------------------------------------------------------------------------------------------
-
-  /**
-   * @description 지도 보기 버튼 클릭 시 지도를 보여주는 함수
-   * @returns {void}
-   */
-  const showMap = () => {
-    const map = document.getElementById('map');
-    const mapTitle = document.getElementById('map_title');
-    mapTitle.style.display = 'block';
-    map.style.display = 'initial';
-    map.style.display = 'block';
-    map.style.visibility = 'visible';
-    map.style.opacity = 1;
-  };
-
-  /**
-   * @description 매장 선택 select 요소에 가드 옵션을 추가하는 함수
-   * @returns {void}
-   */
-  const createStoreGuardOpt = () => {
-    const storeSelectElm = document.getElementById('delivstore');
-    const guard = document.createElement('option');
-    guard.value = '-1';
-    guard.innerText = '매장을 선택해 주세요';
-    storeSelectElm.prepend(guard);
-
-    storeSelectElm[0].selected = true;
-    guard.disabled = true;
-  };
-
-  /**
-   * @description 지도가 열려 있는지 여부를 확인하는 함수
-   * @returns {boolean} - 지도가 열려 있는 경우 true, 그렇지 않은 경우 false 반환
-   */
-  const mapOpenChk = () => {
-    const pendingMap = getMapElm();
-    // pendingMap 요소에 'off' 클래스가 포함되어 있지 않은 경우 false 반환
-    if (!pendingMap.classList.contains('off')) return false;
-
-    return true;
-  };
-
-  /**
-   * @description 페이지가 처음 로딩될 때 매장 검색을 수행하는 함수
-   * @param {string} quick_search - 빠른 검색 기능을 이용하여 검색한 주소
-   * @returns {void}
-   */
-  const firstOpenMap = (quick_search) => {
-    let addr;
-    // quick_search 값이 존재하는 경우 quick_search를 인자로 전달하여 검색 수행
-    if (quick_search) {
-      addr = storeSearch(quick_search);
-    } else {
-      // quick_search 값이 존재하지 않는 경우 address input 요소의 값을 이용하여 검색 수행
-      addr = storeSearch(document.getElementById('address').value);
-    }
-
-    // 검색 결과가 존재하는 경우 지도, 정보창 생성 함수 호출
-    if (addr) {
-      showMap();
-      createNaverMap(quick_search);
-      createInfoWindow();
-    } else {
-      // 검색 결과가 존재하지 않는 경우 알림창 출력
-      alert('해당하는 매장이 존재하지 않습니다.');
-    }
-  };
-
-  /**
-   * @description 매장 검색, 동 검색 선택 버튼 클릭 시 동작하는 함수
-   * @returns {void}
-   */
-  const onSearchType = () => {
-    // 검색 타입 변경 버튼 이벤트 추가
-    const searchTypes = document.querySelectorAll('.search_type');
-    searchTypes.forEach((searchType) => {
-      searchType.addEventListener('click', () => {
-        if (searchType.classList.contains('on')) {
-          return;
-        }
-
-        const dongList = document.querySelector('.store_list_ct');
-
-        // 현재 선택된 검색 타입 버튼의 on 클래스 제거, 클릭한 검색 타입 버튼에 on 클래스 추가
-        document.querySelector('.search_type.on').classList.remove('on');
-        searchType.classList.add('on');
-
-        // 검색 타입에 따라 동 리스트 영역의 on 클래스 추가/제거
-        // if (getSearchType() === "store") {
-        //   dongList.classList.remove("on");
-        // } else if (getSearchType() === "dong") {
-        //   dongList.classList.add("on");
-        // }
-        HideQuickSearch();
-
-        // 검색어 input 요소 초기화
-        document.getElementById('address').value = '';
-      });
-    });
-  };
   /**
    * @description 매장 리스트 요소를 감싸는 div 요소 반환하는 함수
    * @returns {HTMLElement} - 매장 리스트 요소를 감싸는 div 요소 반환
@@ -341,7 +73,181 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
-   * @param {HTMLElement, Object} 매장 정보를 받아옴
+   * @returns {HTMLElement}
+   */
+  const getAddrElm = () => {
+    return document.getElementById('address');
+  };
+
+  /**
+   * @returns {String}
+   */
+
+  const getSearchedAddr = () => {
+    return document.getElementById('address').value;
+  };
+
+  const setSearchedAddr = (addr) => {
+    const AddrElm = getAddrElm();
+    AddrElm.value = addr;
+  };
+  /**
+   * @returns {HTMLElement}
+   */
+  const getSubmitElm = () => {
+    return document.getElementById('submit');
+  };
+
+  /**
+   * @description 검색창을 초기화시킴
+   * @returns {void}
+   */
+  const initSearchedAddr = () => {
+    const AddrElm = getAddrElm();
+    AddrElm.value = '';
+  };
+
+  // 네이버 지도를 생성하는 함수
+  const createNaverMap = () => {
+    // 지도를 생성하고 기본적인 설정을 한다
+    map = new naver.maps.Map('map', {
+      center: new naver.maps.LatLng(37.3595316, 127.1052133),
+      zoom: 5,
+      mapTypeControl: true,
+    });
+
+    // 커서를 포인터로 변경한다
+    map.setCursor('pointer');
+
+    // 검색어를 받아 좌표를 검색하는 함수를 실행한다
+    initGeocoder();
+  };
+
+  // 인포윈도우를 생성하는 함수
+  const createInfoWindow = () => {
+    infoWindow = new naver.maps.InfoWindow({
+      anchorSkew: true,
+    });
+  };
+
+  // 검색어를 받아 좌표를 검색하는 함수
+  const initGeocoder = () => {
+    quickSearch();
+    // 검색어 입력창에서 Enter 키를 눌렀을 때 좌표 검색 함수를 실행한다
+    getAddrElm().addEventListener('keydown', function (e) {
+      const keyCode = e.keyCode || e.which;
+      if (keyCode === 13) {
+        searchAddrToCoord();
+      }
+    });
+    // 검색 버튼을 클릭했을 때 좌표 검색 함수를 실행한다
+    getSubmitElm().addEventListener('click', function (e) {
+      e.preventDefault();
+      searchAddrToCoord();
+    });
+
+    if (!getSearchedAddr()) {
+      getAddrElm().focus();
+      return;
+    }
+    // 페이지 로딩 시 검색어가 있으면 좌표 검색 함수를 실행하고, 없으면 검색어 입력창에 포커스를 준다
+    if (getSearchedAddr() && !mapOpenChk()) {
+      searchAddrToCoord();
+    } else {
+      getMapElm().classList.remove('off');
+      searchAddrToCoord();
+    }
+  };
+
+  // --------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------
+  // --------------------------------------------------------------------------------------------
+
+  /**
+   * @description 지도 보기 버튼 클릭 시 지도를 보여주는 함수
+   * @returns {void}
+   */
+  const showMap = () => {
+    const map = document.getElementById('map');
+    const mapTitle = document.getElementById('map_title');
+    mapTitle.style.display = 'block';
+    map.style.display = 'initial';
+    map.style.display = 'block';
+    map.style.visibility = 'visible';
+    map.style.opacity = 1;
+  };
+
+  /**
+   * @description 지도가 열려 있는지 여부를 확인하는 함수
+   * @returns {boolean} - 지도가 열려 있는 경우 true, 그렇지 않은 경우 false 반환
+   */
+  const mapOpenChk = () => {
+    const pendingMap = getMapElm();
+    // pendingMap 요소에 'off' 클래스가 포함되어 있지 않은 경우 false 반환
+    if (!pendingMap.classList.contains('off')) return false;
+
+    return true;
+  };
+
+  /**
+   * @description 페이지가 처음 로딩될 때 매장 검색을 수행하는 함수
+   * @returns {void}
+   */
+  const firstOpenMap = () => {
+    const addr = getSearchedAddr();
+
+    // 검색 결과가 존재하는 경우 지도, 정보창 생성 함수 호출
+    if (addr) {
+      showMap();
+      createNaverMap();
+      createInfoWindow();
+    } else {
+      // 검색 결과가 존재하지 않는 경우 알림창 출력
+      const type = getSearchType();
+      switch (type) {
+        case 'store':
+          alert('상점명을 입력해 주세요');
+          break;
+        case 'dong':
+          alert('상점주소를 입력해 주세요');
+          break;
+      }
+    }
+  };
+
+  /**
+   * @description 매장 검색, 동 검색 선택 버튼 클릭 시 동작하는 함수
+   * @returns {void}
+   */
+  const onSearchType = () => {
+    // 검색 타입 변경 버튼 이벤트 추가
+    const searchTypes = document.querySelectorAll('.search_type');
+    searchTypes.forEach((searchType) => {
+      searchType.addEventListener('click', () => {
+        if (searchType.classList.contains('on')) {
+          return;
+        }
+
+        // 현재 선택된 검색 타입 버튼의 on 클래스 제거, 클릭한 검색 타입 버튼에 on 클래스 추가
+        document.querySelector('.search_type.on').classList.remove('on');
+        searchType.classList.add('on');
+
+        // 검색 타입에 따라 동 리스트 영역의 on 클래스 추가/제거
+        // if (getSearchType() === "store") {
+        //   dongList.classList.remove("on");
+        // } else if (getSearchType() === "dong") {
+        //   dongList.classList.add("on");
+        // }
+        HideQuickSearch();
+
+        // 검색어 input 요소 초기화
+        initSearchedAddr();
+      });
+    });
+  };
+
+  /**
+   * @param {storePickupBtnElm:HTMLElement, store:Object} 매장 정보를 받아옴
    */
   const onPickupBtnHandler = (storePickupBtnElm, store) => {
     storePickupBtnElm.addEventListener('click', () => {
@@ -349,24 +255,23 @@ window.addEventListener('DOMContentLoaded', async () => {
       paintSearchStore(store); // 서치리스트에 매장 정보를 표시하는 함수
 
       const searchType = getSearchType(); // 검색 타입을 가져오는 함수
-
       switch (searchType) {
         case 'store':
-          document.getElementById('address').value = store.name; // 검색 타입이 '매장 이름'일 경우 검색 창에 매장 이름을 설정
+          setSearchedAddr(store.name); // 검색 타입이 '매장 이름'일 경우 검색 창에 매장 이름을 설정
           break;
         case 'dong':
-          document.getElementById('address').value = store.addr; // 검색 타입이 '동 이름'일 경우 검색 창에 매장 주소를 설정
+          setSearchedAddr(store.addr); // 검색 타입이 '동 이름'일 경우 검색 창에 매장 주소를 설정
           break;
       }
 
-      document.getElementById('submit').click(); // 검색 버튼 클릭
+      getSubmitElm().click(); // 검색 버튼 클릭
     });
   };
   /**
    * @description 매장 리스트를 화면에 출력하는 함수
-   * @param {Object} storeList - 매장 리스트
    * @returns {void}
    */
+
   const paintStoreList = () => {
     let cnt = 0;
     const storeLen = Object.keys(L_STORE_LIST).length; // 매장 갯수
@@ -510,8 +415,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
+   * @returns {Element} - 생성된 주소 문자열
+   **/
+  const getSearchListCtElm = () => {
+    return document.getElementById('search_list_ct'); // 서치리스트 컨테이너 요소를 가져옴
+  };
+
+  /**
    * @description 인자로 받은 `addr` 값을 클립보드에 복사하고, `copyAlert` 함수를 호출하여 복사 완료 알림을 띄우는 함수
-   * @param {string} addr 복사할 주소
+   * @param {addr:string}  복사할 주소
    * @returns {void}
    */
   const copyAddr = (addr) => {
@@ -542,7 +454,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     }, 1500);
   };
 
-  // 매장 리스트를 업데이트하고 페이징을 생성하며, 복사 버튼과 픽업 버튼을 클릭 시의 기능을 수행하는 함수
+  /**
+   * @description 매장 리스트를 업데이트하고 페이징을 생성하며, 복사 버튼과 픽업 버튼을 클릭 시의 기능을 수행하는 함수
+   * @returns {void}
+   */
   const storeListUp = () => {
     paintStoreList(); // 매장 리스트를 표시하는 함수
     createPagination(); // 페이징을 생성하는 함수
@@ -562,53 +477,46 @@ window.addEventListener('DOMContentLoaded', async () => {
     return document.querySelector('.search_type.on').dataset.type;
   };
 
-  // 입력된 주소와 일치하는 매장을 검색하여 반환하는 함수
-  const storeSearch = (address) => {
-    if (!address) return false;
+  const typeCall = (store_callback, dong_callback) => {
+    const type = getSearchType();
+    switch (type) {
+      case 'store':
+        return store_callback();
+      case 'dong':
+        return dong_callback();
+    }
+  };
 
-    let storeOrAddr;
-    const searchType = getSearchType(); // 현재 검색 타입을 가져옴
+  /**
+   * @description 입력된 주소와 일치하는 매장을 검색하여 반환하는 함수
+   * @param {addr:String}
+   * @returns {Boolean}
+   */
 
-    for (let key in L_STORE_LIST) {
-      switch (searchType) {
-        case 'store':
-          storeOrAddr = L_STORE_LIST[key].name; // 매장 이름을 가져옴
-          if (
-            storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
-              address.replaceAll(' ', '') ||
-            storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
-              address.replaceAll(' ', '') + '점'
-          ) {
-            // 매장 이름이 검색어와 일치하면 해당 매장 정보 반환
-            return L_STORE_LIST[key];
-          }
-          break;
-        case 'dong':
-          storeOrAddr = L_STORE_LIST[key].addr; // 매장 주소를 가져옴
-          if (
-            storeOrAddr.replaceAll(' ', '').replaceAll('&amp;', '&') ===
-            address.replaceAll(' ', '')
-          ) {
-            // 매장 주소가 검색어와 일치하면 해당 매장 정보 반환
-            return L_STORE_LIST[key];
-          }
-          break;
+  const findStoreBySearched = () => {
+    const searchedValue = getSearchedAddr();
+    if (!searchedValue) return false;
+
+    const quickSearchStoreElm = document.querySelector(
+      '#search_list_ct > .store'
+    );
+
+    if (quickSearchStoreElm) {
+      for (let key in L_STORE_LIST) {
+        if (L_STORE_LIST[key]._id === quickSearchStoreElm.dataset.storeId) {
+          return L_STORE_LIST[key];
+        }
       }
     }
 
     return false; // 일치하는 매장이 없으면 false 반환
   };
 
-  // 입력된 주소에 해당하는 매장 정보를 반환하는 함수
-  const getStoreAddr = (addr) => {
-    return storeSearch(addr); // storeSearch 함수 호출하여 매장 정보 반환
-  };
-
   // 입력된 주소로 좌표를 검색하고, 해당 좌표를 지도에 표시하는 함수
-  function searchAddrToCoord(addr) {
-    const storeInfo = getStoreAddr(addr); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
+  function searchAddrToCoord() {
+    const store = findStoreBySearched(); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
 
-    if (!storeInfo) {
+    if (!store) {
       // 입력된 주소에 해당하는 매장이 없으면 알림창을 띄우고 리턴
       alert('입력하신 매장명이 존재하지 않습니다.');
       return;
@@ -616,7 +524,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     naver.maps.Service.geocode(
       {
-        query: storeInfo.addr, // 매장 주소로 좌표를 검색
+        query: store.addr, // 매장 주소로 좌표를 검색
       },
       function (status, response) {
         if (status === naver.maps.Service.Status.ERROR) {
@@ -647,13 +555,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     );
   }
 
-  /**
-   * @returns {Element} - 생성된 주소 문자열
-   **/
-  const getSearchListCtElm = () => {
-    return document.getElementById('search_list_ct'); // 서치리스트 컨테이너 요소를 가져옴
-  };
-
   // 검색 결과를 숨기는 함수
   const HideQuickSearch = () => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
@@ -666,7 +567,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
     searchListCt.style.display = 'initial'; // 서치리스트를 보이게 함
     searchListCt.innerHTML = ''; // 서치리스트 내용을 비움
-    searchListCt.style.height = height + 10 + 'px'; // 서치리스트 높이를 설정
+    searchListCt.style.height = L_HEIGHT + 10 + 'px'; // 서치리스트 높이를 설정
   };
 
   // 검색 결과를 표시하는 함수
@@ -674,6 +575,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
     const storeElm = document.createElement('div'); // 검색 결과를 담을 div 요소를 생성
     storeElm.classList.add('store'); // div 요소에 store 클래스를 추가
+    storeElm.dataset.storeId = store._id;
     storeElm.innerHTML =
       `<div class="store_name"><h1>${store.name}</h1></div>` + // 매장 이름을 표시하는 div 요소를 생성
       `<div class="store_addr"><span>${store.addr}</span></div>`; // 매장 주소를 표시하는 div 요소를 생성
@@ -681,6 +583,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     return storeElm; // 검색 결과 div 요소를 반환
   };
 
+  const removeAllSpaces = (text) => {
+    return text.replaceAll(' ', '');
+  };
+
+  const initSearchListCt = () => {
+    getSearchListCtElm().innerHTML = '';
+  };
   /**
    * 검색어에 따라 검색결과를 생성하고 클릭 이벤트를 등록하며, 검색결과에 따라 서치리스트의 높이를 조정합니다.
    * 검색결과 클릭 시 검색어에 해당하는 위치로 지도를 이동시키고 검색창에 검색어를 입력합니다.
@@ -688,51 +597,43 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @param {HTMLInputElement} addr - 검색어가 입력된 input 엘리먼트
    */
 
-  const quickSearch = (searchStore) => {
-    const searchListCt = document.getElementById('search_list_ct');
+  const quickSearch = () => {
+    let searchedValue = getSearchedAddr();
+    const searchListCt = getSearchListCtElm();
     const storesLen = searchListCt.querySelectorAll('.store').length;
 
-    searchListCt.innerHTML = '';
+    initSearchListCt();
     if (storesLen === 0) {
       HideQuickSearch();
     }
-    if (!searchStore.value) {
+    if (!searchedValue) {
       HideQuickSearch();
       return;
     }
 
     let searchStoreArray = [];
-    const value = searchStore.value;
+    const QUICK_SEARCH_LIMIT = 7;
 
     for (let key in L_STORE_LIST) {
-      let condition;
+      const store = L_STORE_LIST[key];
+      const searchTarget =
+        getSearchType() === 'store' ? store.name : store.addr;
 
-      if (getSearchType() === 'store') {
-        condition = L_STORE_LIST[key].name
-          .replaceAll(' ', '')
-          .includes(value.replaceAll(' ', ''));
-      } else {
-        condition = L_STORE_LIST[key].addr
-          .replaceAll(' ', '')
-          .includes(value.replaceAll(' ', ''));
-      }
-
-      if (condition) {
+      if (
+        removeAllSpaces(searchTarget).includes(removeAllSpaces(searchedValue))
+      ) {
+        if (searchStoreArray.length === QUICK_SEARCH_LIMIT) break;
         searchListCt.style.display = 'block';
-        if (searchStoreArray.length < 7) {
-          searchStoreArray.push(L_STORE_LIST[key]);
-        } else {
-          break;
-        }
+        searchStoreArray.push(store);
       }
     }
 
     if (getSearchType() === 'store') {
       searchStoreArray = Object.values(searchStoreArray).sort((a, b) => {
-        if (value === a.name[0]) {
+        if (searchedValue === a.name[0]) {
           return -1;
         }
-        if (value === b.name[0]) {
+        if (searchedValue === b.name[0]) {
           return -1;
         }
 
@@ -746,77 +647,70 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     for (let key in searchStoreArray) {
-      let quickValue;
-      const storeName = searchStoreArray[key].name;
-      const storeAddr = searchStoreArray[key].addr;
+      const setSearchTxtStoreName = () => {
+        setSearchedAddr(store.name);
+      };
 
-      if (getSearchType() === 'store') {
-        quickValue = storeName;
-      } else if (getSearchType() === 'dong') {
-        quickValue = storeAddr;
-      }
+      const setSearchTxtStoreAddr = () => {
+        setSearchedAddr(store.addr);
+      };
 
-      const store = paintSearchStore(searchStoreArray[key]);
+      const store = searchStoreArray[key];
+      const storeElm = paintSearchStore(store);
 
-      store.addEventListener('click', () => {
+      storeElm.addEventListener('click', () => {
+        typeCall(setSearchTxtStoreName, setSearchTxtStoreAddr);
+
         if (mapOpenChk()) {
-          firstOpenMap(quickValue);
+          firstOpenMap();
         } else {
-          searchAddrToCoord(quickValue);
+          searchAddrToCoord();
         }
 
-        searchStore.value = quickValue;
-        if (getSearchType() === 'store') {
-          HideQuickSearch();
-        } else if (getSearchType() === 'dong') {
-          showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정
-          paintSearchStore(searchStoreArray[key]); // 서치리스트를 그려줌
-        }
+        showQuickSearchJustOne(); // 서치리스트 한개만큼에 스타일 지정
+        paintSearchStore(store); // 서치리스트를 그려줌
       });
     }
 
-    searchListCt.style.height = searchStoreArray.length * height + 10 + 'px';
+    searchListCt.style.height = searchStoreArray.length * L_HEIGHT + 10 + 'px';
   };
 
-  const searching = () => {
-    const addr = document.getElementById('address');
-    addr.addEventListener('input', () => {
-      quickSearch(addr);
+  const storeSearchingHandler = () => {
+    getAddrElm().addEventListener('input', () => {
+      quickSearch();
+    });
+  };
+
+  const onFirstSearch = () => {
+    if (mapOpenChk()) {
+      firstOpenMap();
+    }
+  };
+
+  const firstSearchHandler = () => {
+    getAddrElm().addEventListener('keydown', function (e) {
+      const keyCode = e.keyCode || e.which;
+      if (keyCode === 13) {
+        // Enter Key
+        onFirstSearch();
+      }
+    });
+
+    getSubmitElm().addEventListener('click', function (e) {
+      onFirstSearch();
     });
   };
 
   const init = async () => {
-    await UISetting();
-    L_STORE_LIST = await getStoreList();
+    const storeMapAPI = new StoreMapAPI();
+    await storeMapAPI.UISetting();
+    L_STORE_LIST = await storeMapAPI.getStoreList();
 
-    document.getElementById('search_store').style.display = 'block';
     onSearchType(); // 검색타입 변경 시 작동하는 함수
     storeListUp();
-    searching();
+    storeSearchingHandler();
 
-    // document.querySelectorAll('store_pick_btn').forEach(storePickBtn => {
-    //   storePickBtn.addEventListener("click" , () => {
-
-    //   })
-    // });
-    document
-      .getElementById('address')
-      .addEventListener('keydown', function (e) {
-        const keyCode = e.which;
-        if (keyCode === 13) {
-          // Enter Key
-          if (mapOpenChk()) {
-            firstOpenMap();
-          }
-        }
-      });
-
-    document.getElementById('submit').addEventListener('click', function (e) {
-      e.preventDefault();
-      if (mapOpenChk()) {
-        firstOpenMap();
-      }
-    });
+    firstSearchHandler();
   };
 
   init();

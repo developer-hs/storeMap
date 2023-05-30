@@ -31,6 +31,16 @@ window.addEventListener('DOMContentLoaded', () => {
   /**
    * @returns {HTMLElement}
    */
+  const getExcelModalBtn = () => {
+    return document.getElementById('excelModalBtn');
+  };
+
+  const getExcelUploadModalBg = () => {
+    return document.getElementById('excelUploadModalBg');
+  };
+  /**
+   * @returns {HTMLElement}
+   */
   const getSubmitBtn = () => {
     return document.getElementById('submitBtn');
   };
@@ -42,9 +52,17 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   /**
-   * @description 엑셀을 이용한 매장생성
+   *
+   * @returns {Boolean}
+   */
+  const getExcelUseStatus = () => {
+    return document.getElementById('excelUseStatus').checked;
+  };
+  /**
+   * @description 엑셀을 이용한 여러개의 매장 생성
    * @return {void}
    */
+
   const createManyHandler = () => {
     storeManyCreate();
   };
@@ -52,16 +70,20 @@ window.addEventListener('DOMContentLoaded', () => {
   const storeManyCreate = async () => {
     const fileInput = getexcelUploadBtn();
     const file = fileInput.files[0];
+    const excelUseStatus = getExcelUseStatus();
     if (!file) {
       return;
     }
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('useStatus', excelUseStatus);
 
     try {
-      const response = await axios.post('/stores/many', formData);
-      console.log(response.data);
+      const res = await axios.post('/stores/many', formData);
+      if (res.status === 200) {
+        window.location.href = '/stores';
+      }
     } catch (error) {
       console.error(error);
     }
@@ -117,9 +139,30 @@ window.addEventListener('DOMContentLoaded', () => {
     getexcelUploadBtn().addEventListener('change', createManyHandler);
   };
 
+  const openExcelModal = () => {
+    getExcelModalBtn().addEventListener('click', () => {
+      getExcelUploadModalBg().classList.add('on');
+    });
+  };
+
+  const closeExcelModal = () => {
+    const ExcelUploadModalBg = getExcelUploadModalBg();
+    ExcelUploadModalBg.addEventListener('click', (e) => {
+      if (e.target !== ExcelUploadModalBg) {
+        return;
+      }
+      ExcelUploadModalBg.classList.remove('on');
+    });
+  };
+
+  const toggleExcelModal = () => {
+    openExcelModal();
+    closeExcelModal();
+  };
   const init = () => {
     onSubmit();
     storeCreateMany();
+    toggleExcelModal();
   };
 
   init();

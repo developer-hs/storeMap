@@ -1,62 +1,82 @@
 <link rel="stylesheet" type="text/css" href="/css/stores/store.css" />
-<style>
-  input#excelUploadBtn {
-    opacity: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0px;
-    height: 0px;
-  }
-</style>
+
+<% if (type === "c") { %>
+<div id="excelUploadModalBg" class="on">
+  <div id="excelUploadModal">
+    <div id="storeCreateBtn" id="createWithExcelBtn">
+      <label for="excelUploadBtn">Excel 파일 업로드</label>
+      <input
+        id="excelUploadBtn"
+        name="file"
+        type="file"
+        enctype="multipart/form-data"
+      />
+    </div>
+    <div class="switch_ct" id="useStatusCt">
+      <div>
+        <span>노출여부</span>
+        <div>
+          <input
+            class="switch_input"
+            id="excelUseStatus"
+            type="checkbox"
+            checked
+          />
+          <label class="switch_label" for="excelUseStatus"></label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
 <div id="content">
   <div class="content-head">
     <div class="title"><span>매장생성</span></div>
     <div>
       <% if (type === "c") { %>
-      <div id="storeCreateBtn">
-        <div class="excel md-btn bg-primary" id="createWithExcelBtn">
-          <label for="excelUploadBtn">엑셀로 생성</label>
-          <input
-            id="excelUploadBtn"
-            name="file"
-            type="file"
-            enctype="multipart/form-data"
-          />
+      <div id="excelBtnCt">
+        <div class="create-btn" id="excelModalBtn">
+          <span>엑셀로 생성</span>
         </div>
       </div>
       <% } %>
     </div>
   </div>
-  <div id="store" data-store-id="<%- store._id %>">
-    <div>
-      <label for="storeName">매장명</label>
-      <input id="storeName" value="<%- store.name %>" />
-    </div>
-    <div>
-      <label for="storeAddr">매장주소</label>
-      <input id="storeAddr" value="<%- store.addr %>" />
-    </div>
-    <div>
-      <label for="storeUseStatus">노출여부</label>
-      <% if (store.useStatus === true) { %>
-      <input type="checkbox" id="storeUseStatus" checked />
-      <% } else { %>
-      <input type="checkbox" id="storeUseStatus" />
-      <% } %>
-    </div>
 
-    <div class="btn_area">
-      <% if (store._id) { %>
-      <div class="md-btn bg-primary" id="submitBtn">수정</div>
-      <% } else { %>
-      <div class="md-btn bg-primary" id="submitBtn">추가</div>
-      <% } %>
+  <div class="store_ct">
+    <div class="left">
+      <div id="store" data-store-id="<%- store._id %>">
+        <div class="text_field">
+          <input type="text" id="storeName" value="<%- store.name %>" />
+          <label for="storeName">매장명</label>
+        </div>
+        <div class="text_field">
+          <input type="text" id="storeAddr" value="<%- store.addr %>" />
+          <label for="storeAddr">매장주소</label>
+        </div>
+        <div>
+          <label for="storeUseStatus">노출여부</label>
+          <% if (store.useStatus === true) { %>
+          <input type="checkbox" id="storeUseStatus" checked />
+          <% } else { %>
+          <input type="checkbox" id="storeUseStatus" />
+          <% } %>
+        </div>
 
-      <div class="md-btn bg-white" id="cancelBtn">
-        <a href="/stores">취소</a>
+        <div class="btn_area">
+          <% if (store._id) { %>
+          <div class="md-btn bg-primary" id="submitBtn">수정</div>
+          <% } else { %>
+          <div class="md-btn bg-primary" id="submitBtn">추가</div>
+          <% } %>
+
+          <div class="md-btn bg-white" id="cancelBtn">
+            <a href="/stores">취소</a>
+          </div>
+        </div>
       </div>
     </div>
+    <div class="right"></div>
   </div>
 </div>
 
