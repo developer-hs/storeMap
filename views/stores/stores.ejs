@@ -4,8 +4,13 @@
   <div class="content-head">
     <div class="title"><span>매장관리</span></div>
     <div>
-      <div class="create-btn" id="storeCreateBtn">
-        <a href="/stores/store?type=c">매장 생성</a>
+      <div class="head_btn_area">
+        <div class="create-btn" id="storeCreateBtn">
+          <a href="/stores/store?type=c">매장 생성</a>
+        </div>
+        <div id="coordSetBtn">
+          <span>좌표 설정</span>
+        </div>
       </div>
     </div>
   </div>
@@ -23,13 +28,14 @@
       <div class="use_status">
         <span>노출여부</span>
       </div>
-      <div class="btn-area"></div>
+      <div class="coord">
+        <span>좌표설정</span>
+      </div>
     </div>
 
     <div id="stores">
       <% for(var i = 0; i < stores.length; i++){ %>
-
-      <div class="store" data-store-id="<%- stores[i]._id %>">
+      <div class="store" id="<%- stores[i]._id %>">
         <div class="check_btn_area">
           <input class="check_btn" type="checkbox" />
         </div>
@@ -37,12 +43,18 @@
           <div class="store_name"><%- stores[i].name %></div>
         </a>
         <a class="addr" href="/stores/store/<%- stores[i]._id %>?type=u">
-          <div class="store_addr"><%- stores[i].addr %></div>
+          <div class="store_addr"><%- stores[i].address %></div>
         </a>
         <% if (stores[i].useStatus === true) { %>
         <div class="use_status on"><%- stores[i].useStatus %></div>
         <% } else { %>
         <div class="use_status off"><%- stores[i].useStatus %></div>
+        <% } %>
+
+        <% if (stores[i].latitude && stores[i].longitude){ %>
+        <div class="coord on">true</div>
+        <% } else { %>
+        <div class="coord off">false</div>
         <% } %>
       </div>
       <% } %>

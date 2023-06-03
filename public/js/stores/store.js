@@ -11,46 +11,67 @@ window.addEventListener('DOMContentLoaded', () => {
    * @returns {String}
    */
   const getStoreId = () => {
-    return document.getElementById('store').dataset.storeId;
+    return document.querySelector('.store').id;
   };
 
   /**
    * @returns {String , String , Boolean}
    */
-  const getDatas = () => {
+  const getRequireDatas = () => {
     let result;
     const name = document.getElementById('storeName').value;
-    const addr = document.getElementById('storeAddr').value;
+    const address = document.getElementById('storeAddr').value;
     let useStatus = document.getElementById('storeUseStatus').checked;
 
-    result = { name, addr, useStatus: useStatus };
+    result = { name, address, useStatus: useStatus };
 
     return result;
   };
 
+  const getDatas = () => {
+    let result;
+    const name = document.getElementById('storeName').value;
+    const address = document.getElementById('storeAddr').value;
+    let useStatus = document.getElementById('storeUseStatus').checked;
+
+    result = { name, address, useStatus: useStatus };
+
+    return result;
+  };
   /**
    * @returns {HTMLElement}
    */
-  const getExcelModalBtn = () => {
+  const getExcelModalBtnElm = () => {
     return document.getElementById('excelModalBtn');
   };
 
-  const getExcelUploadModalBg = () => {
+  const getExcelUploadModalBgElm = () => {
     return document.getElementById('excelUploadModalBg');
   };
   /**
    * @returns {HTMLElement}
    */
-  const getSubmitBtn = () => {
+  const getSubmitBtnElm = () => {
     return document.getElementById('submitBtn');
   };
   /**
    * @returns {HTMLElement}
    */
-  const getexcelUploadBtn = () => {
+  const getexcelUploadBtnElm = () => {
     return document.getElementById('excelUploadBtn');
   };
-
+  /**
+   * @returns {HTMLElement}
+   */
+  const getCoordBtnElm = () => {
+    return document.getElementById('coordBtn');
+  };
+  /**
+   * @returns {HTMLElement}
+   */
+  const getdeleteBtnElm = () => {
+    return document.getElementById('deleteBtn');
+  };
   /**
    *
    * @returns {Boolean}
@@ -58,23 +79,23 @@ window.addEventListener('DOMContentLoaded', () => {
   const getExcelUseStatus = () => {
     return document.getElementById('excelUseStatus').checked;
   };
+
+  const getStoreAddress = () => {
+    return document.getElementById('storeAddr').value;
+  };
   /**
    * @description 엑셀을 이용한 여러개의 매장 생성
    * @return {void}
    */
 
-  const createManyHandler = () => {
-    storeManyCreate();
-  };
-
-  const storeManyCreate = async () => {
-    const fileInput = getexcelUploadBtn();
+  const storeCreateMany = async () => {
+    const fileInput = getexcelUploadBtnElm();
     const file = fileInput.files[0];
-    const excelUseStatus = getExcelUseStatus();
+
     if (!file) {
       return;
     }
-
+    const excelUseStatus = getExcelUseStatus();
     const formData = new FormData();
     formData.append('file', file);
     formData.append('useStatus', excelUseStatus);
@@ -91,7 +112,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const storeUpdate = async (form) => {
     try {
-      const res = await put(`/stores/store/${getStoreId()}`, form);
+      const res = await put(`/stores/store/${getStoreId()}`, {
+        ...form,
+      });
       console.log(res.status);
       if (res.status === 200) {
         window.location.href = '/stores';
@@ -115,13 +138,23 @@ window.addEventListener('DOMContentLoaded', () => {
    * @returns {void}
    */
 
-  const submitHandler = () => {
-    const form = getDatas();
-    for (let key in form) {
-      if (!form[key] === '') {
+  const onSubmit = async () => {
+    const address = document.getElementById('storeAddr').value;
+    const requiredDatas = getRequireDatas();
+    for (let key in requiredDatas) {
+      if (!requiredDatas[key] === '') {
         return;
       }
     }
+
+    const coord = await getCoord(address);
+    if (!coord) {
+      alert('입력하신 주소를 다시 한번 확인해 주세요');
+      return;
+    }
+
+    const form = { ...getDatas(), ...coord };
+
     if (type === 'u') {
       // update 일 경우
       storeUpdate(form);
@@ -131,22 +164,22 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  const onSubmit = () => {
-    getSubmitBtn().addEventListener('click', submitHandler);
+  const submitHandler = () => {
+    getSubmitBtnElm().addEventListener('click', onSubmit);
   };
 
-  const storeCreateMany = () => {
-    getexcelUploadBtn().addEventListener('change', createManyHandler);
+  const createManyHandler = () => {
+    getexcelUploadBtnElm().addEventListener('change', storeCreateMany);
   };
 
   const openExcelModal = () => {
-    getExcelModalBtn().addEventListener('click', () => {
-      getExcelUploadModalBg().classList.add('on');
+    getExcelModalBtnElm().addEventListener('click', () => {
+      getExcelUploadModalBgElm().classList.add('on');
     });
   };
 
   const closeExcelModal = () => {
-    const ExcelUploadModalBg = getExcelUploadModalBg();
+    const ExcelUploadModalBg = getExcelUploadModalBgElm();
     ExcelUploadModalBg.addEventListener('click', (e) => {
       if (e.target !== ExcelUploadModalBg) {
         return;
@@ -155,14 +188,56 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const getCoord = async (address) => {
+    if (!address) {
+      return;
+    }
+
+    const res = await get('/stores/geocode', { address }, (error) => {
+      if (error.response.status === 502) {
+        console.error('네이버에 등록되지 않은 주소', error);
+      } else {
+        console.error(error);
+      }
+    });
+
+    if (!res) return false;
+
+    if (res.status === 200) {
+      return res.data;
+    }
+
+    return false;
+  };
+
+  const onDelete = async () => {
+    const res = await remove(`/stores/store/${getStoreId()}`);
+    if (res.status === 200) {
+      window.location.href = '/stores';
+    }
+  };
+
+  const coordBtnHandler = () => {
+    getCoordBtnElm().addEventListener('click', getCoord);
+  };
+
+  const deleteBtnHandler = () => {
+    getdeleteBtnElm().addEventListener('click', onDelete);
+  };
+
   const toggleExcelModal = () => {
     openExcelModal();
     closeExcelModal();
   };
+
   const init = () => {
-    onSubmit();
-    storeCreateMany();
-    toggleExcelModal();
+    if (type === 'c') {
+      createManyHandler();
+      toggleExcelModal();
+    } else if (type === 'u') {
+      deleteBtnHandler();
+    }
+    submitHandler();
   };
 
   init();

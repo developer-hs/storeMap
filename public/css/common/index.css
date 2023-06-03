@@ -2,8 +2,9 @@
   --header-h: 60px;
   --top-margin: 66px;
   --color-primary: #748cf1 !important;
-  --color-danger: #fd9998 !important;
-  --color-success: #59ebdb !important;
+  --color-danger: #ff7777 !important;
+  --color-l-danger: #fd9998 !important;
+  --color-success: #22c197 !important;
   --color-black: #353956 !important;
   --color-l-black: #666 !important;
   --default-radius: 8px;
@@ -18,7 +19,9 @@ body::after {
   z-index: -1;
   content: url('icons/side_nav_cover.svg');
 }
-
+.displaynone {
+  display: none !important;
+}
 .md-btn {
   overflow: hidden;
   cursor: pointer;
@@ -54,21 +57,31 @@ div[class*='btn'] > a {
 }
 
 .bg-primary,
-.bg-primary > a {
+.bg-primary > a,
+.bg-primary > span {
   background-color: var(--color-primary);
   color: #fff;
 }
 
 .bg-danger,
-.bg-danger > a {
+.bg-danger > a,
+.bg-danger > span {
   background-color: var(--color-danger);
   color: #fff;
 }
 
 .bg-white,
-.bg-white > a {
+.bg-white > a,
+.bg-white > span {
   color: #000;
   background-color: #fff;
+}
+
+.bg-success,
+.bg-success > a,
+.bg-success > span {
+  color: #000;
+  background-color: var(--color-success);
 }
 
 .bg-white {

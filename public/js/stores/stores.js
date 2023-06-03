@@ -13,17 +13,14 @@ window.addEventListener('DOMContentLoaded', () => {
     return document.getElementById('allCheckBtn');
   };
   /**
-   * @return {List<Element>} 체크버튼 Element 들을 반환하는 함수
+   * @return {Array<Element>} 체크버튼 Element 들을 반환하는 함수
    */
   const getChkBtnElms = () => {
     return document.querySelectorAll('input.check_btn');
   };
-  /**
-   * @returns {Element} sideNav 에서 storesCate Element 반환하는 함수
-   */
 
   /**
-   * @returns {[Element?]} 체크된 상점 Element 들을 반환하는 함수
+   * @returns {Array<Element>} 체크된 상점 Element 들을 반환하는 함수
    */
   const getCheckedStoreElms = () => {
     const result = Array.from(getChkBtnElms())
@@ -31,70 +28,113 @@ window.addEventListener('DOMContentLoaded', () => {
         return chkBtn.checked;
       })
       .map((data) => {
-        return data.parentNode.parentNode.dataset.storeId;
+        return data.parentNode.parentNode.id;
       });
 
     return result;
   };
+
+  const getCoordSetBtn = () => {
+    return document.getElementById('coordSetBtn');
+  };
   /**
    * @return {void} 체크된 상점들을 삭제하는 함수 1개일때, 여러개일 때 호출되는 API 가 다름
    */
+  const onDelete = async () => {
+    let storesId = 'storesId=';
 
-  const onDelBtn = () => {
-    getDelBtnElm().addEventListener('click', async () => {
-      let storesId = 'storesId=';
+    const checkedStores = getCheckedStoreElms();
 
-      const checkedStores = getCheckedStoreElms();
-
-      if (checkedStores.length === 1) {
-        try {
-          const res = await remove(`/stores/store/${checkedStores[0]}`);
-          if (res.status === 200) {
-            reload();
-          }
-        } catch (err) {
-          console.error(err);
-          return;
-        }
-      } else {
-        try {
-          for (let i = 0; i < checkedStores.length; i++) {
-            storesId += checkedStores[i];
-            if (i !== checkedStores.length - 1) {
-              storesId += ',';
-            }
-          }
-          const res = await remove(`/stores/many?${storesId}`);
-          if (res.status === 200) {
-            onAlertModal('매장이 삭제되었습니다.');
-            reload();
-          }
-        } catch (err) {
-          console.error(err);
-          return;
+    if (checkedStores.length === 1) {
+      // 삭제할 매장이 한개일 때
+      const res = await remove(`/stores/store/${checkedStores[0]}`);
+      if (res.status === 200) {
+        reload();
+      }
+    } else {
+      // 삭제할 매장이 여러개 일 때
+      for (let i = 0; i < checkedStores.length; i++) {
+        storesId += checkedStores[i];
+        if (i !== checkedStores.length - 1) {
+          storesId += ',';
         }
       }
-    });
+      const res = await remove(`/stores/many?${storesId}`);
+      if (res.status === 200) {
+        onAlertModal('매장이 삭제되었습니다.');
+        reload();
+      }
+    }
   };
 
   const onAllChkBtn = () => {
     const allChkBtn = getAllChkBtnElm();
     const chkBtns = getChkBtnElms();
-    allChkBtn.addEventListener('click', () => {
-      if (allChkBtn.checked) {
-        chkBtns.forEach((chkBtn) => {
-          chkBtn.checked = true;
+
+    if (allChkBtn.checked) {
+      chkBtns.forEach((chkBtn) => {
+        chkBtn.checked = true;
+      });
+    } else {
+      chkBtns.forEach((chkBtn) => {
+        chkBtn.checked = false;
+      });
+    }
+  };
+
+  const onCoordSet = async () => {
+    const geoRes = await get('/stores/geocode/many', {}, async (error) => {
+      if (error.response.status === 502) {
+        const contentArea = document.getElementById('content-area');
+        const errorTargetElm = document.getElementById(
+          `${error.response.data.id}`
+        );
+        errorTargetElm.classList.add('wrong_addr');
+
+        const rect = errorTargetElm.getBoundingClientRect();
+        contentArea.scrollTo({
+          top: rect.y + contentArea.scrollTop - 60,
         });
+        alert(
+          `상점명 : ${error.response.data.name}\n상점주소 : ${error.response.data.address}의 주소를 다시 확인해 주세요`
+        );
+        console.error(error);
       } else {
-        chkBtns.forEach((chkBtn) => {
-          chkBtn.checked = false;
-        });
+        console.error(error);
       }
     });
+
+    if (!geoRes) return;
+    if (geoRes.status === 200) {
+      try {
+        const updateRes = await put('/stores/geocode/many', geoRes.data);
+        if (updateRes.status === 200) {
+          reload();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    return;
   };
+
+  const coordSetBtnHandler = () => {
+    getCoordSetBtn().addEventListener('click', onCoordSet);
+  };
+
+  const deleteBtnHandler = () => {
+    getDelBtnElm().addEventListener('click', onDelete);
+  };
+
+  const allChkBtnHandler = () => {
+    getAllChkBtnElm().addEventListener('click', onAllChkBtn);
+  };
+
   const init = () => {
-    onDelBtn();
-    onAllChkBtn();
+    deleteBtnHandler();
+    allChkBtnHandler();
+    coordSetBtnHandler();
   };
 
   init();

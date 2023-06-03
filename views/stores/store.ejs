@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="/css/stores/store.css" />
 
 <% if (type === "c") { %>
-<div id="excelUploadModalBg" class="on">
+<div id="excelUploadModalBg">
   <div id="excelUploadModal">
     <div id="storeCreateBtn" id="createWithExcelBtn">
       <label for="excelUploadBtn">Excel 파일 업로드</label>
@@ -45,14 +45,40 @@
 
   <div class="store_ct">
     <div class="left">
-      <div id="store" data-store-id="<%- store._id %>">
-        <div class="text_field">
-          <input type="text" id="storeName" value="<%- store.name %>" />
-          <label for="storeName">매장명</label>
+      <div class="store" id="<%- store._id %>">
+        <div>
+          <div class="text_field">
+            <input type="text" id="storeName" value="<%- store.name %>" />
+            <label for="storeName">매장명</label>
+          </div>
         </div>
-        <div class="text_field">
-          <input type="text" id="storeAddr" value="<%- store.addr %>" />
-          <label for="storeAddr">매장주소</label>
+        <div>
+          <div class="text_field">
+            <input type="text" id="storeAddr" value="<%- store.address %>" />
+            <label for="storeAddr">매장주소</label>
+          </div>
+        </div>
+        <div id="latLongCt" class="displaynone">
+          <% if (type === "u") { %>
+          <div class="text_field lat_field">
+            <input
+              type="text"
+              id="latitude"
+              value="<%- store.latitude %>"
+              disabled
+            />
+            <label for="storeAddr">위도</label>
+          </div>
+          <div class="text_field long_field">
+            <input
+              type="text"
+              id="longitude"
+              value="<%- store.longitude %>"
+              disabled
+            />
+            <label for="storeAddr">경도</label>
+          </div>
+          <% } %>
         </div>
         <div>
           <label for="storeUseStatus">노출여부</label>
@@ -64,12 +90,18 @@
         </div>
 
         <div class="btn_area">
+          <div class="md-btn bg-danger" id="deleteBtn">삭제</div>
           <% if (store._id) { %>
-          <div class="md-btn bg-primary" id="submitBtn">수정</div>
+          <div class="md-btn bg-primary" id="submitBtn">
+            <% if (type === "c") { %>
+            <span>생성</span>
+            <% } else { %>
+            <span>수정</span>
+            <% } %>
+          </div>
           <% } else { %>
           <div class="md-btn bg-primary" id="submitBtn">추가</div>
           <% } %>
-
           <div class="md-btn bg-white" id="cancelBtn">
             <a href="/stores">취소</a>
           </div>
@@ -80,4 +112,5 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="/js/stores/store.js"></script>

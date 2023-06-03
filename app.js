@@ -6,6 +6,7 @@ import expressSanitizer from 'express-sanitizer';
 import cookieParser from 'cookie-parser';
 import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
+import axios from 'axios';
 
 import getAdminJs from './admin.js';
 import db from './app/mongodb/models/index.js';
@@ -16,6 +17,7 @@ import { __dirname } from './utils/utils.js';
 import { User } from './app/users/models/user.js';
 import { Store } from './app/stores/models/store.js';
 import widgetRoutes from './app/widgets/routes/index.js';
+import { authJWT } from './app/users/middleware/auth.js';
 
 process.env.NODE_ENV =
   process.env.NODE_ENV &&

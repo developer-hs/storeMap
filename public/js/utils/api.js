@@ -7,45 +7,61 @@ const instance = axios.create({
 });
 
 // GET 요청을 보내는 함수
-const get = async (url, params) => {
+const get = async (url, params, callback = null) => {
   try {
     const response = await instance.get(url, { params });
     return response;
   } catch (error) {
-    console.error(error);
-    throw new Error('API 요청 중 오류가 발생했습니다.');
+    if (callback) {
+      callback(error);
+    } else {
+      console.error(error);
+      throw new Error('API 요청 중 오류가 발생했습니다.');
+    }
   }
 };
 
 // POST 요청을 보내는 함수
-const post = async (url, data) => {
+const post = async (url, data, callback = null) => {
   try {
     const response = await instance.post(url, data);
     return response;
   } catch (error) {
-    console.error(error);
-    throw new Error('API 요청 중 오류가 발생했습니다.');
+    if (callback) {
+      callback(error);
+    } else {
+      console.error(error);
+      throw new Error('API 요청 중 오류가 발생했습니다.');
+    }
   }
 };
 
 // PUT 요청을 보내는 함수
-const put = async (url, data) => {
+const put = async (url, data, callback = null) => {
   try {
     const response = await instance.put(url, data);
     return response;
   } catch (error) {
-    console.error(error);
-    throw new Error('API 요청 중 오류가 발생했습니다.');
+    if (callback) {
+      callback(error);
+    } else {
+      console.error(error);
+      throw new Error('API 요청 중 오류가 발생했습니다.');
+    }
   }
 };
 
 // DELETE 요청을 보내는 함수
-const remove = async (url, data) => {
+const remove = async (url, callback = null) => {
   try {
     const response = await instance.delete(url);
     return response;
   } catch (error) {
-    console.error(error);
-    throw new Error('API 요청 중 오류가 발생했습니다.');
+    if (callback) {
+      callback(error);
+    } else {
+      console.error(error);
+      throw new Error('API 요청 중 오류가 발생했습니다.');
+    }
   }
 };

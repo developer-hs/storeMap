@@ -1,5 +1,7 @@
 :root {
   --ui-color: #000;
+  --ui-distance-color: #000;
+  --ui-alert-color: #000;
 }
 body {
   width: 100%;
@@ -44,18 +46,24 @@ body {
 #mCafe24Order #ec-jigsaw-area-productdetail {
   margin: 0px;
 }
-#search_store {
+#pickupStore {
+  display: none;
   padding: 24px 12px;
   background-color: #fefefe;
 }
+
+#pickupStore.on {
+  display: block;
+}
+
 .search_store_pkup_ct {
   width: 100%;
 }
-#search_store .head {
+#pickupStore .head {
   display: flex;
   width: 100%;
 }
-#search_store .search_type {
+#pickupStore .search_type {
   width: 50%;
   height: 50px;
   background-color: #fff;
@@ -67,24 +75,24 @@ body {
   border-bottom: 1px solid #eee;
   cursor: pointer;
 }
-#search_store .search_type.on {
+#pickupStore .search_type.on {
   background-color: var(--ui-color);
   color: #fff;
 }
-#search_store .head .search_type:nth-child(1) {
+#pickupStore .head .search_type:nth-child(1) {
   border-top: 1px solid #eee;
   border-left: 1px solid #eee;
 }
-#search_store .head .search_type:nth-last-child(1) {
+#pickupStore .head .search_type:nth-last-child(1) {
   border-top: 1px solid #eee;
   border-right: 1px solid #eee;
 }
-#search_store .search_box {
+#pickupStore .search_box {
   display: flex;
   position: relative;
   font-size: 0px;
 }
-#search_store #address {
+#pickupStore #address {
   height: 42px;
   width: 100%;
   padding: 10px 11px 10px 10px;
@@ -103,27 +111,27 @@ body {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
-#search_store #submit {
+#pickupStore #submit {
   position: absolute;
   right: 15px;
   top: 50%;
   transform: translateY(-50%);
   font-size: 22px;
 }
-#search_store #map_title {
+#pickupStore #mapTitle {
   display: none;
   width: 100%;
   background-color: var(--ui-color);
   color: #fff;
   margin-top: 24px;
 }
-#search_store #map_title .title {
+#pickupStore #mapTitle .title {
   padding: 14px 12px;
 }
-#search_store #store_name {
+#pickupStore #storeName {
   margin-left: 4px;
 }
-#search_store #store_address {
+#pickupStore #storeAddress {
   font-size: 14px;
   color: #e1e1e1;
 }
@@ -143,57 +151,57 @@ body {
   display: none;
 }
 
-#search_store .store_list_ct {
+#pickupStore .store_list_ct {
   border-radius: 20px 20px 0 0;
   width: 100%;
   background: #fff;
   transition: all 0.25s linear;
   display: none;
 }
-#search_store .store_list_ct.on {
+#pickupStore .store_list_ct.on {
   height: 300px;
   overflow-y: scroll;
   display: initial;
 }
-#search_store .store_list_ct .store-info-container div.swiper-slide {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide {
   margin: 12px 0 12px;
   overflow-y: scroll;
   opacity: 0 !important;
 }
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide.swiper-slide-active {
   opacity: 1 !important;
 }
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide::-webkit-scrollbar {
   width: 6px; /* 스크롤바의 너비 */
 }
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide::-webkit-scrollbar-thumb {
   height: 30%; /* 스크롤바의 길이 */
-  background: #fd6768; /* 스크롤바의 색상 */
+  background: var(--ui-color); /* 스크롤바의 색상 */
   border-radius: 10px;
 }
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.5); /*스크롤바 뒷 배경 색상*/
 }
-#search_store .store_list_ct .store-info-container div.swiper-slide > .store {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide > .store {
   display: flex;
   justify-content: space-between;
   padding: 20px 4%;
   border-top: 1px solid #ededed;
 }
 
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide
@@ -201,7 +209,7 @@ body {
   .chk_btn {
   fill: var(--ui-color);
 }
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide
@@ -210,7 +218,7 @@ body {
   display: flex;
   align-items: center;
 }
-#search_store
+#pickupStore
   .store_list_ct
   .store-info-container
   div.swiper-slide
@@ -218,29 +226,29 @@ body {
   border-bottom: 1px solid #ebebeb;
   margin-bottom: 20px;
 }
-#search_store .store_list_ct .swiper-button-next,
-#search_store .store_list_ct .swiper-button-prev {
+#pickupStore .store_list_ct .swiper-button-next,
+#pickupStore .store_list_ct .swiper-button-prev {
   top: initial;
   bottom: 20px;
   height: initial;
   position: initial;
   margin: 0;
 }
-#search_store .store_list_ct .swiper-button-next:after,
-#search_store .store_list_ct .swiper-button-prev:after {
+#pickupStore .store_list_ct .swiper-button-next:after,
+#pickupStore .store_list_ct .swiper-button-prev:after {
   font-size: 10px;
 }
-#search_store .store_list_ct .swiper-button-prev,
-#search_store .store_list_ct .swiper-rtl .swiper-button-next {
+#pickupStore .store_list_ct .swiper-button-prev,
+#pickupStore .store_list_ct .swiper-rtl .swiper-button-next {
   left: 33%;
   color: #666;
 }
-#search_store .store_list_ct .swiper-button-next,
-#search_store .store_list_ct .swiper-rtl .swiper-button-prev {
+#pickupStore .store_list_ct .swiper-button-next,
+#pickupStore .store_list_ct .swiper-rtl .swiper-button-prev {
   right: 33%;
   color: #666;
 }
-#search_store
+#pickupStore
   .store_list_ct
   .swiper-pagination-horizontal
   .swiper-pagination-bullet:nth-child(n + 11) {
@@ -249,11 +257,11 @@ body {
 .swiper-pagination-lock {
   display: none !important;
 }
-body #search_store .store_list_ct .swiper-pagination {
+body #pickupStore .store_list_ct .swiper-pagination {
   position: initial;
   width: auto;
 }
-#search_store .store_list_ct .swiper-pagination-bullet {
+#pickupStore .store_list_ct .swiper-pagination-bullet {
   width: 30px;
   height: 30px;
   text-align: center;
@@ -263,16 +271,24 @@ body #search_store .store_list_ct .swiper-pagination {
   opacity: 1;
   background: #fff;
 }
-#search_store .store_list_ct .swiper-pagination-bullet-active {
+#pickupStore .store_list_ct .swiper-pagination-bullet-active {
   color: #fff;
   background: var(--ui-color);
 }
-#search_store .store_list_ct .cont {
-  position: fxied;
-  display: flex;
+
+#pickupStore .store_list_ct .distance {
+  color: var(--ui-distance-color);
+}
+
+#pickupStore .store_list_ct .cont {
+  display: none;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
+}
+
+#pickupStore .store_list_ct .cont.on {
+  display: flex;
 }
 #lShippingCompanyLists {
   position: absolute;
@@ -283,7 +299,7 @@ body #search_store .store_list_ct .swiper-pagination {
   opacity: 0;
 }
 
-#search_store #search_list_ct {
+#pickupStore #search_list_ct {
   display: none;
   position: absolute;
   left: 0;
@@ -297,35 +313,90 @@ body #search_store .store_list_ct .swiper-pagination {
   -moz-box-shadow: 0px 15px 15px -5px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 15px 15px -5px rgba(0, 0, 0, 0.15);
 }
-#search_store #search_list_ct .store {
+#pickupStore #search_list_ct .store {
   padding: 10px 0;
   border-top: 1px solid #ededed;
   cursor: pointer;
 }
-#search_store #search_list_ct .store > div {
+#pickupStore #search_list_ct .store > div {
   transition: all 0.3s;
 }
-#search_store #search_list_ct .store:hover > div {
+#pickupStore #search_list_ct .store:hover > div {
   transform: scale(1.005);
 }
-#search_store #search_list_ct .store:hover > .store_name h1 {
+#pickupStore #search_list_ct .store:hover > .store_name h1 {
   color: var(--ui-color);
 }
-#search_store #search_list_ct .store:hover > .store_addr span {
+#pickupStore #search_list_ct .store:hover > .store_addr span {
   color: #9987cd;
 }
-#search_store #search_list_ct .store:nth-last-child(1) {
+#pickupStore #search_list_ct .store:nth-last-child(1) {
   border-bottom: 1px solid #ededed;
 }
-#search_store #search_list_ct .store_name h1,
-#search_store #search_list_ct .store_addr span {
+#pickupStore #search_list_ct .store_name h1,
+#pickupStore #search_list_ct .store_addr span {
   font-size: 14px;
 }
-#search_store #search_list_ct .store_name h1 {
+#pickupStore #search_list_ct .store_name h1 {
   color: #666;
   padding-bottom: 6px;
   box-sizing: border-box;
 }
-#search_store #search_list_ct .store_addr span {
+#pickupStore #search_list_ct .store_addr span {
   color: #979797;
+}
+
+#map,
+#map:focus {
+  outline: none;
+}
+#map .iw_inner .content {
+  padding: 10px;
+}
+
+#map .iw_inner .btn-box {
+  display: flex;
+  width: 100%;
+}
+
+#map .iw_inner.btn-box .close-btn {
+  border-right: 1px solid var(--ui-color);
+}
+
+#map .iw_inner .btn-box div {
+  cursor: pointer;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid var(--ui-color);
+  height: 40px;
+}
+
+#map .iw_inner .btn-box .pickup-btn {
+  display: flex;
+  background-color: var(--ui-color);
+  color: #fff;
+  border-radius: 0 0 8px 0;
+}
+
+#map > div > div > div > div > div > div > div {
+  border-radius: 10px;
+}
+
+#pickUpStoreBtn {
+  cursor: pointer;
+  width: 100%;
+  height: 50px;
+  background-color: var(--ui-color);
+}
+
+#pickUpStoreBtn span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  font-size: 1.125rem;
 }
