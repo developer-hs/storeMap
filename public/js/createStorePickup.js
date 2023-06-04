@@ -177,13 +177,6 @@ const createNaverMap = () => {
   L_MAP.setCursor('pointer');
 };
 
-// 인포윈도우를 생성하는 함수
-const createInfoWindow = () => {
-  infoWindow = new naver.maps.InfoWindow({
-    anchorSkew: true,
-  });
-};
-
 // 검색어를 받아 좌표를 검색하는 함수
 const initGeocoder = () => {
   quickSearch();
@@ -251,7 +244,6 @@ const firstOpenMap = () => {
   showMap();
   createNaverMap();
   initGeocoder(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
-  createInfoWindow();
 
   // const addr = getSearchedAddr();
 
@@ -390,6 +382,8 @@ const paintStoreList = () => {
   } else {
     L_STORE_LIST.forEach((store) => {
       store.naverCoord = createNaverCoord(store.latitude, store.longitude);
+      createStoreMarker(store);
+      markerHandler(store);
     });
   }
 
@@ -636,9 +630,20 @@ const findStoreBySearched = () => {
 };
 
 const createStoreMarker = (store) => {
+  const content = [
+    '<div>',
+    `       <img src="../icons/store.svg" width="35" height="35" alt="현재 위치"/>`,
+    '</div>',
+  ].join('');
+
   const marker = new naver.maps.Marker({
     map: L_MAP, // 검색된 좌표를 지도에 표시
     position: store.naverCoord,
+    icon: {
+      content,
+      size: new naver.maps.Size(35, 35),
+      anchor: new naver.maps.Point(11, 35),
+    },
   });
 
   store.marker = marker;
@@ -894,7 +899,7 @@ const createPickupInfoWindow = (store) => {
     anchorSize: new naver.maps.Size(0, 0),
     anchorSkew: true,
     anchorColor: '#fff',
-    pixelOffset: new naver.maps.Point(20, -20),
+    pixelOffset: new naver.maps.Point(5, -20),
   });
 
   L_SHOWING_INFO_WIN = infowindow; // 닫기버튼 클릭시 없애기 위함
@@ -937,11 +942,26 @@ const geoLocationSuccess = async ({ coords, timestamp }) => {
   L_USER_NAVER_COORD = new naver.maps.LatLng(latitude, longitude);
 };
 
-const geoLocationErrCallback = (error) => {};
+const geoLocationErrCallback = (error) => {
+  L_GEOLOCATION_WIDGET = false;
+};
 
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
+const geoLocationPickupInit = () => {
+  firstOpenMap();
+  createUserMarker(L_USER_NAVER_COORD);
+  setDistance(L_USER_NAVER_COORD);
+  storeListUp();
+};
+
+const pickupInit = () => {
+  firstOpenMap();
+  storeListUp();
+  firstSearchHandler();
+};
+
 const storePickupInit = async () => {
   const storeMapAPI = new StoreMapAPI();
   L_STORE_LIST = await storeMapAPI.getStoreList();
@@ -962,14 +982,9 @@ const storePickupInit = async () => {
       storeSearchingHandler();
 
       if (L_GEOLOCATION_WIDGET) {
-        firstOpenMap();
-        createUserMarker(L_USER_NAVER_COORD);
-        setDistance(L_USER_NAVER_COORD);
-        storeListUp();
+        geoLocationPickupInit();
       } else {
-        firstOpenMap();
-        storeListUp();
-        firstSearchHandler();
+        pickupInit();
       }
     },
     { once: true }
