@@ -57,7 +57,7 @@ const getRootPropertyValue = (propertyName) => {
 /**
  * @return {HTMLElement}
  */
-const getPickUpStoreBtnElm = () => {
+const getPickupStoreBtnElm = () => {
   return document.getElementById('pickUpStoreBtn');
 };
 /**
@@ -940,9 +940,13 @@ const geoLocationSuccess = async ({ coords, timestamp }) => {
   longitude = coords.longitude; // 경도
 
   L_USER_NAVER_COORD = new naver.maps.LatLng(latitude, longitude);
+  getPickupStoreBtnElm().classList.remove('loading');
+  getPickupStoreBtnElm().innerHTML = '';
 };
 
 const geoLocationErrCallback = (error) => {
+  getPickupStoreBtnElm().classList.remove('loading');
+  getPickupStoreBtnElm().innerHTML = '';
   L_GEOLOCATION_WIDGET = false;
 };
 
@@ -962,9 +966,55 @@ const pickupInit = () => {
   firstSearchHandler();
 };
 
+const onPickupStoreBtn = async (storeMapAPI) => {
+  await storeMapAPI.UISetting();
+
+  if (L_GEOLOCATION_WIDGET) {
+    geoLocationPickupInit();
+  } else {
+    pickupInit();
+  }
+};
+const pickupStoreBtnHandler = (storeMapAPI) => {
+  if (L_GEOLOCATION_WIDGET) {
+    const pickupStoreBtn = getPickupStoreBtnElm();
+    const pickupStoreBtnMutionObv = new MutationObserver((mutations) => {
+      if (!pickupStoreBtn.classList.contains('loading')) {
+        getPickupStoreBtnElm().addEventListener(
+          'click',
+          () => {
+            onPickupStoreBtn(storeMapAPI);
+          },
+          {
+            once: true,
+          }
+        );
+      }
+      pickupStoreBtnMutionObv.disconnect();
+    });
+    pickupStoreBtnMutionObv.observe(pickupStoreBtn, {
+      subtree: true,
+      attributes: true,
+    });
+  } else {
+    getPickupStoreBtnElm().addEventListener(
+      'click',
+      () => {
+        onPickupStoreBtn(storeMapAPI);
+      },
+      {
+        once: true,
+      }
+    );
+  }
+};
+
 const storePickupInit = async () => {
   const storeMapAPI = new StoreMapAPI();
   L_STORE_LIST = await storeMapAPI.getStoreList();
+
+  onSearchType(); // 검색타입 변경 시 작동하는 함수
+  storeSearchingHandler();
 
   if (L_GEOLOCATION_WIDGET) {
     navigator.geolocation.getCurrentPosition(
@@ -973,22 +1023,7 @@ const storePickupInit = async () => {
     );
   }
 
-  getPickUpStoreBtnElm().addEventListener(
-    'click',
-    async () => {
-      await storeMapAPI.UISetting();
-
-      onSearchType(); // 검색타입 변경 시 작동하는 함수
-      storeSearchingHandler();
-
-      if (L_GEOLOCATION_WIDGET) {
-        geoLocationPickupInit();
-      } else {
-        pickupInit();
-      }
-    },
-    { once: true }
-  );
+  pickupStoreBtnHandler(storeMapAPI);
 };
 
 storePickupInit();

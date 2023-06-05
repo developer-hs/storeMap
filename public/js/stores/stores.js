@@ -1,4 +1,5 @@
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+  const { onAlertModal, reload } = await import('../utils/utils.js');
   /**
    * @return {Element} 삭제버튼 Element 를 반환하는 함수
    */
@@ -47,8 +48,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     if (checkedStores.length === 1) {
       // 삭제할 매장이 한개일 때
-      const res = await remove(`/stores/store/${checkedStores[0]}`);
+      const res = await axios.delete(`stores/store/${checkedStores[0]}`);
       if (res.status === 200) {
+        console.log(res.data);
+        onAlertModal('매장이 삭제되었습니다.');
         reload();
       }
     } else {
@@ -59,7 +62,8 @@ window.addEventListener('DOMContentLoaded', () => {
           storesId += ',';
         }
       }
-      const res = await remove(`/stores/many?${storesId}`);
+
+      const res = await axios.delete(`stores/many?${storesId}`);
       if (res.status === 200) {
         onAlertModal('매장이 삭제되었습니다.');
         reload();
@@ -83,7 +87,13 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   const onCoordSet = async () => {
-    const geoRes = await get('/stores/geocode/many', {}, async (error) => {
+    let geoRes;
+    try {
+      geoRes = await axios.get('/stores/geocode/many', {});
+      if (geoRes.status === 202) {
+        console.warn(geoRes.data.message);
+      }
+    } catch (error) {
       if (error.response.status === 502) {
         const contentArea = document.getElementById('content-area');
         const errorTargetElm = document.getElementById(
@@ -99,15 +109,14 @@ window.addEventListener('DOMContentLoaded', () => {
           `상점명 : ${error.response.data.name}\n상점주소 : ${error.response.data.address}의 주소를 다시 확인해 주세요`
         );
         console.error(error);
-      } else {
-        console.error(error);
       }
-    });
+    }
 
     if (!geoRes) return;
     if (geoRes.status === 200) {
       try {
-        const updateRes = await put('/stores/geocode/many', geoRes.data);
+        const updateRes = await axios.put('/stores/geocode/many', geoRes.data);
+        console.log(updateRes);
         if (updateRes.status === 200) {
           reload();
         }

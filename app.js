@@ -30,16 +30,19 @@ export const app = express();
 const allowlist = [
   'http://localhost:8080',
   'https://localhost:8000',
+  'http://127.0.0.1:8080',
+  'https://127.0.0.1:8000',
   'https://rlagudtjq2016.cafe24.com',
 ];
 
-const corsOptionsDelegate = function (req, callback) {
+const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+    corsOptions = { origin: true, credentials: true }; // reflect (enable) the requested origin in the CORS response
   } else {
     corsOptions = { origin: false }; // disable CORS for this request
   }
+
   callback(null, corsOptions); // callback expects two parameters: error and options
 };
 
@@ -111,7 +114,7 @@ app.listen();
 
 const appStart = async () => {
   await appInit();
-  connectDB();
+  await connectDB();
   appRouting();
 };
 

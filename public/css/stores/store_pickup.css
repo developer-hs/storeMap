@@ -385,18 +385,34 @@ body #pickupStore .store_list_ct .swiper-pagination {
 }
 
 #pickUpStoreBtn {
+  position: relative;
   cursor: pointer;
   width: 100%;
   height: 50px;
   background-color: var(--ui-color);
 }
 
-#pickUpStoreBtn span {
+#pickUpStoreBtn::before {
+  content: '매장 선택';
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
+  width: 100%;
   color: #fff;
+  font-size: 1.125rem;
+}
+
+#pickUpStoreBtn.loading::before {
+  content: '위치정보를 불러오는 중입니다.';
+}
+
+#pickUpStoreBtn .guard {
+  cursor: not-allowed;
+  position: absolute;
+  left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  font-size: 1.125rem;
+  background-color: rgba(255, 255, 255, 0.3);
 }

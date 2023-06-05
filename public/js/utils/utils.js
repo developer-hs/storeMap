@@ -1,4 +1,4 @@
-const onAlertModal = (message) => {
+export const onAlertModal = (message) => {
   const alertModal = document.querySelector('.alert_modal');
   const alertContent = document.querySelector('.alert_content');
   alertContent.innerText = message;
@@ -8,6 +8,6 @@ const onAlertModal = (message) => {
   }, 1300);
 };
 
-const reload = () => {
+export const reload = () => {
   window.location.reload();
 };

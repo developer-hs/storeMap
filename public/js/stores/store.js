@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   const param = new URLSearchParams(window.location.search);
   const type = param.get('type');
 
@@ -101,7 +101,7 @@ window.addEventListener('DOMContentLoaded', () => {
     formData.append('useStatus', excelUseStatus);
 
     try {
-      const res = await axios.post('/stores/many', formData);
+      const res = await axios.post(`/stores/many`, formData);
       if (res.status === 200) {
         window.location.href = '/stores';
       }
@@ -112,10 +112,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const storeUpdate = async (form) => {
     try {
-      const res = await put(`/stores/store/${getStoreId()}`, {
+      const res = await axios.put(`/stores/store/${getStoreId()}`, {
         ...form,
       });
-      console.log(res.status);
+
       if (res.status === 200) {
         window.location.href = '/stores';
       }
@@ -126,7 +126,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const storeCreate = async (form) => {
     try {
-      const res = await post('/stores/store', form);
+      const res = await axios.post('/stores/store', form);
       if (res.status === 200) {
         window.location.href = '/stores';
       }
@@ -139,7 +139,13 @@ window.addEventListener('DOMContentLoaded', () => {
    */
 
   const onSubmit = async () => {
-    const address = document.getElementById('storeAddr').value;
+    const address = getStoreAddress();
+
+    if (!address) {
+      alert('입력하신 주소를 다시 한번 확인해 주세요');
+      return;
+    }
+
     const requiredDatas = getRequireDatas();
     for (let key in requiredDatas) {
       if (!requiredDatas[key] === '') {
@@ -193,25 +199,24 @@ window.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const res = await get('/stores/geocode', { address }, (error) => {
-      if (error.response.status === 502) {
+    try {
+      const res = await axios.get('/stores/geocode', { params: { address } });
+      if (res.status === 200) {
+        return res.data;
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 502) {
         console.error('네이버에 등록되지 않은 주소', error);
       } else {
         console.error(error);
       }
-    });
-
-    if (!res) return false;
-
-    if (res.status === 200) {
-      return res.data;
     }
 
     return false;
   };
 
   const onDelete = async () => {
-    const res = await remove(`/stores/store/${getStoreId()}`);
+    const res = await axios.delete(`/stores/store/${getStoreId()}`);
     if (res.status === 200) {
       window.location.href = '/stores';
     }
