@@ -1,21 +1,292 @@
-<style>
-  .widget_ct {
-    display: flex;
-  }
+<link rel="stylesheet" type="text/css" href="/css/widgets/styles.css" />
+<link rel="stylesheet" type="text/css" href="/css/stores/store_pickup.css" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/monolith.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"
+/>
 
-  .widget_ct .left {
-    width: 70%;
-  }
-  .widget_ct .right {
-    width: 30%;
-  }
-</style>
 <div id="content">
   <div class="content-head">
     <div class="title"><span>스타일 설정</span></div>
   </div>
   <div class="widget_ct">
-    <div class="left"></div>
+    <div class="left">
+      <div class="section on" id="pickupStore">
+        <div class="pickr_ct main_color_pickr_ct">
+          <span>UI 색상</span>
+          <div class="" id="uiMainColor"></div>
+        </div>
+        <div id="uiMainColorPreview">
+          <div class="search_store_pkup_ct">
+            <div class="head">
+              <div class="search_type on">매장 검색</div>
+              <div class="search_type">동단위 검색</div>
+            </div>
+            <div class="search_box">
+              <input
+                id="address"
+                type="text"
+                placeholder="검색할 주소"
+                value=""
+              />
+              <i id="submit" class="xi-search"></i>
+              <div id="search_list_ct"></div>
+            </div>
+            <div class="store_list_ct on">
+              <div
+                class="swiper-container swiper-fade swiper-initialized swiper-horizontal swiper-watch-progress swiper-backface-hidden"
+              >
+                <div class="store-info-container swiper-wrapper">
+                  <div
+                    class="swiper-slide swiper-slide-visible swiper-slide-active"
+                  >
+                    <div class="store">
+                      <div class="left">
+                        <h1
+                          class="store_name"
+                          style="font-size: 16px; padding-bottom: 6px"
+                        >
+                          테스트 매장
+                        </h1>
+                        <div class="addr_ct">
+                          <span class="distance">2Km</span>
+                          <span style="color: rgb(151, 151, 151)">
+                            테스트 주소
+                          </span>
+                          <img
+                            class="copy_addr"
+                            src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
+                            style="
+                              width: 15px;
+                              height: 15px;
+                              margin-left: 5px;
+                              cursor: pointer;
+                            "
+                          />
+                        </div>
+                      </div>
+                      <div class="right">
+                        <svg
+                          class="store_pick_btn"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 30 30"
+                          width="30"
+                          height="30"
+                        >
+                          <g>
+                            <path
+                              d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
+                            ></path>
+                            <path
+                              d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
+                            ></path>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="store">
+                      <div class="left">
+                        <h1
+                          class="store_name"
+                          style="font-size: 16px; padding-bottom: 6px"
+                        >
+                          테스트 매장
+                        </h1>
+                        <div class="addr_ct">
+                          <span class="distance">3Km</span>
+                          <span style="color: rgb(151, 151, 151)">
+                            테스트 주소
+                          </span>
+                          <img
+                            class="copy_addr"
+                            src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
+                            style="
+                              width: 15px;
+                              height: 15px;
+                              margin-left: 5px;
+                              cursor: pointer;
+                            "
+                          />
+                        </div>
+                      </div>
+                      <div class="right">
+                        <svg
+                          class="store_pick_btn"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 30 30"
+                          width="30"
+                          height="30"
+                        >
+                          <g>
+                            <path
+                              d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
+                            ></path>
+                            <path
+                              d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
+                            ></path>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="store">
+                      <div class="left">
+                        <h1
+                          class="store_name"
+                          style="font-size: 16px; padding-bottom: 6px"
+                        >
+                          테스트 매장
+                        </h1>
+                        <div class="addr_ct">
+                          <span class="distance">3Km</span>
+                          <span style="color: rgb(151, 151, 151)">
+                            테스트 주소
+                          </span>
+                          <img
+                            class="copy_addr"
+                            src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
+                            style="
+                              width: 15px;
+                              height: 15px;
+                              margin-left: 5px;
+                              cursor: pointer;
+                            "
+                          />
+                        </div>
+                      </div>
+                      <div class="right">
+                        <svg
+                          class="store_pick_btn"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 30 30"
+                          width="30"
+                          height="30"
+                        >
+                          <g>
+                            <path
+                              d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
+                            ></path>
+                            <path
+                              d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
+                            ></path>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="store">
+                      <div class="left">
+                        <h1
+                          class="store_name"
+                          style="font-size: 16px; padding-bottom: 6px"
+                        >
+                          테스트 매장
+                        </h1>
+                        <div class="addr_ct">
+                          <span class="distance">3Km</span>
+                          <span style="color: rgb(151, 151, 151)">
+                            테스트 주소
+                          </span>
+                          <img
+                            class="copy_addr"
+                            src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
+                            style="
+                              width: 15px;
+                              height: 15px;
+                              margin-left: 5px;
+                              cursor: pointer;
+                            "
+                          />
+                        </div>
+                      </div>
+                      <div class="right">
+                        <svg
+                          class="store_pick_btn"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 30 30"
+                          width="30"
+                          height="30"
+                        >
+                          <g>
+                            <path
+                              d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
+                            ></path>
+                            <path
+                              d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
+                            ></path>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="store">
+                      <div class="left">
+                        <h1
+                          class="store_name"
+                          style="font-size: 16px; padding-bottom: 6px"
+                        >
+                          테스트 매장
+                        </h1>
+                        <div class="addr_ct">
+                          <span class="distance">4Km</span>
+                          <span style="color: rgb(151, 151, 151)">
+                            테스트 주소
+                          </span>
+                          <img
+                            class="copy_addr"
+                            src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
+                            style="
+                              width: 15px;
+                              height: 15px;
+                              margin-left: 5px;
+                              cursor: pointer;
+                            "
+                          />
+                        </div>
+                      </div>
+                      <div class="right">
+                        <svg
+                          class="store_pick_btn"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 30 30"
+                          width="30"
+                          height="30"
+                        >
+                          <g>
+                            <path
+                              d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
+                            ></path>
+                            <path
+                              d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
+                            ></path>
+                          </g>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pickr_ct">
+        <span>글자 색상</span>
+        <div class="" id="uiTextColor"></div>
+      </div>
+      <div class="pickr_ct">
+        <span>거리 색상</span>
+        <div class="" id="uiDistanceColor"></div>
+      </div>
+    </div>
     <div class="right"></div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+<script src="/js/widgets/styles.js"></script>
