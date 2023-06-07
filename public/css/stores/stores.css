@@ -85,7 +85,22 @@
 }
 
 .btn-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-danger);
+  position: absolute;
+  overflow: hidden;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
   margin-top: 1.5rem;
+}
+
+.btn-area #deleteBtn {
+  color: #fff;
 }
 
 .head_btn_area {

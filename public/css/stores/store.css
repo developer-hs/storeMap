@@ -178,3 +178,7 @@ input#excelUploadBtn {
   left: 0;
   top: 0;
 }
+
+#excelBtnCt .create-btn {
+  background-color: #1d6f42;
+}
