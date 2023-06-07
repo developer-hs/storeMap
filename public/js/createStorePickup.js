@@ -1034,4 +1034,18 @@ const storePickupInit = async () => {
   pickupStoreBtnHandler(storeMapAPI);
 };
 
-storePickupInit();
+const getStoreMapData = async () => {
+  const storeMap = document.getElementById('storeMap');
+  const url = 'http://localhost:8080/';
+  try {
+    const res = await axios.get(url);
+    if (res.status === 200) {
+      storeMap.innerHTML = res.data;
+      storePickupInit();
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+getStoreMapData();
