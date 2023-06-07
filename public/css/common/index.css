@@ -80,7 +80,7 @@ div[class*='btn'] > a {
 .bg-success,
 .bg-success > a,
 .bg-success > span {
-  color: #000;
+  color: #fff;
   background-color: var(--color-success);
 }
 

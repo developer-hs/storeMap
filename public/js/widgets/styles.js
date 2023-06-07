@@ -1,4 +1,38 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const { reload } = await import('../utils/utils.js');
+  let MAIN_COLOR, ACTIVE_TEXT_COLOR, TEXT_COLOR, DISTANCE_COLOR;
+
+  const getMainColor = () => {
+    return document.getElementById('mainColorPickrCt').dataset.color;
+  };
+  const getTextColor = () => {
+    return document.getElementById('uiTextColorCt').dataset.color;
+  };
+  const getActiveTextColor = () => {
+    return document.getElementById('uiActiveTextColorCt').dataset.color;
+  };
+  const getDistanceColor = () => {
+    return document.getElementById('uiDistanceColorCt').dataset.color;
+  };
+  const getSubmitBtn = () => {
+    return document.getElementById('submitBtn');
+  };
+  const getTypeSearchStoreElm = () => {
+    return document.getElementById('typeSearchStore');
+  };
+  const getTypeSearchDong = () => {
+    return document.getElementById('typeSearchDong');
+  };
+  const getDistanceElms = () => {
+    return document.querySelectorAll('.distance');
+  };
+
+  const initGlobalVariableColor = () => {
+    MAIN_COLOR = getMainColor();
+    TEXT_COLOR = getTextColor();
+    DISTANCE_COLOR = getDistanceColor();
+  };
+
   const createPickr = async () => {
     const pickrComponents = {
       // Main components
@@ -40,13 +74,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainUIColorPickr = Pickr.create({
       el: '#uiMainColor',
       theme: 'classic', //'classic' or 'monolith', or 'nano'
+      default: getMainColor(),
       swatches: swatches,
       components: pickrComponents,
     });
 
-    const mainTextColorPickr = Pickr.create({
+    const ActiveTextColorPickr = Pickr.create({
+      el: '#uiActiveTextColor',
+      theme: 'classic', //'classic' or 'monolith', or 'nano'
+      default: getActiveTextColor(),
+      swatches: swatches,
+      components: pickrComponents,
+    });
+
+    const TextColorPickr = Pickr.create({
       el: '#uiTextColor',
       theme: 'classic', //'classic' or 'monolith', or 'nano'
+      default: getTextColor(),
       swatches: swatches,
       components: pickrComponents,
     });
@@ -55,17 +99,70 @@ document.addEventListener('DOMContentLoaded', () => {
       el: '#uiDistanceColor',
       theme: 'classic', //'classic' or 'monolith', or 'nano'
       swatches: swatches,
+      default: getDistanceColor(),
       components: pickrComponents,
     });
 
     mainUIColorPickr.on('save', (color, instance) => {
-      console.log(color.toHEXA().toString());
+      const selectedColor = colorToString(color);
+      MAIN_COLOR = selectedColor;
+      getTypeSearchStoreElm().style.backgroundColor = selectedColor;
     });
+
+    ActiveTextColorPickr.on('save', (color, instance) => {
+      const selectedColor = colorToString(color);
+      ACTIVE_TEXT_COLOR = selectedColor;
+      getTypeSearchStoreElm().style.color = selectedColor;
+    });
+
+    TextColorPickr.on('save', (color, instance) => {
+      const selectedColor = colorToString(color);
+      TEXT_COLOR = selectedColor;
+      getTypeSearchDong().style.color = selectedColor;
+    });
+
+    distanceColorPickr.on('save', (color, instance) => {
+      const selectedColor = colorToString(color);
+      DISTANCE_COLOR = selectedColor;
+      getDistanceElms().forEach((distanceElm) => {
+        distanceElm.style.color = selectedColor;
+      });
+    });
+  };
+  const colorToString = (color) => {
+    return color.toHEXA().toString();
+  };
+  const onSubmit = async () => {
+    const form = {
+      uiColor: MAIN_COLOR,
+      activeTextColor: ACTIVE_TEXT_COLOR,
+      textColor: TEXT_COLOR,
+      distanceColor: DISTANCE_COLOR,
+    };
+
+    try {
+      const res = await axios.put('/api/widgets/styles', form);
+      if (res.status === 200) {
+        reload();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const submitBtnHandler = () => {
+    getSubmitBtn().addEventListener('click', onSubmit);
   };
 
   const widgetStyleInit = () => {
+    initGlobalVariableColor();
     createPickr();
+    submitBtnHandler();
   };
 
-  widgetStyleInit();
+  const init = () => {
+    widgetStyleInit();
+  };
+
+  init();
 });

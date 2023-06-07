@@ -15,19 +15,27 @@ class StoreMapAPI {
   async UISetting() {
     const pickUpStore = document.getElementById('pickupStore');
     pickUpStore.classList.add('on');
-    await axios
-      .get('http://localhost:8080/api/users/ui')
-      .then((res) => {
+    try {
+      const res = await axios.get('/api/users/ui');
+      if (res.status === 200) {
         const ui = res.data;
+        document.documentElement.style.setProperty('--ui-color', ui.uiColor);
         document.documentElement.style.setProperty(
-          '--ui-color',
-          ui.backgroundColor
+          '--ui-distance-color',
+          ui.distanceColor
         );
-        return res.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+        document.documentElement.style.setProperty(
+          '--ui-active-text-color',
+          ui.activeTextColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-text-color',
+          ui.textColor
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async getStoreList() {
@@ -968,7 +976,7 @@ const pickupInit = () => {
 
 const onPickupStoreBtn = async (storeMapAPI) => {
   await storeMapAPI.UISetting();
-
+  getPickupStoreBtnElm().remove();
   if (L_GEOLOCATION_WIDGET) {
     geoLocationPickupInit();
   } else {

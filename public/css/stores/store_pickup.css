@@ -1,6 +1,8 @@
 :root {
   --ui-color: #000;
+  --ui-text-color: #fff;
   --ui-distance-color: #000;
+  --ui-active-text-color: #000;
   --ui-alert-color: #000;
 }
 body {
@@ -12,6 +14,7 @@ body {
 
 .store_pick_btn {
   cursor: pointer;
+  fill: var(--ui-color);
 }
 #copy_alert,
 #pickup_alert {
@@ -217,6 +220,7 @@ body {
   .right {
   display: flex;
   align-items: center;
+  justify-content: right;
 }
 #pickupStore
   .store_list_ct
@@ -272,7 +276,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
   background: #fff;
 }
 #pickupStore .store_list_ct .swiper-pagination-bullet-active {
-  color: #fff;
+  color: var(--ui-active-text-color);
   background: var(--ui-color);
 }
 
