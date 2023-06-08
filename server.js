@@ -1,15 +1,15 @@
-import { app } from "./app.js";
-import getAdminJs from "./admin.js";
-import https from "https";
-import fs from "fs";
+import { app } from './app.js';
+import getAdminJs from './admin.js';
+// import https from "https";
+// import fs from 'fs';
 
 const PORT = 8080;
-const HTTPS_PORT = 8000;
+// const HTTPS_PORT = 8000;
 
-const certOptions = {
-  key: fs.readFileSync("./cert/create-cert-key.pem"),
-  cert: fs.readFileSync("./cert/create-cert.pem"),
-};
+// const certOptions = {
+//   key: fs.readFileSync("./cert/create-cert-key.pem"),
+//   cert: fs.readFileSync("./cert/create-cert.pem"),
+// };
 
 app.listen(PORT, async () => {
   const adminJs = await getAdminJs();
@@ -21,6 +21,6 @@ app.listen(PORT, async () => {
   );
 });
 
-https.createServer(certOptions, app).listen(HTTPS_PORT, () => {
-  console.log(`HTTPS server started on port http://localhost:${HTTPS_PORT}`);
-});
+// https.createServer(certOptions, app).listen(HTTPS_PORT, () => {
+//   console.log(`HTTPS server started on port http://localhost:${HTTPS_PORT}`);
+// });
