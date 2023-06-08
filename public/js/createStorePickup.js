@@ -16,7 +16,7 @@ class StoreMapAPI {
     const pickUpStore = document.getElementById('pickupStore');
     pickUpStore.classList.add('on');
     try {
-      const res = await axios.get('/api/users/ui');
+      const res = await axios.get('http://localhost:8080/api/users/ui');
       if (res.status === 200) {
         const ui = res.data;
         document.documentElement.style.setProperty('--ui-color', ui.uiColor);
