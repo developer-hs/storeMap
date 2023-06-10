@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
-  const { reload } = await import('../utils/utils.js');
+  const { onAlertModal } = await import('../utils/utils.js');
   let MAIN_COLOR, ACTIVE_TEXT_COLOR, TEXT_COLOR, DISTANCE_COLOR;
 
   const getMainColor = () => {
@@ -143,10 +143,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axios.put('/api/widgets/styles', form);
       if (res.status === 200) {
-        reload();
+        onAlertModal('성공적으로 저장 되었습니다.');
       }
     } catch (error) {
       console.error(error);
+      onAlertModal('저장에 실패하였습니다.');
     }
   };
 

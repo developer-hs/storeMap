@@ -1,5 +1,14 @@
 <link rel="stylesheet" type="text/css" href="/css/stores/stores.css" />
 <div id="content">
+  <%- nodeEnv %>
+  <% for(let key in env){ %>
+  <div>
+    <%- key %>
+    :
+    <%- env[key] %>
+  </div>
+  <br />
+  <% } %>
   <div class="content-head">
     <div class="title"><span>매장관리</span></div>
     <div>

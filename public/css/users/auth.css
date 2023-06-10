@@ -8,7 +8,8 @@
 
 .login_area {
   box-sizing: border-box;
-  padding: 10px 12px;
+  padding: 18px 14px;
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -21,10 +22,15 @@
 .login_area .form {
   width: 100%;
 }
+
 .login_area .form_input {
-  margin: 10px 0;
+  margin: 16px 0;
   position: relative;
   width: 100%;
+}
+
+.login_area .form_input:first-child {
+  margin-top: 0px;
 }
 
 .login_area .form_input .placeholder {
@@ -42,4 +48,17 @@
   width: 100%;
   border-radius: 8px;
   border: 1px solid #000;
+}
+
+.md-btn {
+  width: 100%;
+}
+
+#platform {
+  opacity: 0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0px;
+  height: 0px;
 }

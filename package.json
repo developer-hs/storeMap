@@ -5,9 +5,10 @@
   "description": "Create a map that pins the locations of stores",
   "main": "server.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon index.js",
-    "prod": "NODE_ENV=production node index.js",
-    "prod:compress": "NODE_ENV=production USE_COMPRESS=1 node index.js"
+    "start": "node server.js",
+    "dev": "NODE_ENV=development nodemon server.js",
+    "prod": "NODE_ENV=production node server.js",
+    "prod:compress": "NODE_ENV=production USE_COMPRESS=1 node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +37,10 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "nodemon": "^2.0.22",
     "prettier-plugin-ejs": "^0.0.10"
+  },
+  "engines": {
+    "node": "16.20.0"
   }
 }
