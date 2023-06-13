@@ -1,0 +1,44 @@
+#content {
+  height: 100%;
+}
+.card {
+  width: 600px;
+  margin: 0 auto;
+}
+.content_col {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-field {
+  height: 70px;
+}
+
+.oprigin_ct {
+  margin-top: 80px;
+}
+
+.oprigin_ct .text-field {
+  display: flex;
+}
+
+.oprigin_ct input {
+  margin-right: 12px;
+}
+
+.oprigin_ct .md-btn {
+  height: 60px;
+}
+
+.card > .btn-area {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #eee;
+}
+
+.content-head .area {
+  margin: 0 auto;
+  width: 600px;
+}

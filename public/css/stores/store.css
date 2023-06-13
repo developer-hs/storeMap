@@ -47,39 +47,6 @@ input#excelUploadBtn {
   left: 0;
   top: 0;
 }
-.store .text_field {
-  width: 100%;
-  position: relative;
-  margin: 14px 0;
-}
-.store .text_field label {
-  display: block;
-  position: absolute;
-  left: 15px;
-  top: -5px;
-  background-color: #fff;
-  padding: 0 4px;
-  box-sizing: border-box;
-  transition: color 0.1s ease-in;
-}
-
-.store .text_field input[type='text'] {
-  width: 100%;
-  height: 60px;
-  border-radius: var(--default-radius);
-  border: 1px solid #eee;
-  transition: border 0.2s ease-in;
-  padding: 0 20px;
-  font-size: 1rem;
-}
-
-.store .text_field input[type='text']:focus {
-  outline: none;
-  border: 1px solid var(--color-l-black);
-}
-.store .text_field input[type='text']:focus + label {
-  color: var(--color-primary);
-}
 
 #excelBtnCt {
   display: flex;
@@ -162,7 +129,7 @@ input#excelUploadBtn {
   color: #fff;
   font-weight: 500;
 }
-#latLongCt > div.text_field {
+#latLongCt > div.text-field {
   flex: 0 1 49%;
 }
 .lat_field,

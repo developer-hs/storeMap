@@ -1,3 +1,6 @@
+body #content {
+  overflow: initial;
+}
 .widget_ct {
   display: flex;
   width: 100%;

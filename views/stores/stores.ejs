@@ -1,25 +1,28 @@
 <link rel="stylesheet" type="text/css" href="/css/stores/stores.css" />
 <div id="content">
-  <%- nodeEnv %>
-  <% for(let key in env){ %>
-  <div>
-    <%- key %>
-    :
-    <%- env[key] %>
-  </div>
-  <br />
-  <% } %>
   <div class="content-head">
-    <div class="title"><span>매장관리</span></div>
-    <div>
-      <div class="head_btn_area">
-        <div class="create-btn" id="storeCreateBtn">
-          <a href="/stores/store?type=c">매장 생성</a>
-        </div>
-        <div id="coordSetBtn">
-          <span>좌표 설정</span>
+    <div class="area">
+      <div class="title">
+        <span>매장관리</span>
+        <span id="storeCount">
+          (
+          <%- totalCount %>
+          )
+        </span>
+      </div>
+      <div>
+        <div class="head_btn_area">
+          <div class="create-btn" id="storeCreateBtn">
+            <a href="/stores/store?type=c">매장 생성</a>
+          </div>
+          <div id="coordSetBtn">
+            <span>좌표 설정</span>
+          </div>
         </div>
       </div>
+    </div>
+    <div class="area">
+      <div></div>
     </div>
   </div>
   <div class="store_table">
@@ -66,10 +69,37 @@
         <% } %>
       </div>
       <% } %>
+      <% if (stores.length > 0) { %>
       <div class="btn-area">
         <div id="deleteBtn">삭제</div>
       </div>
+      <% } %>
     </div>
+  </div>
+  <div class="pagination">
+    <% if (pagination.currentPage > 1) { %>
+    <div class="previous page_arrow">
+      <a href="?page=<%- pagination.prevPage %>">
+        <img src="/icons/arrow_prev_black.svg" alt="이전페이지" />
+      </a>
+    </div>
+    <% } %>
+
+    <% for (var page = pagination.startPage; page <= pagination.endPage; page++) { %>
+    <div
+      class="page <% if (page === pagination.currentPage) { %> active <% } %>"
+    >
+      <a href="?page=<%- page %>"><%- page %></a>
+    </div>
+    <% } %>
+
+    <% if (pagination.currentPage < pagination.totalPage) { %>
+    <div class="next page_arrow">
+      <a href="?page=<%- pagination.nextPage %>">
+        <img src="/icons/arrow_next_black.svg" alt="다음페이지" />
+      </a>
+    </div>
+    <% } %>
   </div>
 </div>
 

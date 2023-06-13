@@ -131,3 +131,6 @@
   font-size: 1.125rem;
   color: #fff;
 }
+#storeCount {
+  letter-spacing: -4px;
+}

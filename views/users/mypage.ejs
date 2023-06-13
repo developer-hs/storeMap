@@ -1,1 +1,43 @@
 <link rel="stylesheet" type="text/css" href="/css/users/mypage.css" />
+
+<div id="content">
+  <div class="content-head">
+    <div class="area">
+      <div class="title">
+        <span>마이페이지</span>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="content_col">
+      <div class="info_ct">
+        <div class="text-field">
+          <input type="text" id="name" value="<%- user.name %>" />
+          <label for="name">이름</label>
+        </div>
+        <div class="text-field">
+          <input type="text" id="email" value="<%- user.email %>" />
+          <label for="email">이메일</label>
+        </div>
+        <div class="text-field">
+          <input type="password" id="password" value="" />
+          <label for="password">비밀번호</label>
+        </div>
+      </div>
+      <div class="oprigin_ct">
+        <div class="text-field required">
+          <input type="text" id="domain" value="<%- user.origin %>" />
+          <label for="domain">홈페이지 도메인</label>
+          <div class="btn-area">
+            <div class="md-btn bg-primary" id="originSubmit">등록</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-area">
+      <div class="md-btn bg-success" id="submit">저장</div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/users/mypage.js"></script>

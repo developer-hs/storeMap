@@ -31,15 +31,17 @@
 <% } %>
 <div id="content">
   <div class="content-head">
-    <div class="title"><span>매장생성</span></div>
-    <div>
-      <% if (type === "c") { %>
-      <div id="excelBtnCt">
-        <div class="create-btn" id="excelModalBtn">
-          <span>엑셀로 생성</span>
+    <div class="area">
+      <div class="title"><span>매장생성</span></div>
+      <div>
+        <% if (type === "c") { %>
+        <div id="excelBtnCt">
+          <div class="create-btn" id="excelModalBtn">
+            <span>엑셀로 생성</span>
+          </div>
         </div>
+        <% } %>
       </div>
-      <% } %>
     </div>
   </div>
 
@@ -47,20 +49,20 @@
     <div class="left">
       <div class="store" id="<%- store._id %>">
         <div>
-          <div class="text_field">
+          <div class="text-field">
             <input type="text" id="storeName" value="<%- store.name %>" />
             <label for="storeName">매장명</label>
           </div>
         </div>
         <div>
-          <div class="text_field">
+          <div class="text-field">
             <input type="text" id="storeAddr" value="<%- store.address %>" />
             <label for="storeAddr">매장주소</label>
           </div>
         </div>
         <div id="latLongCt" class="displaynone">
           <% if (type === "u") { %>
-          <div class="text_field lat_field">
+          <div class="text-field lat_field">
             <input
               type="text"
               id="latitude"
@@ -69,7 +71,7 @@
             />
             <label for="storeAddr">위도</label>
           </div>
-          <div class="text_field long_field">
+          <div class="text-field long_field">
             <input
               type="text"
               id="longitude"
@@ -112,5 +114,4 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="/js/stores/store.js"></script>

@@ -11,3 +11,22 @@ export const onAlertModal = (message) => {
 export const reload = () => {
   window.location.reload();
 };
+
+export const confirmCheck = (message) => {
+  if (confirm(message) == true) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export const getRootPropertyValue = (propertyName) => {
+  // 문서의 루트 요소를 가져옴
+  const root = document.documentElement;
+
+  // 계산된 스타일 값을 가져옴
+  const computedStyle = getComputedStyle(root);
+
+  // 속성 값을 반환
+  return computedStyle.getPropertyValue(propertyName);
+};

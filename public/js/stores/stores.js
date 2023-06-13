@@ -1,5 +1,7 @@
 window.addEventListener('DOMContentLoaded', async () => {
-  const { onAlertModal, reload } = await import('../utils/utils.js');
+  const { onAlertModal, reload, confirmCheck } = await import(
+    '../utils/utils.js'
+  );
   /**
    * @return {Element} 삭제버튼 Element 를 반환하는 함수
    */
@@ -21,7 +23,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   /**
-   * @returns {Array<Element>} 체크된 상점 Element 들을 반환하는 함수
+   * @description 체크된 상점 Element 들을 반환하는 함수
+   * @returns {Array<Element>}
    */
   const getCheckedStoreElms = () => {
     const result = Array.from(getChkBtnElms())
@@ -35,38 +38,68 @@ window.addEventListener('DOMContentLoaded', async () => {
     return result;
   };
 
+  /**
+   * @description 좌표설정 버튼을 가져오는 함수
+   * @return {HTMLElement}
+   */
   const getCoordSetBtn = () => {
     return document.getElementById('coordSetBtn');
   };
+
   /**
-   * @return {void} 체크된 상점들을 삭제하는 함수 1개일때, 여러개일 때 호출되는 API 가 다름
+   * @description 등록된 스토어의 총 개수를 구함
+   * @return {Number}
    */
+  const getStoreTotalCnt = () => {
+    return Number(document.getElementById('storeCount').innerText);
+  };
+
+  /**
+   * @description 체크된 상점들을 삭제하는 함수 1개일때, 여러개일 때 호출되는 API 가 다름
+   * @return {void}
+   */
+
   const onDelete = async () => {
     let storesId = 'storesId=';
 
     const checkedStores = getCheckedStoreElms();
+    if (checkedStores.length === 0) {
+      onAlertModal('삭제할 매장을 선택해 주세요.');
+      return;
+    }
 
-    if (checkedStores.length === 1) {
-      // 삭제할 매장이 한개일 때
-      const res = await axios.delete(`stores/store/${checkedStores[0]}`);
-      if (res.status === 200) {
-        console.log(res.data);
-        onAlertModal('매장이 삭제되었습니다.');
-        reload();
-      }
-    } else {
-      // 삭제할 매장이 여러개 일 때
-      for (let i = 0; i < checkedStores.length; i++) {
-        storesId += checkedStores[i];
-        if (i !== checkedStores.length - 1) {
-          storesId += ',';
+    const removeChk = confirmCheck('정말 삭제하시겠습니까?');
+
+    if (removeChk) {
+      if (checkedStores.length === 1) {
+        // 삭제할 매장이 한개일 때
+        try {
+          const res = await axios.delete(`stores/store/${checkedStores[0]}`);
+          if (res.status === 200) {
+            onAlertModal('매장이 삭제되었습니다.');
+            reload();
+          }
+        } catch (error) {
+          console.error(error);
         }
-      }
+      } else {
+        // 삭제할 매장이 여러개 일 때
+        for (let i = 0; i < checkedStores.length; i++) {
+          storesId += checkedStores[i];
+          if (i !== checkedStores.length - 1) {
+            storesId += ',';
+          }
+        }
 
-      const res = await axios.delete(`stores/many?${storesId}`);
-      if (res.status === 200) {
-        onAlertModal('매장이 삭제되었습니다.');
-        reload();
+        try {
+          const res = await axios.delete(`stores/many?${storesId}`);
+          if (res.status === 200) {
+            onAlertModal('매장이 삭제되었습니다.');
+            reload();
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
     }
   };
@@ -116,7 +149,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (geoRes.status === 200) {
       try {
         const updateRes = await axios.put('/stores/geocode/many', geoRes.data);
-        console.log(updateRes);
         if (updateRes.status === 200) {
           reload();
         }
@@ -141,7 +173,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const init = () => {
-    deleteBtnHandler();
+    if (getStoreTotalCnt() > 0) {
+      deleteBtnHandler();
+    }
     allChkBtnHandler();
     coordSetBtnHandler();
   };
