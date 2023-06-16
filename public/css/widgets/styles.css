@@ -1,5 +1,6 @@
 body #content {
   overflow: initial;
+  padding-bottom: 60px;
 }
 .widget_ct {
   display: flex;
@@ -15,6 +16,7 @@ body #content {
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
   border-radius: var(--default-radius);
   position: relative;
+  height: calc(100% + 300px);
 }
 
 .widget_ct > .right {
@@ -134,4 +136,27 @@ body #content {
   background-color: #000;
   color: #fff;
   border: 1px solid #eee;
+}
+
+.sample_map_ct {
+  width: 100%;
+}
+
+.sample_map_ct img {
+  width: 100%;
+}
+
+.ui_ct {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ui_ct > div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
 }

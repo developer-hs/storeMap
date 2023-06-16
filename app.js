@@ -102,7 +102,7 @@ const appRouting = () => {
   });
 
   app.get('/test', (req, res) => {
-    return res.sendFile(__dirname + '/routes/stores/store_pickup.html');
+    return res.sendFile(__dirname + '/routes/stores/test.html');
   });
 
   app.get('/oauth', (req, res) => {

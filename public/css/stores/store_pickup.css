@@ -80,7 +80,7 @@ body {
 }
 #pickupStore .search_type.on {
   background-color: var(--ui-color);
-  color: #fff;
+  color: var(--ui-active-text-color);
 }
 #pickupStore .head .search_type:nth-child(1) {
   border-top: 1px solid #eee;
@@ -127,6 +127,11 @@ body {
   background-color: var(--ui-color);
   color: #fff;
   margin-top: 24px;
+}
+
+#pickupStore #mapTitle .pickup_store {
+  color: #fff;
+  font-size: 1rem;
 }
 #pickupStore #mapTitle .title {
   padding: 14px 12px;

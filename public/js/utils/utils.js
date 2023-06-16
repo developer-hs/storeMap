@@ -1,8 +1,10 @@
-export const onAlertModal = (message) => {
+export const onAlertModal = (message, width = 200, height = 60) => {
   const alertModal = document.querySelector('.alert_modal');
   const alertContent = document.querySelector('.alert_content');
   alertContent.innerText = message;
   alertModal.classList.add('on');
+  alertModal.style.width = width + 'px';
+  alertModal.style.height = height + 'px';
   setTimeout(() => {
     alertModal.classList.remove('on');
   }, 1300);

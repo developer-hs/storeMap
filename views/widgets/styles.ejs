@@ -21,6 +21,28 @@
   <div class="widget_ct">
     <div class="left">
       <div class="section">
+        <div class="ui_ct">
+          <div>
+            <input class="full" name="uiType" type="radio" id="defaultUI"
+            value="default"
+            <% if (widget.ui === "default") { %>
+            checked
+            <% } %>
+            />
+            <label for="defaultUI">기본 UI</label>
+          </div>
+          <div>
+            <input class="full" name="uiType" type="radio" id="distanceUI"
+            value="distance"
+            <% if (widget.ui === "distance") { %>
+            checked
+            <% } %>
+            />
+            <label for="distanceUI">거리형 UI</label>
+          </div>
+        </div>
+      </div>
+      <div class="section">
         <div
           class="pickr_ct"
           id="mainColorPickrCt"
@@ -50,7 +72,9 @@
           <div class="" id="uiTextColor"></div>
         </div>
       </div>
-      <div class="section">
+      <div
+        class="section <% if (widget.ui === 'default') { %> displaynone <% } %>"
+      >
         <div
           class="pickr_ct"
           id="uiDistanceColorCt"
@@ -104,23 +128,27 @@
                 <div
                   class="swiper-slide swiper-slide-visible swiper-slide-active"
                 >
+                  <% for (var i = 1; i < 6; i++) { %>
                   <div class="store">
                     <div class="left">
                       <h1
                         class="store_name"
                         style="font-size: 16px; padding-bottom: 6px"
                       >
-                        테스트 매장
+                        테스트 매장_
+                        <%- i %>
                       </h1>
                       <div class="addr_ct">
                         <span
-                          class="distance"
+                          class="distance <% if (widget.ui === 'default') { %> displaynone <% } %>"
                           style="color: <%- widget.distanceColor %>"
                         >
-                          2Km
+                          <%- i %>
+                          Km
                         </span>
                         <span style="color: rgb(151, 151, 151)">
-                          테스트 주소
+                          테스트 주소_
+                          <%- i %>
                         </span>
                         <img
                           class="copy_addr"
@@ -153,206 +181,38 @@
                       </svg>
                     </div>
                   </div>
-                  <div class="store">
-                    <div class="left">
-                      <h1
-                        class="store_name"
-                        style="font-size: 16px; padding-bottom: 6px"
-                      >
-                        테스트 매장
-                      </h1>
-                      <div class="addr_ct">
-                        <span
-                          class="distance"
-                          style="color: <%- widget.distanceColor %>"
-                        >
-                          3Km
-                        </span>
-                        <span style="color: rgb(151, 151, 151)">
-                          테스트 주소
-                        </span>
-                        <img
-                          class="copy_addr"
-                          src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
-                          style="
-                            width: 15px;
-                            height: 15px;
-                            margin-left: 5px;
-                            cursor: pointer;
-                          "
-                        />
-                      </div>
-                    </div>
-                    <div class="right">
-                      <svg
-                        class="store_pick_btn"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 30 30"
-                        width="30"
-                        height="30"
-                      >
-                        <g>
-                          <path
-                            d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
-                          ></path>
-                          <path
-                            d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
-                          ></path>
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="store">
-                    <div class="left">
-                      <h1
-                        class="store_name"
-                        style="font-size: 16px; padding-bottom: 6px"
-                      >
-                        테스트 매장
-                      </h1>
-                      <div class="addr_ct">
-                        <span
-                          class="distance"
-                          style="color: <%- widget.distanceColor %>"
-                        >
-                          3Km
-                        </span>
-                        <span style="color: rgb(151, 151, 151)">
-                          테스트 주소
-                        </span>
-                        <img
-                          class="copy_addr"
-                          src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
-                          style="
-                            width: 15px;
-                            height: 15px;
-                            margin-left: 5px;
-                            cursor: pointer;
-                          "
-                        />
-                      </div>
-                    </div>
-                    <div class="right">
-                      <svg
-                        class="store_pick_btn"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 30 30"
-                        width="30"
-                        height="30"
-                      >
-                        <g>
-                          <path
-                            d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
-                          ></path>
-                          <path
-                            d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
-                          ></path>
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="store">
-                    <div class="left">
-                      <h1
-                        class="store_name"
-                        style="font-size: 16px; padding-bottom: 6px"
-                      >
-                        테스트 매장
-                      </h1>
-                      <div class="addr_ct">
-                        <span
-                          class="distance"
-                          style="color: <%- widget.distanceColor %>"
-                        >
-                          3Km
-                        </span>
-                        <span style="color: rgb(151, 151, 151)">
-                          테스트 주소
-                        </span>
-                        <img
-                          class="copy_addr"
-                          src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
-                          style="
-                            width: 15px;
-                            height: 15px;
-                            margin-left: 5px;
-                            cursor: pointer;
-                          "
-                        />
-                      </div>
-                    </div>
-                    <div class="right">
-                      <svg
-                        class="store_pick_btn"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 30 30"
-                        width="30"
-                        height="30"
-                      >
-                        <g>
-                          <path
-                            d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
-                          ></path>
-                          <path
-                            d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
-                          ></path>
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
-                  <div class="store">
-                    <div class="left">
-                      <h1
-                        class="store_name"
-                        style="font-size: 16px; padding-bottom: 6px"
-                      >
-                        테스트 매장
-                      </h1>
-                      <div class="addr_ct">
-                        <span
-                          class="distance"
-                          style="color: <%- widget.distanceColor %>"
-                        >
-                          4Km
-                        </span>
-                        <span style="color: rgb(151, 151, 151)">
-                          테스트 주소
-                        </span>
-                        <img
-                          class="copy_addr"
-                          src="https://oneulwineshop.cafe24.com/web/icons/copy.svg"
-                          style="
-                            width: 15px;
-                            height: 15px;
-                            margin-left: 5px;
-                            cursor: pointer;
-                          "
-                        />
-                      </div>
-                    </div>
-                    <div class="right">
-                      <svg
-                        class="store_pick_btn"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 30 30"
-                        width="30"
-                        height="30"
-                      >
-                        <g>
-                          <path
-                            d="M15,0C6.73,0,0,6.73,0,15s6.73,15,15,15,15-6.73,15-15S23.27,0,15,0Zm0,27.27c-6.77,0-12.27-5.51-12.27-12.27S8.23,2.73,15,2.73s12.27,5.51,12.27,12.27-5.51,12.27-12.27,12.27Z"
-                          ></path>
-                          <path
-                            d="M20.62,9.7l-7.71,7.71-3.54-3.54c-.53-.53-1.4-.53-1.93,0-.53,.53-.53,1.4,0,1.93l4.5,4.5c.26,.26,.6,.4,.96,.4h0c.36,0,.71-.14,.96-.4l8.68-8.68c.53-.53,.53-1.4,0-1.93-.53-.53-1.4-.53-1.93,0Z"
-                          ></path>
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
+                  <% } %>
                 </div>
               </div>
             </div>
           </div>
+          <div class="pagination" style="margin-bottom: 0px">
+            <% for (var i = 1; i <= 5; i++) { %>
+            <div
+              class="page <% if (i === 1) { %> active <% } %>"
+              style="<% if (i === 1) { %> background-color: <%- widget.uiColor %><% } %>"
+            >
+              <a href="#"><%- i %></a>
+            </div>
+            <% } %>
+          </div>
+        </div>
+        <div
+          id="mapTitle"
+          style="
+            display: block;
+            background-color: <%- widget.uiColor %>;
+            color: <%- widget.activeTextColor %>;
+          "
+        >
+          <div class="title">
+            <div>
+              <span class="pickup_store">픽업 매장</span>
+            </div>
+          </div>
+        </div>
+        <div class="sample_map_ct">
+          <img src="/imgs/sample_map.png" alt="맵 이미지" />
         </div>
       </div>
     </div>

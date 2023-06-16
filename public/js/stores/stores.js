@@ -21,7 +21,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getChkBtnElms = () => {
     return document.querySelectorAll('input.check_btn');
   };
-
+  const getFilterBtnElm = () => {
+    return document.getElementById('filterBtn');
+  };
   /**
    * @description 체크된 상점 Element 들을 반환하는 함수
    * @returns {Array<Element>}
@@ -54,6 +56,38 @@ window.addEventListener('DOMContentLoaded', async () => {
     return Number(document.getElementById('storeCount').innerText);
   };
 
+  /**
+   * @description
+   * @return {HTMLElement}
+   */
+  const getFilterLimitElm = () => {
+    return document.getElementById('storesLimit');
+  };
+  const getAlignFilter = () => {
+    return document.getElementById('alignFilter');
+  };
+  /**
+   * @description
+   * @return {String}
+   */
+  const getFilterLimit = () => {
+    const limitElm = getFilterLimitElm();
+    return limitElm.options[limitElm.selectedIndex].value;
+  };
+
+  const getFilterAlign = () => {
+    const alignElm = getAlignFilter();
+    return alignElm.options[alignElm.selectedIndex].value;
+  };
+  const getFilterSubmitElm = () => {
+    return document.getElementById('filterSubmit');
+  };
+  const getFilterCtElm = () => {
+    return document.getElementById('filterCt');
+  };
+  const getFilterCloseBtnCtElm = () => {
+    return document.getElementById('filterCloseBtnCt');
+  };
   /**
    * @description 체크된 상점들을 삭제하는 함수 1개일때, 여러개일 때 호출되는 API 가 다름
    * @return {void}
@@ -160,6 +194,57 @@ window.addEventListener('DOMContentLoaded', async () => {
     return;
   };
 
+  const setPaginationWithLimit = () => {
+    const pageElms = document.querySelectorAll('.pagination .page > a');
+    const param = new URLSearchParams(window.location.search);
+    const limit = param.get('limit');
+    const align = param.get('align');
+    if (limit) {
+      pageElms.forEach((pageElm) => {
+        const pageHref = new URL(pageElm.href);
+        const pageHrefParams = pageHref.searchParams;
+        pageHrefParams.set('limit', limit);
+        pageHrefParams.set('align', align);
+        pageElm.href = pageHref;
+      });
+    }
+  };
+
+  const onFilterSubmit = () => {
+    const filterLimit = getFilterLimit();
+    const filterAlign = getFilterAlign();
+    const urlStr = window.location.href;
+    const url = new URL(urlStr);
+
+    const urlParams = url.searchParams;
+    urlParams.set('limit', filterLimit);
+    urlParams.set('align', filterAlign);
+
+    window.location.href = url;
+  };
+
+  const showFilterCt = () => {
+    const filterCtElm = getFilterCtElm();
+    filterCtElm.classList.add('on');
+  };
+
+  const hideFilterCt = () => {
+    const filterCtElm = getFilterCtElm();
+    filterCtElm.classList.remove('on');
+  };
+
+  const toggleFilterCt = () => {
+    getFilterBtnElm().addEventListener('click', onFilterBtn);
+    getFilterCloseBtnCtElm().addEventListener('click', onFilterCloseBtn);
+  };
+
+  const onFilterBtn = () => {
+    showFilterCt();
+  };
+  const onFilterCloseBtn = () => {
+    hideFilterCt();
+  };
+
   const coordSetBtnHandler = () => {
     getCoordSetBtn().addEventListener('click', onCoordSet);
   };
@@ -172,10 +257,22 @@ window.addEventListener('DOMContentLoaded', async () => {
     getAllChkBtnElm().addEventListener('click', onAllChkBtn);
   };
 
+  const filterSubmitHandler = () => {
+    getFilterSubmitElm().addEventListener('click', onFilterSubmit);
+  };
+
+  const filterBtnHandler = () => {
+    toggleFilterCt();
+  };
+
   const init = () => {
     if (getStoreTotalCnt() > 0) {
       deleteBtnHandler();
+      filterSubmitHandler();
+      setPaginationWithLimit();
+      filterBtnHandler();
     }
+
     allChkBtnHandler();
     coordSetBtnHandler();
   };

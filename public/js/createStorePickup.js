@@ -1,4 +1,5 @@
 const L_HEIGHT = 80;
+const API_BASE_URL = 'http://localhost:8080';
 let L_GEOLOCATION_WIDGET = true,
   L_STORE_LIST,
   L_SHOWING_INFO_WIN,
@@ -16,7 +17,7 @@ class StoreMapAPI {
     const pickUpStore = document.getElementById('pickupStore');
     pickUpStore.classList.add('on');
     try {
-      const res = await axios.get('http://localhost:8080/api/users/ui');
+      const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
       if (res.status === 200) {
         const ui = res.data;
         document.documentElement.style.setProperty('--ui-color', ui.uiColor);
@@ -40,7 +41,7 @@ class StoreMapAPI {
 
   async getStoreList() {
     const res = await axios
-      .get('http://localhost:8080/api/stores')
+      .get(`${API_BASE_URL}/api/stores`)
       .then((res) => {
         return res.data;
       })
@@ -1017,10 +1018,7 @@ const pickupStoreBtnHandler = (storeMapAPI) => {
   }
 };
 
-const storePickupInit = async () => {
-  const storeMapAPI = new StoreMapAPI();
-  L_STORE_LIST = await storeMapAPI.getStoreList();
-
+const storePickupInit = async (storeMapAPI) => {
   onSearchType(); // 검색타입 변경 시 작동하는 함수
   storeSearchingHandler();
 
@@ -1035,13 +1033,19 @@ const storePickupInit = async () => {
 };
 
 const getStoreMapData = async () => {
+  const storeMapAPI = new StoreMapAPI();
+  L_STORE_LIST = await storeMapAPI.getStoreList();
+
+  if (!L_STORE_LIST) {
+    return;
+  }
+
   const storeMap = document.getElementById('storeMap');
-  const url = 'http://localhost:8080/';
   try {
-    const res = await axios.get(url);
+    const res = await axios.get(API_BASE_URL);
     if (res.status === 200) {
       storeMap.innerHTML = res.data;
-      storePickupInit();
+      storePickupInit(storeMapAPI);
     }
   } catch (error) {
     console.error(error);

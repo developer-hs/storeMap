@@ -1,14 +1,57 @@
 <link rel="stylesheet" type="text/css" href="/css/stores/stores.css" />
 <div id="content">
+  <div class="filter_ct ct-shadow" id="filterCt">
+    <div class="close_btn_ct" id="filterCloseBtnCt">
+      <div class="close_btn">
+        <i class="xi-drag-vertical"></i>
+      </div>
+    </div>
+    <div class="filter_box">
+      <div class="filter_section_ct">
+        <div class="filter_section">
+          <div class="filter_title">보기</div>
+          <div class="area filter_area">
+            <div class="limit_filter">
+              <select id="storesLimit">
+                <option value="10" <% if (params.limit === 10) { %>selected<% } %>>10개씩 보기</option>
+                <option value="30" <% if (params.limit === 30) { %>selected<% } %>>30개씩 보기</option>
+                <option value="50" <% if (params.limit === 50) { %>selected<% } %>>50개씩 보기</option>
+                <option value="100" <% if (params.limit === 100) { %>selected<% } %>>100개씩 보기</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="filter_section">
+          <div class="filter_title">정렬</div>
+          <div class="area filter_area">
+            <div class="align_filter">
+              <select id="alignFilter">
+                <option value="name" <% if (params.align === 'name') { %>selected<% } %>>이름</option>
+                <option value="address" <% if (params.align === 'address') { %>selected<% } %>>주소</option>
+                <option value="created" <% if (params.align === 'created') { %>selected<% } %>>생성일</option>
+                <option value="exposed" <% if (params.align === 'exposed') { %>selected<% } %>>노출여부</option>
+                <option value="distance" <% if (params.align === 'distance') { %>selected<% } %>>좌표설정</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-area">
+        <div class="md-btn bg-success" id="filterSubmit">설정</div>
+      </div>
+    </div>
+  </div>
   <div class="content-head">
     <div class="area">
       <div class="title">
         <span>매장관리</span>
-        <span id="storeCount">
+        <div class="store_count">
           (
-          <%- totalCount %>
+          <span id="storeCount">
+            <%- totalCount %>
+          </span>
           )
-        </span>
+        </div>
       </div>
       <div>
         <div class="head_btn_area">
@@ -21,8 +64,11 @@
         </div>
       </div>
     </div>
-    <div class="area">
-      <div></div>
+    <div class="area filter_btn_ct">
+      <div id="filterBtn">
+        <img class="filter_icon" src="/icons/filter_blue.svg" alt="필터아이콘">
+        Filter
+      </div>
     </div>
   </div>
   <div class="store_table">
