@@ -64,10 +64,10 @@ input[type='radio'].full:checked {
 
 input[type='radio'].full:checked + label {
   border-radius: var(--lg-radius);
-  background-color: var(--color-primary);
-  padding: 10px 24px;
+  border: 2px solid var(--color-primary);
+  padding: 12px 24px;
   box-sizing: border-box;
-  color: #fff;
+  color: #000;
 }
 .displaynone {
   display: none !important;
@@ -256,13 +256,16 @@ div[class*='btn'] > a {
 }
 
 .switch_ct > div {
+  height: 30px;
+  display: flex;
+  align-items: center;
+}
+.switch_ct > div > span {
+  margin-right: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: 20%;
-}
-.switch_ct > div > span {
+  height: 100%;
   font-size: 1rem;
   color: var(--color-black);
 }
@@ -274,7 +277,6 @@ div[class*='btn'] > a {
   border-radius: 30px;
   width: 80px;
   height: 30px;
-  margin-top: 4px;
   transition: all 0.25s ease-in;
 }
 
@@ -309,6 +311,8 @@ div[class*='btn'] > a {
   height: 20px;
   border-radius: 100%;
   background-color: #fff;
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
 }
 
 .switch_input:checked + .switch_label::before {

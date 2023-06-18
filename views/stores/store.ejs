@@ -3,7 +3,7 @@
 <% if (type === "c") { %>
 <div id="excelUploadModalBg">
   <div id="excelUploadModal">
-    <div id="storeCreateBtn" id="createWithExcelBtn">
+    <div id="createWithExcelBtn">
       <label for="excelUploadBtn">Excel 파일 업로드</label>
       <input
         id="excelUploadBtn"
@@ -16,12 +16,7 @@
       <div>
         <span>노출여부</span>
         <div>
-          <input
-            class="switch_input"
-            id="excelUseStatus"
-            type="checkbox"
-            checked
-          />
+          <input class="switch_input" id="excelUseStatus" type="checkbox" />
           <label class="switch_label" for="excelUseStatus"></label>
         </div>
       </div>
@@ -33,15 +28,18 @@
   <div class="content-head">
     <div class="area">
       <div class="title"><span>매장생성</span></div>
-      <div>
-        <% if (type === "c") { %>
+      <% if (type === "c") { %>
+      <div class="excel_btn_area">
         <div id="excelBtnCt">
-          <div class="create-btn" id="excelModalBtn">
-            <span>엑셀로 생성</span>
+          <div class="create_btn" id="excelModalBtn">엑셀로 생성</div>
+        </div>
+        <div id="smapleExcelDwldBtn">
+          <div class="sample_dwld_btn">
+            <a href="/files/excel_sample.xlsx" download="">샘플 다운로드</a>
           </div>
         </div>
-        <% } %>
       </div>
+      <% } %>
     </div>
   </div>
 

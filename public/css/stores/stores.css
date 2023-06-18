@@ -66,16 +66,21 @@
 }
 .use_status {
   display: flex;
+  width: 7%;
+  justify-content: center;
   align-items: center;
-  width: 10%;
 }
 
 .coord {
   display: flex;
   align-items: center;
-  width: 5%;
+  justify-content: center;
+  width: 8%;
 }
 
+.coord img {
+  width: 22px;
+}
 .store_name {
   font-weight: 600;
 }
@@ -292,4 +297,8 @@
 .filter_ct .close_btn_ct .xi-drag-vertical {
   font-size: 38px;
   color: var(--color-black);
+}
+
+.switch_ct {
+  margin: 0px;
 }

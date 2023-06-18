@@ -1042,7 +1042,7 @@ const getStoreMapData = async () => {
 
   const storeMap = document.getElementById('storeMap');
   try {
-    const res = await axios.get(API_BASE_URL);
+    const res = await axios.get(API_BASE_URL + '/api/stores_map/tags');
     if (res.status === 200) {
       storeMap.innerHTML = res.data;
       storePickupInit(storeMapAPI);

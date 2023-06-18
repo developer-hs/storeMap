@@ -1,13 +1,26 @@
 export const onAlertModal = (message, width = 200, height = 60) => {
-  const alertModal = document.querySelector('.alert_modal');
-  const alertContent = document.querySelector('.alert_content');
+  const body = document.querySelector('body');
+  const alertModal = document.createElement('div');
+  const alertContent = document.createElement('div');
+  alertModal.classList.add('alert_modal');
+  alertContent.classList.add('alert_content');
+
   alertContent.innerText = message;
-  alertModal.classList.add('on');
-  alertModal.style.width = width + 'px';
-  alertModal.style.height = height + 'px';
+  alertModal.style.cssText = `width:${width}px; height:${height}px`;
+  alertModal.appendChild(alertContent);
+  body.appendChild(alertModal);
+
+  setTimeout(() => {
+    alertModal.classList.add('on');
+  }, 100);
+
   setTimeout(() => {
     alertModal.classList.remove('on');
   }, 1300);
+
+  setTimeout(() => {
+    alertModal.remove();
+  }, 1500);
 };
 
 export const reload = () => {

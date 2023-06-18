@@ -102,16 +102,21 @@
         <a class="addr" href="/stores/store/<%- stores[i]._id %>?type=u">
           <div class="store_addr"><%- stores[i].address %></div>
         </a>
-        <% if (stores[i].useStatus === true) { %>
-        <div class="use_status on"><%- stores[i].useStatus %></div>
-        <% } else { %>
-        <div class="use_status off"><%- stores[i].useStatus %></div>
-        <% } %>
-
+        <div class="use_status switch_ct">
+          <div>
+            <div>
+              <input class="switch_input" id="useStatus<%- i %>" data-store-id="<%- stores[i]._id %>" type="checkbox" <% if (stores[i].useStatus === true) { %> checked <% } %>/>
+              <label class="switch_label" for="useStatus<%- i %>"></label>
+            </div>
+          </div>
+        </div>
         <% if (stores[i].latitude && stores[i].longitude){ %>
-        <div class="coord on">true</div>
+        <div class="coord on"><img src="/icons/check.svg" alt="체크아이콘">
+        </div>
         <% } else { %>
-        <div class="coord off">false</div>
+        <div class="coord off">
+          <img src="/icons/x.svg" alt="엑스아이콘">
+        </div>
         <% } %>
       </div>
       <% } %>

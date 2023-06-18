@@ -24,6 +24,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getFilterBtnElm = () => {
     return document.getElementById('filterBtn');
   };
+  const getUseStatusBtnElms = () => {
+    return document.querySelectorAll("input[id*='useStatus']");
+  };
   /**
    * @description 체크된 상점 Element 들을 반환하는 함수
    * @returns {Array<Element>}
@@ -233,6 +236,24 @@ window.addEventListener('DOMContentLoaded', async () => {
     filterCtElm.classList.remove('on');
   };
 
+  const onUseStatusBtn = async (useStatusElm) => {
+    try {
+      const storeId = useStatusElm.dataset.storeId;
+      const res = await axios.put(`/stores/store/${storeId}`, {
+        useStatus: useStatusElm.checked,
+      });
+      if (res.status === 200) {
+        if (useStatusElm.checked) {
+          onAlertModal('노출설정 되었습니다');
+        } else {
+          onAlertModal('노출설정이 비활성화 되었습니다');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const toggleFilterCt = () => {
     getFilterBtnElm().addEventListener('click', onFilterBtn);
     getFilterCloseBtnCtElm().addEventListener('click', onFilterCloseBtn);
@@ -261,6 +282,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     getFilterSubmitElm().addEventListener('click', onFilterSubmit);
   };
 
+  const useStatusBtnHandler = () => {
+    const useStatusElms = getUseStatusBtnElms();
+    useStatusElms.forEach((useStatusElm) => {
+      useStatusElm.addEventListener('input', () => {
+        onUseStatusBtn(useStatusElm);
+      });
+    });
+  };
+
   const filterBtnHandler = () => {
     toggleFilterCt();
   };
@@ -271,6 +301,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       filterSubmitHandler();
       setPaginationWithLimit();
       filterBtnHandler();
+      useStatusBtnHandler();
     }
 
     allChkBtnHandler();

@@ -1,23 +1,23 @@
 import express from 'express';
 import cors from 'cors';
-import fs from 'fs';
-import cheerio from 'cheerio';
 import expressSanitizer from 'express-sanitizer';
 import cookieParser from 'cookie-parser';
 import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
 import axios from 'axios';
 
+import { __dirname } from './utils/utils.js';
 import getAdminJs from './admin.js';
 import db from './app/mongodb/models/index.js';
 import userRoutes from './app/users/routes/index.js';
 import storeRoutes from './app/stores/routes/index.js';
-import { __dirname } from './utils/utils.js';
+import widgetRoutes from './app/widgets/routes/index.js';
+import productRoutes from './app/products/routes/index.js';
 
 import { User } from './app/users/models/user.js';
 import { Store } from './app/stores/models/store.js';
-import widgetRoutes from './app/widgets/routes/index.js';
 import { authJWT } from './app/users/middleware/auth.js';
+import { CAFE24_AUTH } from './app/config/index.js';
 
 process.env.NODE_ENV =
   process.env.NODE_ENV &&
@@ -87,18 +87,35 @@ const appRouting = () => {
   userRoutes(app);
   storeRoutes(app);
   widgetRoutes(app);
+  productRoutes(app);
 
   app.get('/', (req, res) => {
-    fs.readFile(
-      __dirname + '/routes/stores/store_pickup.html',
-      'utf8',
-      (err, data) => {
-        if (err) throw err;
-        const $ = cheerio.load(data);
-        const body = $('body').html();
-        return res.send(body);
+    return res.sendFile(__dirname + '/views/auth/index.html');
+  });
+
+  app.post('/cafe24/oauth/:mallId', async (req, res) => {
+    const { mallId } = req.params;
+    const redirectURI = 'https://storemap-389307.du.r.appspot.com/users/login';
+    const form = { redirect_uri: redirectURI, ...req.body };
+    const headers = {
+      Authorization: `Basic ${CAFE24_AUTH}`,
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    try {
+      const res = await axios.post(
+        `https://${mallId}.cafe24api.com/api/v2/oauth/token`,
+        form,
+        headers
+      );
+
+      if (res.status === 200) {
+        return res.status(200).send(res);
       }
-    );
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ ok: false, message: error });
+    }
   });
 
   app.get('/test', (req, res) => {

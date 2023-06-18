@@ -87,6 +87,9 @@ body #content {
 .section:first-child {
   margin-top: 0px;
 }
+.section.lg {
+  height: 65px;
+}
 
 #uiMainColorPreview {
   width: 100%;
