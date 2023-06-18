@@ -89,28 +89,65 @@ const appRouting = () => {
   widgetRoutes(app);
   productRoutes(app);
 
+  app.get('/redirect', (req, res) => {
+    return res.redirect('/users/register');
+  });
+
   app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/views/auth/index.html');
   });
 
   app.post('/cafe24/oauth/:mallId', async (req, res) => {
     const { mallId } = req.params;
-    const redirectURI = 'https://storemap-389307.du.r.appspot.com/users/login';
-    const form = { redirect_uri: redirectURI, ...req.body };
+
+    const form = { ...req.body };
     const headers = {
       Authorization: `Basic ${CAFE24_AUTH}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
     try {
-      const res = await axios.post(
+      const tokenRes = await axios.post(
         `https://${mallId}.cafe24api.com/api/v2/oauth/token`,
         form,
         headers
       );
 
-      if (res.status === 200) {
-        return res.status(200).send(res);
+      if (tokenRes.status === 200) {
+        try {
+          let user = await User.findOne({ mallId: mallId });
+
+          if (!user) {
+            const registerRes = await axios.post('/api/users/register', {
+              email: `${mallId}@cafe24.com`,
+              password: mallId,
+              mallId: mallId,
+              platform: 'cafe24',
+            });
+
+            if (!registerRes.ok) {
+              return res.json({
+                ok: false,
+                message: '회원가입에 실패하였습니다.',
+              });
+            }
+
+            user = await User.findOne({ mallId: mallId });
+          }
+
+          user.cafe24AccessToken = tokenRes.data.access_token;
+          await user.save();
+
+          res.cookie('cafe24_refresh_token', tokenRes.data.refresh_token, {
+            httpOnly: true,
+            secure: true,
+          });
+
+          return res.status(200).send(user);
+        } catch (error) {
+          console.error(error);
+          return res.json({ ok: false, message: error });
+        }
       }
     } catch (error) {
       console.error(error);

@@ -6,6 +6,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const param = new URLSearchParams(window.location.search);
   const mallId = param.get('mall_id') || getCodeFromSession();
   const code = param.get('code');
+  const redirectURI = 'https://storemap-389307.du.r.appspot.com/users/login';
 
   if (!mallId && !code) {
     alert('잘못된 접근입니다.');
@@ -24,6 +25,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const form = {
       grant_type: 'authorization_code',
       code: code,
+      redirect_uri: redirectURI,
     };
     console.log(form);
     console.log(mallId);
