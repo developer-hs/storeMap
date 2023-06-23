@@ -59,17 +59,19 @@
             <a href="/stores/store?type=c">매장 생성</a>
           </div>
           <div id="coordSetBtn">
-            <span>좌표 설정</span>
+            <span>일괄 좌표 설정</span>
           </div>
         </div>
       </div>
     </div>
+    <% if (stores.length > 0) { %>
     <div class="area filter_btn_ct">
       <div id="filterBtn">
         <img class="filter_icon" src="/icons/filter_blue.svg" alt="필터아이콘">
         Filter
       </div>
     </div>
+    <% } %>
   </div>
   <div class="store_table">
     <div class="table-head">
@@ -90,42 +92,49 @@
       </div>
     </div>
 
-    <div id="stores">
-      <% for(var i = 0; i < stores.length; i++){ %>
-      <div class="store" id="<%- stores[i]._id %>">
-        <div class="check_btn_area">
-          <input class="check_btn" type="checkbox" />
-        </div>
-        <a class="name" href="/stores/store/<%- stores[i]._id %>?type=u">
-          <div class="store_name"><%- stores[i].name %></div>
-        </a>
-        <a class="addr" href="/stores/store/<%- stores[i]._id %>?type=u">
-          <div class="store_addr"><%- stores[i].address %></div>
-        </a>
-        <div class="use_status switch_ct">
-          <div>
-            <div>
-              <input class="switch_input" id="useStatus<%- i %>" data-store-id="<%- stores[i]._id %>" type="checkbox" <% if (stores[i].useStatus === true) { %> checked <% } %>/>
-              <label class="switch_label" for="useStatus<%- i %>"></label>
+    <% if (stores.length > 0) { %>
+      <div id="stores">
+        <% for(var i = 0; i < stores.length; i++){ %>
+          <div class="store" id="<%- stores[i]._id %>">
+            <div class="check_btn_area">
+              <input class="check_btn" type="checkbox" />
             </div>
+            <a class="name" href="/stores/store/<%- stores[i]._id %>?type=u">
+              <div class="store_name"><%- stores[i].name %></div>
+            </a>
+            <a class="addr" href="/stores/store/<%- stores[i]._id %>?type=u">
+              <div class="store_addr"><%- stores[i].address %></div>
+            </a>
+            <div class="use_status switch_ct">
+              <div>
+                <div>
+                  <input class="switch_input" id="useStatus<%- i %>" data-store-id="<%- stores[i]._id %>" type="checkbox" <% if (stores[i].useStatus === true) { %> checked <% } %>/>
+                  <label class="switch_label" for="useStatus<%- i %>"></label>
+                </div>
+              </div>
+            </div>
+            <% if (stores[i].latitude && stores[i].longitude){ %>
+            <div class="coord on"><img src="/icons/check.svg" alt="체크아이콘">
+            </div>
+            <% } else { %>
+            <div class="coord off">
+              <img src="/icons/x.svg" alt="엑스아이콘">
+            </div>
+            <% } %>
           </div>
-        </div>
-        <% if (stores[i].latitude && stores[i].longitude){ %>
-        <div class="coord on"><img src="/icons/check.svg" alt="체크아이콘">
-        </div>
-        <% } else { %>
-        <div class="coord off">
-          <img src="/icons/x.svg" alt="엑스아이콘">
-        </div>
         <% } %>
+        <div class="btn-area">
+          <div id="deleteBtn">삭제</div>
+        </div>
       </div>
-      <% } %>
-      <% if (stores.length > 0) { %>
-      <div class="btn-area">
-        <div id="deleteBtn">삭제</div>
+    <% } else { %>
+      <div class="emtpy_store_ct">
+        <div class="emtpy_store">
+          <img src="/icons/empty_box.svg" alt="빈상자 아이콘">
+          <span>등록된 매장이 존재하지 않습니다.</span>
+        </div>
       </div>
-      <% } %>
-    </div>
+    <% } %>
   </div>
   <div class="pagination">
     <% if (pagination.currentPage > 1) { %>

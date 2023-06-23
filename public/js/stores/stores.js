@@ -239,8 +239,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   const onUseStatusBtn = async (useStatusElm) => {
     try {
       const storeId = useStatusElm.dataset.storeId;
+      const storeAddr =
+        useStatusElm.parentNode.parentNode.parentNode.parentNode.querySelector(
+          '.store_addr'
+        ).innerText;
+
       const res = await axios.put(`/stores/store/${storeId}`, {
         useStatus: useStatusElm.checked,
+        address: storeAddr,
       });
       if (res.status === 200) {
         if (useStatusElm.checked) {

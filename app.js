@@ -6,7 +6,7 @@ import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
 import axios from 'axios';
 
-import { __dirname } from './utils/utils.js';
+import { __dirname, setToken } from './utils/utils.js';
 import getAdminJs from './admin.js';
 import db from './app/mongodb/models/index.js';
 import userRoutes from './app/users/routes/index.js';
@@ -15,8 +15,6 @@ import widgetRoutes from './app/widgets/routes/index.js';
 import productRoutes from './app/products/routes/index.js';
 
 import { User } from './app/users/models/user.js';
-import { Store } from './app/stores/models/store.js';
-import { authJWT } from './app/users/middleware/auth.js';
 import { CAFE24_AUTH } from './app/config/index.js';
 
 process.env.NODE_ENV =
@@ -89,69 +87,79 @@ const appRouting = () => {
   widgetRoutes(app);
   productRoutes(app);
 
-  app.get('/redirect', (req, res) => {
-    return res.redirect('/users/register');
+  app.get('/', (req, res) => {
+    return res.sendFile(__dirname + '/views/index.html');
   });
 
-  app.get('/', (req, res) => {
+  app.get('/cafe24/oauth', (req, res) => {
     return res.sendFile(__dirname + '/views/auth/index.html');
   });
 
   app.post('/cafe24/oauth/:mallId', async (req, res) => {
+    let user;
     const { mallId } = req.params;
 
-    const form = { ...req.body };
+    const form = req.body;
     const headers = {
       Authorization: `Basic ${CAFE24_AUTH}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     };
 
     try {
+      // cafe24 access token 요청
       const tokenRes = await axios.post(
         `https://${mallId}.cafe24api.com/api/v2/oauth/token`,
         form,
-        headers
+        {
+          headers: headers,
+        }
       );
 
       if (tokenRes.status === 200) {
         try {
-          let user = await User.findOne({ mallId: mallId });
+          user = await User.findOne({ mallId: mallId });
 
-          if (!user) {
-            const registerRes = await axios.post('/api/users/register', {
+          if (!user || user === null) {
+            const userForm = {
               email: `${mallId}@cafe24.com`,
               password: mallId,
               mallId: mallId,
               platform: 'cafe24',
+            };
+            // 유저가 존재하지 않을경우 -> 첫방문일 경우
+            user = new User(userForm);
+            user.save();
+
+            user.generateToken((accessToken, refreshToken) => {
+              setToken(res, accessToken, refreshToken);
             });
-
-            if (!registerRes.ok) {
-              return res.json({
-                ok: false,
-                message: '회원가입에 실패하였습니다.',
-              });
-            }
-
-            user = await User.findOne({ mallId: mallId });
           }
-
-          user.cafe24AccessToken = tokenRes.data.access_token;
-          await user.save();
-
-          res.cookie('cafe24_refresh_token', tokenRes.data.refresh_token, {
-            httpOnly: true,
-            secure: true,
-          });
-
-          return res.status(200).send(user);
         } catch (error) {
-          console.error(error);
-          return res.json({ ok: false, message: error });
+          // 유저 생성에 실패하였을 경우
+          return res.status(500).json({
+            ok: false,
+            message: '유저 생성실패 !',
+          });
         }
+
+        user.cafe24RefreshToken = tokenRes.data.refresh_token;
+        await user.save();
+
+        res.cookie('cafe24_access_token', tokenRes.data.access_token, {
+          httpOnly: true,
+          secure: true,
+        });
+
+        return res
+          .status(200)
+          .json({ ok: true, message: '정상적으로 처리되었습니다.' });
       }
     } catch (error) {
+      //cafe24 access token 요청 에 실패하였을 경우
       console.error(error);
-      return res.status(400).json({ ok: false, message: error });
+      return res
+        .status(400)
+        .json({ ok: false, message: 'access token 요청 실패!', error: error });
     }
   });
 

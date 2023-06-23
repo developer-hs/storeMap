@@ -1,4 +1,5 @@
 import path from 'path';
+import { SECURE } from '../app/config/index.js';
 export const __dirname = path.resolve();
 
 export const removeDuplicates = (arr1, arr2) => {
@@ -10,4 +11,16 @@ export const removeDuplicates = (arr1, arr2) => {
   );
 
   return unique;
+};
+
+export const setToken = (res, accessToken, refreshToken) => {
+  res.cookie('access_token', accessToken, {
+    httpOnly: true,
+    secure: SECURE,
+    // 예: secure: true (HTTPS 연결에서만 전송)
+  });
+  res.cookie('refresh_token', refreshToken, {
+    httpOnly: true,
+    secure: SECURE,
+  });
 };

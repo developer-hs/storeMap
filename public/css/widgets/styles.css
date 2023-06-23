@@ -2,6 +2,7 @@ body #content {
   overflow: initial;
   padding-bottom: 60px;
 }
+
 .widget_ct {
   display: flex;
   width: 100%;

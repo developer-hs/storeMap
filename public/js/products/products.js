@@ -1,17 +1,13 @@
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
+  const { onAlertModal } = await import('../utils/utils.js');
   let L_PRODUCTS_LIST;
 
-  const token = 'Bearer PqwAD943NtoiDM0jfuhF3E';
-  const mallId = 'rlagudtjq2016';
+  const mallId = sessionStorage.getItem('mall_id');
   const getProducts = async () => {
     try {
-      const res = await axios.get(`https://${mallId}/api/v2/admin/products`, {
-        Authorization: token,
-        'Content-Type': 'application/json',
-      });
-
+      const res = await axios.get(`/api/products/${mallId}`);
       if (res.status === 200) {
-        L_PRODUCTS_LIST = res.data.products;
+        L_PRODUCTS_LIST = res.data;
       }
     } catch (error) {
       console.error(error);
@@ -69,7 +65,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const getUsingProducts = async () => {
     try {
-      const res = await axios.get('/api/product/use_status');
+      const res = await axios.get('/api/products/use_status');
       if (res.status === 200) {
         return res.data;
       }
@@ -94,10 +90,13 @@ window.addEventListener('DOMContentLoaded', () => {
         useStatus: useStatus,
       };
 
-      const res = await axios.post('/api/products/product', form);
+      const res = await axios.post(
+        `/api/products/product/${mallId}/option`,
+        form
+      );
 
       if (res.status === 201) {
-        console.log(res);
+        onAlertModal('설정이 완료되었습니다.');
       }
     } catch (error) {
       console.error(error);
@@ -116,8 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  const init = () => {
-    getProducts();
+  const init = async () => {
+    await getProducts();
     paintProducts();
     usingProductInit();
     useStatusHandler();

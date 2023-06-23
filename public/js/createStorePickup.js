@@ -1,6 +1,6 @@
 const L_HEIGHT = 80;
 const API_BASE_URL = 'http://localhost:8080';
-let L_GEOLOCATION_WIDGET = true,
+let L_GEOLOCATION_WIDGET,
   L_STORE_LIST,
   L_SHOWING_INFO_WIN,
   L_USER_NAVER_COORD,
@@ -14,24 +14,27 @@ class StoreMapAPI {
   constructor() {}
 
   async UISetting() {
-    const pickUpStore = document.getElementById('pickupStore');
-    pickUpStore.classList.add('on');
     try {
       const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
       if (res.status === 200) {
-        const ui = res.data;
-        document.documentElement.style.setProperty('--ui-color', ui.uiColor);
+        const UI = res.data;
+        if (UI.ui === 'default') {
+          L_GEOLOCATION_WIDGET = false;
+        } else {
+          L_GEOLOCATION_WIDGET = true;
+        }
+        document.documentElement.style.setProperty('--ui-color', UI.uiColor);
         document.documentElement.style.setProperty(
           '--ui-distance-color',
-          ui.distanceColor
+          UI.distanceColor
         );
         document.documentElement.style.setProperty(
           '--ui-active-text-color',
-          ui.activeTextColor
+          UI.activeTextColor
         );
         document.documentElement.style.setProperty(
           '--ui-text-color',
-          ui.textColor
+          UI.textColor
         );
       }
     } catch (error) {
@@ -40,16 +43,14 @@ class StoreMapAPI {
   }
 
   async getStoreList() {
-    const res = await axios
-      .get(`${API_BASE_URL}/api/stores`)
-      .then((res) => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/stores`);
+      if (res.status === 200) {
         return res.data;
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-
-    return res;
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 }
 
@@ -975,24 +976,26 @@ const pickupInit = () => {
   firstSearchHandler();
 };
 
-const onPickupStoreBtn = async (storeMapAPI) => {
-  await storeMapAPI.UISetting();
+const onPickupStoreBtn = async () => {
+  const pickUpStore = document.getElementById('pickupStore');
+  pickUpStore.classList.add('on');
   getPickupStoreBtnElm().remove();
+
   if (L_GEOLOCATION_WIDGET) {
     geoLocationPickupInit();
   } else {
     pickupInit();
   }
 };
-const pickupStoreBtnHandler = (storeMapAPI) => {
+const pickupStoreBtnHandler = () => {
+  const pickupStoreBtn = getPickupStoreBtnElm();
   if (L_GEOLOCATION_WIDGET) {
-    const pickupStoreBtn = getPickupStoreBtnElm();
     const pickupStoreBtnMutionObv = new MutationObserver((mutations) => {
       if (!pickupStoreBtn.classList.contains('loading')) {
-        getPickupStoreBtnElm().addEventListener(
+        pickupStoreBtn.addEventListener(
           'click',
           () => {
-            onPickupStoreBtn(storeMapAPI);
+            onPickupStoreBtn();
           },
           {
             once: true,
@@ -1006,10 +1009,12 @@ const pickupStoreBtnHandler = (storeMapAPI) => {
       attributes: true,
     });
   } else {
-    getPickupStoreBtnElm().addEventListener(
+    pickupStoreBtn.classList.remove('loading');
+    pickupStoreBtn.innerHTML = '';
+    pickupStoreBtn.addEventListener(
       'click',
       () => {
-        onPickupStoreBtn(storeMapAPI);
+        onPickupStoreBtn();
       },
       {
         once: true,
@@ -1018,7 +1023,7 @@ const pickupStoreBtnHandler = (storeMapAPI) => {
   }
 };
 
-const storePickupInit = async (storeMapAPI) => {
+const storePickupInit = async () => {
   onSearchType(); // 검색타입 변경 시 작동하는 함수
   storeSearchingHandler();
 
@@ -1029,22 +1034,24 @@ const storePickupInit = async (storeMapAPI) => {
     );
   }
 
-  pickupStoreBtnHandler(storeMapAPI);
+  pickupStoreBtnHandler();
 };
 
 const getStoreMapData = async () => {
-  const storeMapAPI = new StoreMapAPI();
-  L_STORE_LIST = await storeMapAPI.getStoreList();
-
-  if (!L_STORE_LIST) {
-    return;
-  }
-
   const storeMap = document.getElementById('storeMap');
+  const storeMapAPI = new StoreMapAPI();
+
   try {
+    L_STORE_LIST = await storeMapAPI.getStoreList();
+    if (!L_STORE_LIST) {
+      return;
+    }
+    await storeMapAPI.UISetting();
+
     const res = await axios.get(API_BASE_URL + '/api/stores_map/tags');
     if (res.status === 200) {
       storeMap.innerHTML = res.data;
+
       storePickupInit(storeMapAPI);
     }
   } catch (error) {

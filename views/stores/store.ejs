@@ -12,6 +12,12 @@
         enctype="multipart/form-data"
       />
     </div>
+    <div class="description_ct">
+      <div class="description">
+        <span class="circle">⦁</span>
+        파일 형식은 샘플 내용에 맞춰서 작성해야 합니다.
+      </div>
+    </div>
     <div class="switch_ct" id="useStatusCt">
       <div>
         <span>노출여부</span>
@@ -44,7 +50,7 @@
   </div>
 
   <div class="store_ct">
-    <div class="left">
+    <div class="left card">
       <div class="store" id="<%- store._id %>">
         <div>
           <div class="text-field">
@@ -80,13 +86,21 @@
           </div>
           <% } %>
         </div>
-        <div>
-          <label for="storeUseStatus">노출여부</label>
-          <% if (store.useStatus === true) { %>
-          <input type="checkbox" id="storeUseStatus" checked />
-          <% } else { %>
-          <input type="checkbox" id="storeUseStatus" />
-          <% } %>
+        <div class="switch_ct">
+          <div>
+            <span>노출여부</span>
+            <% if (store.useStatus === true) { %>
+            <input
+              class="switch_input"
+              type="checkbox"
+              id="storeUseStatus"
+              checked
+            />
+            <% } else { %>
+            <input class="switch_input" type="checkbox" id="storeUseStatus" />
+            <% } %>
+            <label class="switch_label" for="storeUseStatus"></label>
+          </div>
         </div>
 
         <div class="btn_area">
@@ -108,7 +122,25 @@
         </div>
       </div>
     </div>
-    <div class="right"></div>
+    <div class="right card">
+      <div class="title">매장등록 설명서</div>
+      <div class="description_ct">
+        <div class="description">
+          <span class="circle">⦁</span>
+          매장명은 고객들에게 노출시킬 이름입니다.
+        </div>
+        <div class="description">
+          <span class="circle">⦁</span>
+          노출여부 설정은 매장 생성 후 바로 지도에 노출여부를 결정합니다.
+        </div>
+        <div class="description important">
+          <span class="circle">⦁</span>
+          네이버 지도 API를 사용하기 때문에
+          <span class="important">네이버에 등록되어 있는 주소</span>
+          만 사용이 가능합니다.
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 

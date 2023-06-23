@@ -1,5 +1,10 @@
 #content {
   height: 100%;
+  padding-bottom: 36px;
+}
+.content-head {
+  width: 1000px;
+  margin: var(--top-margin) auto 42px;
 }
 #products .prd_img,
 #products .name,

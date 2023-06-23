@@ -14,13 +14,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     const email = getEmail();
     const password = getPW();
     const form = { email, password };
+
     try {
       const res = await axios.post('/api/users/login', form);
       if (res.status === 200) {
         window.location.href = '/stores';
       }
     } catch (error) {
-      onAlertModal(`${error.response.data.message}`);
+      onAlertModal(`${error.response.data.message}`, 300);
       console.error(error);
     }
   };

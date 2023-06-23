@@ -8,3 +8,7 @@
 #header .logo_ct {
   padding-left: 24px;
 }
+
+#header .logo_ct > a {
+  font-size: 1.5rem;
+}

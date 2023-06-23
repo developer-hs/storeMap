@@ -4,7 +4,7 @@ import * as config from '../app/config/index.js';
 //* Redis 연결
 // redis[s]://[[username][:password]@][host][:port][/db-number]
 const redisClient = redis.createClient({
-  url: `redis://${config.REDIS_USERNAME}:${config.REDIS_PASSWORD}@${config.REDIS_HOST}:${config.REDIS_PORT}/0`,
+  url: `redis://${config.REDIS_USERNAME}:${config.REDIS_PASSWORD}@${config.REDIS_HOST}:${config.REDIS_PORT}`,
   legacyMode: true, // 반드시 설정 !!
 });
 
