@@ -122,25 +122,30 @@
         </div>
       </div>
     </div>
+    <% if (type === "c") { %>
     <div class="right card">
-      <div class="title">매장등록 설명서</div>
       <div class="description_ct">
+        <div class="title">매장등록 설명서</div>
         <div class="description">
           <span class="circle">⦁</span>
-          매장명은 고객들에게 노출시킬 이름입니다.
+          <span>매장명은 고객들에게 노출시킬 이름입니다.</span>
         </div>
         <div class="description">
           <span class="circle">⦁</span>
-          노출여부 설정은 매장 생성 후 바로 지도에 노출여부를 결정합니다.
+          <span>
+            노출여부 설정은 매장 생성 후 바로 지도에 노출여부를 결정합니다.
+          </span>
         </div>
         <div class="description important">
           <span class="circle">⦁</span>
-          네이버 지도 API를 사용하기 때문에
-          <span class="important">네이버에 등록되어 있는 주소</span>
-          만 사용이 가능합니다.
+          <span class="important">
+            네이버 지도 API를 사용하기 때문에 네이버에 등록되어 있는 주소 만
+            사용이 가능합니다.
+          </span>
         </div>
       </div>
     </div>
+    <% } %>
   </div>
 </div>
 

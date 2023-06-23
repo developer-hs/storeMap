@@ -3,11 +3,17 @@ window.addEventListener('DOMContentLoaded', async () => {
   let L_PRODUCTS_LIST;
 
   const mallId = sessionStorage.getItem('mall_id');
+
+  const getPrdCntElm = () => {
+    return document.getElementById('prdCnt');
+  };
+
   const getProducts = async () => {
     try {
       const res = await axios.get(`/api/products/${mallId}`);
       if (res.status === 200) {
         L_PRODUCTS_LIST = res.data;
+        getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
       }
     } catch (error) {
       console.error(error);

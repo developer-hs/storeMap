@@ -1,11 +1,13 @@
 const L_HEIGHT = 80;
 const API_BASE_URL = 'http://localhost:8080';
-let L_GEOLOCATION_WIDGET,
-  L_STORE_LIST,
+
+let L_GEOLOCATION_WIDGET = Boolean,
+  L_SHOWING_DISTANCE = Number,
+  L_STORE_LIST = Array,
+  L_MARKERS = Array,
+  L_INFO_WINDOWS = Array,
   L_SHOWING_INFO_WIN,
-  L_USER_NAVER_COORD,
-  L_MARKERS = [],
-  L_INFO_WINDOWS = [];
+  L_USER_NAVER_COORD;
 
 let PREV_MARKER, L_MAP;
 
@@ -254,27 +256,6 @@ const firstOpenMap = () => {
   showMap();
   createNaverMap();
   initGeocoder(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
-
-  // const addr = getSearchedAddr();
-
-  // 검색 결과가 존재하는 경우 지도, 정보창 생성 함수 호출
-  // if (addr || L_GEOLOCATION_WIDGET) {
-  // showMap();
-  // createNaverMap();
-  // initGeocoder(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
-  // createInfoWindow();
-  // } else {
-  //   // 검색 결과가 존재하지 않는 경우 알림창 출력
-  //   const type = getSearchType();
-  //   switch (type) {
-  //     case 'store':
-  //       alert('상점명을 입력해 주세요');
-  //       break;
-  //     case 'dong':
-  //       alert('상점주소를 입력해 주세요');
-  //       break;
-  //   }
-  // }
 };
 
 /**
@@ -294,12 +275,6 @@ const onSearchType = () => {
       document.querySelector('.search_type.on').classList.remove('on');
       searchType.classList.add('on');
 
-      // 검색 타입에 따라 동 리스트 영역의 on 클래스 추가/제거
-      // if (getSearchType() === "store") {
-      //   dongList.classList.remove("on");
-      // } else if (getSearchType() === "dong") {
-      //   dongList.classList.add("on");
-      // }
       HideQuickSearchElm();
       // 검색어 input 요소 초기화
       initSearchedAddr();
@@ -323,10 +298,16 @@ const onPickup = (store) => {
   searchAddrToCoord();
 };
 
-const showInfoWindow = (store) => {
+const onInfoWindow = (store) => {
   setSearchedAddr(store); // 서치 인풋에 타입별 값을 채워넣음
 
   const infoWindow = createPickupInfoWindow(store);
+
+  if (L_GEOLOCATION_WIDGET) {
+    // 선택한 마커 기준으로 스토어리스트를 다시 그려줌
+    setDistance(store.naverCoord);
+    paintStoreList();
+  }
 
   if (infoWindow.getMap()) {
     infoWindow.close();
@@ -341,7 +322,7 @@ const showInfoWindow = (store) => {
 
 const markerHandler = (store) => {
   naver.maps.Event.addListener(store.marker, 'click', (e) => {
-    showInfoWindow(store);
+    onInfoWindow(store);
   });
 };
 
@@ -712,11 +693,11 @@ const searchAddrToCoord = () => {
     }
     PREV_MARKER = marker;
     naver.maps.Event.addListener(store.marker, 'click', (e) => {
-      showInfoWindow(store);
+      onInfoWindow(store);
     });
   }
 
-  showInfoWindow(store);
+  onInfoWindow(store);
   storePuckup();
 };
 
@@ -930,6 +911,10 @@ const createNaverCoord = (latitude, longitude) => {
   return new naver.maps.LatLng(latitude, longitude);
 };
 
+/**
+ * @description UI 가 distance 일때 사용되는 함수 기준이되는 거리를 받아서 스토어 리스트에 거리를 생성
+ * @param {naverCoord} targetNaverCoord
+ */
 const setDistance = (targetNaverCoord) => {
   const _storeInfoContainer = document.querySelector('.store-info-container');
   _storeInfoContainer.innerHTML = '';

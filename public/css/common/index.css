@@ -200,6 +200,10 @@ div[class*='btn'] > a {
   height: 100%;
 }
 
+.content-head .title {
+  display: flex;
+  align-items: center;
+}
 .content-head .title > span:first-child {
   font-size: 38px;
   font-weight: 500;
@@ -319,6 +323,48 @@ div[class*='btn'] > a {
   left: 55px;
 }
 
+.right .description_ct .title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.right .description_ct .description {
+  position: relative;
+  display: flex;
+  border: 1px solid #eee;
+  font-size: 1rem;
+  border-radius: var(--lg-radius);
+  background-color: #eee;
+  padding: 14px 12px;
+  margin-bottom: 16px;
+}
+
+.right .description_ct .description span:nth-of-type(2) {
+  padding-left: 8px;
+}
+
+.right .description_ct .description span:not(.circle) {
+  font-size: 1rem;
+  display: block;
+}
+.right .description_ct .description.important {
+  border: 1px solid var(--color-danger);
+}
+
+.right .description_ct .description > span.important {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.right .description_ct .description:nth-last-child(1) {
+  margin: 0px;
+}
+
+.right .description_ct .description > .circle {
+  font-size: 0.875rem;
+  margin-top: 2px;
+}
+
 .ct-shadow {
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
   -webkit-box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
@@ -386,7 +432,7 @@ div[class*='btn'] > a {
 }
 
 .card {
-  padding: 24px 18px;
+  padding: 32px 28px;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
   border-radius: var(--default-radius);
   position: relative;
@@ -439,6 +485,43 @@ div[class*='btn'] > a {
   width: 100%;
   height: 100%;
 }
+
+.shadow-success {
+  -webkit-box-shadow: 0px 23px 15px -10px rgba(34, 193, 151, 0.2);
+  box-shadow: 0px 23px 15px -10px rgba(34, 193, 151, 0.2);
+}
+
+.imp-btn {
+  margin-left: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.125rem;
+  border-radius: var(--lg-radius);
+  width: var(--btn-default-wd);
+  height: var(--btn-default-ht);
+  overflow: hidden;
+}
+
+.imp-btn > span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  font-size: 1.125rem;
+  color: #fff;
+}
+
+.lg-radius {
+  border-radius: var(--lg-radius);
+}
+
+.default-radius {
+  border-radius: var(--default-radius);
+}
+
 div,
 span,
 a,

@@ -44,7 +44,7 @@
   <div class="content-head">
     <div class="area">
       <div class="title">
-        <span>매장관리</span>
+        <span>매장 관리</span>
         <div class="store_count">
           (
           <span id="storeCount">
@@ -123,8 +123,13 @@
             <% } %>
           </div>
         <% } %>
-        <div class="btn-area">
-          <div id="deleteBtn">삭제</div>
+        <div class="btn_area_ct card">
+          <div id="btnMenu"><i class="xi xi-apps"></i></div>
+          <div class="btn-area">
+            <div id="checkedDeleteBtn" class="card">삭제</div>
+            <div id="checkedUseStatusOnBtn" class="card">노출</div>
+            <div id="checkedUseStatusOffBtn" class="card">비노출</div>
+          </div>
         </div>
       </div>
     <% } else { %>

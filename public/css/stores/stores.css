@@ -92,30 +92,97 @@ body {
   align-items: center;
 }
 
-#stores .btn-area {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--color-danger);
+#stores .btn_area_ct {
+  padding: 0px;
   position: absolute;
-  overflow: hidden;
   bottom: 20px;
   right: 20px;
   width: 70px;
   height: 70px;
   border-radius: 100%;
-  margin-top: 1.5rem;
+  background-color: #f3f3f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
-.btn-area #deleteBtn {
+#stores .btn_area_ct .xi-apps {
+  font-size: 2rem;
+}
+
+#stores .btn_area_ct .btn-area > div {
+  position: absolute;
   cursor: pointer;
   color: #fff;
-  font-size: 1.125rem;
+  right: 0;
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+  visibility: hidden;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#stores .btn_area_ct #btnMenu {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#stores .btn_area_ct .btn-area.on > div {
+  width: 80px;
+  height: 80px;
+  opacity: 1;
+  visibility: visible;
+  z-index: 0;
+  padding: 0px;
+}
+
+#stores .btn_area_ct .btn-area > #checkedDeleteBtn {
+  background-color: var(--color-danger);
+  transform: translate3d(0, 0, 0);
+  transition: all 0.25s ease;
+  font-size: 0px;
+}
+
+#stores .btn_area_ct .btn-area > #checkedUseStatusOffBtn {
+  background-color: var(--color-success);
+  transform: translate3d(0, 0, 0);
+  transition: all 0.45s ease;
+  font-size: 0px;
+}
+
+#stores .btn_area_ct .btn-area > #checkedUseStatusOnBtn {
+  background-color: var(--color-success);
+  transform: translate3d(0, 0, 0);
+  transition: all 0.65s ease;
+  font-size: 0px;
+}
+
+#stores .btn_area_ct .btn-area.on > #checkedDeleteBtn {
+  background-color: var(--color-danger);
+  font-size: 1rem;
+  transform: translate3d(0, -130px, 0);
+  transition: transform 0.15s ease;
+}
+
+#stores .btn_area_ct .btn-area.on > #checkedUseStatusOffBtn {
+  background-color: var(--color-l-danger);
+  font-size: 1rem;
+  transform: translate3d(0, -220px, 0);
+  transition: transform 0.25s ease;
+}
+
+#stores .btn_area_ct .btn-area.on > #checkedUseStatusOnBtn {
+  background-color: var(--color-success);
+  font-size: 1rem;
+  transform: translate3d(0, -310px, 0);
+  transition: transform 0.35s ease;
 }
 
 .head_btn_area {
@@ -147,10 +214,6 @@ body {
   color: #fff;
 }
 
-.content-head .title {
-  display: flex;
-  align-items: center;
-}
 .store_count {
   display: flex;
   justify-content: center;

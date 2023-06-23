@@ -6,9 +6,20 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @return {Element} 삭제버튼 Element 를 반환하는 함수
    */
   const getDelBtnElm = () => {
-    return document.getElementById('deleteBtn');
+    return document.getElementById('checkedDeleteBtn');
   };
-
+  /**
+   * @return {Element} 노출버튼 Element 를 반환하는 함수
+   */
+  const getChkedUseStatusOnBtnElm = () => {
+    return document.getElementById('checkedUseStatusOnBtn');
+  };
+  /**
+   * @return {Element} 비버튼 Element 를 반환하는 함수
+   */
+  const getChkedUseStatusOffBtnElm = () => {
+    return document.getElementById('checkedUseStatusOffBtn');
+  };
   /**
    * @return {Element} 모든 체크버튼을 담당하는 체크버튼을 반환하는 함수
    */
@@ -27,11 +38,23 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getUseStatusBtnElms = () => {
     return document.querySelectorAll("input[id*='useStatus']");
   };
+
+  const getCheckedUseStatusElms = () => {
+    const result = Array.from(getChkBtnElms())
+      .filter((chkBtn) => {
+        return chkBtn.checked;
+      })
+      .map((data) => {
+        return data.parentNode.parentNode.querySelector('input[id*=useStatus]');
+      });
+
+    return result;
+  };
   /**
-   * @description 체크된 상점 Element 들을 반환하는 함수
+   * @description 체크된 상점 Id 들을 반환하는 함수
    * @returns {Array<Element>}
    */
-  const getCheckedStoreElms = () => {
+  const getCheckedStoreIds = () => {
     const result = Array.from(getChkBtnElms())
       .filter((chkBtn) => {
         return chkBtn.checked;
@@ -91,17 +114,20 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getFilterCloseBtnCtElm = () => {
     return document.getElementById('filterCloseBtnCt');
   };
+  const getBtnMenu = () => {
+    return document.getElementById('btnMenu');
+  };
+
   /**
    * @description 체크된 상점들을 삭제하는 함수 1개일때, 여러개일 때 호출되는 API 가 다름
    * @return {void}
    */
-
   const onDelete = async () => {
     let storesId = 'storesId=';
 
-    const checkedStores = getCheckedStoreElms();
+    const checkedStores = getCheckedStoreIds();
     if (checkedStores.length === 0) {
-      onAlertModal('삭제할 매장을 선택해 주세요.');
+      alert('삭제할 매장을 선택해 주세요.');
       return;
     }
 
@@ -259,6 +285,42 @@ window.addEventListener('DOMContentLoaded', async () => {
       console.error(error);
     }
   };
+  const onBtnMenu = () => {
+    const btnArea = getBtnMenu().parentNode.querySelector('.btn-area');
+    btnArea.classList.toggle('on');
+  };
+
+  /**
+   * @description 노출 / 비노출 버튼 클릭시 처리하는 함수
+   * @param {Boolean} useStatus
+   * @returns {Void}
+   */
+  const onChkedUseStatusBtn = async (useStatus) => {
+    const chkedStores = getCheckedStoreIds();
+    if (chkedStores.length === 0) {
+      alert('매장을 선택해 주세요');
+      return;
+    }
+
+    let form = {};
+
+    chkedStores.forEach((storeId, index) => {
+      form[index] = { storeId, useStatus: useStatus };
+    });
+
+    try {
+      const res = await axios.put('/api/stores/use_status/many', form);
+      if (res.status === 200) {
+        onAlertModal('성공적으로 설정 되었습니다.');
+        const useStatusElms = getCheckedUseStatusElms();
+        useStatusElms.forEach((useStatusElm) => {
+          useStatusElm.checked = useStatus;
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const toggleFilterCt = () => {
     getFilterBtnElm().addEventListener('click', onFilterBtn);
@@ -280,12 +342,35 @@ window.addEventListener('DOMContentLoaded', async () => {
     getDelBtnElm().addEventListener('click', onDelete);
   };
 
+  const chkedUseStatusOnBtnHandler = () => {
+    getChkedUseStatusOnBtnElm().addEventListener('click', () => {
+      onChkedUseStatusBtn(true);
+    });
+  };
+
+  const chkedUseStatusOffBtnHandler = () => {
+    getChkedUseStatusOffBtnElm().addEventListener('click', () => {
+      onChkedUseStatusBtn(false);
+    });
+  };
+
   const allChkBtnHandler = () => {
     getAllChkBtnElm().addEventListener('click', onAllChkBtn);
   };
 
   const filterSubmitHandler = () => {
     getFilterSubmitElm().addEventListener('click', onFilterSubmit);
+  };
+
+  const BtnMenuHandler = () => {
+    deleteBtnHandler();
+    chkedUseStatusOnBtnHandler();
+    chkedUseStatusOffBtnHandler();
+    getBtnMenu().addEventListener('click', (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      else e.cancelBubble = true; // IE 대응
+      onBtnMenu();
+    });
   };
 
   const useStatusBtnHandler = () => {
@@ -303,7 +388,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const init = () => {
     if (getStoreTotalCnt() > 0) {
-      deleteBtnHandler();
+      BtnMenuHandler();
       filterSubmitHandler();
       setPaginationWithLimit();
       filterBtnHandler();
