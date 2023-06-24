@@ -148,6 +148,7 @@ const appRouting = () => {
         res.cookie('cafe24_access_token', tokenRes.data.access_token, {
           httpOnly: true,
           secure: true,
+          maxAge: 1200000, // 2시간
         });
 
         return res

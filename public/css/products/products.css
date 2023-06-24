@@ -83,3 +83,20 @@
 .product_ct .right {
   width: 40%;
 }
+
+.emtpy_product {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.emtpy_product > img {
+  width: 140px;
+  margin: 24px;
+}
+
+.emtpy_product > span {
+  font-size: 1rem;
+  font-weight: 500;
+}

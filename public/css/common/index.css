@@ -528,6 +528,31 @@ a,
 p {
   font-size: 0.875rem;
 }
+.loading_guard {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 999;
+  overflow: hidden;
+}
+
+.loading_guard > i.xi-spinner-2 {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.loading_guard > div {
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+
 @font-face {
   font-family: 'Outfit';
   font-weight: 100;

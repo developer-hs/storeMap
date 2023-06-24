@@ -1,11 +1,33 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const { onAlertModal } = await import('../utils/utils.js');
-  let L_PRODUCTS_LIST;
+  let L_PRODUCTS_LIST = [];
 
   const mallId = sessionStorage.getItem('mall_id');
 
   const getPrdCntElm = () => {
     return document.getElementById('prdCnt');
+  };
+
+  const createLoadingGaurd = () => {
+    const loadingGuard = document.createElement('div');
+    loadingGuard.classList.add('loading_guard');
+    const guardChildsHTML = [
+      `<i class="xi-spinner-2 xi-spin"></i>`,
+      `<div>로딩중 입니다.</div>`,
+    ].join('');
+
+    loadingGuard.innerHTML += guardChildsHTML;
+
+    return loadingGuard;
+  };
+
+  const paintLoadingGuard = (loadingGuard) => {
+    const contentElm = document.getElementById('content');
+    contentElm.prepend(loadingGuard);
+  };
+
+  const removeLoadingGuard = (loadingGuard) => {
+    loadingGuard.remove();
   };
 
   const getProducts = async () => {
@@ -23,30 +45,42 @@ window.addEventListener('DOMContentLoaded', async () => {
   const paintProducts = () => {
     let index = 1;
     const productsElm = document.getElementById('products');
-    for (let key in L_PRODUCTS_LIST) {
-      const productHTML =
-        `<div class="product">` +
-        `  <div class="prd_no">${L_PRODUCTS_LIST[key].product_no}</div>` +
-        `  <div class="prd_img">` +
-        `    <img` +
-        `      src="${L_PRODUCTS_LIST[key].detail_image}"` +
-        `      alt=""` +
-        `    />` +
-        `  </div>` +
-        `  <div class="name">${L_PRODUCTS_LIST[key].product_name}</div>` +
-        `  <div class="prd_price">${L_PRODUCTS_LIST[key].price}</div>` +
-        `  <div class="use_status switch_ct">` +
-        `    <div>` +
-        `      <div>` +
-        `        <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} type="checkbox" />` +
-        `        <label class="switch_label" for="useStatus_${L_PRODUCTS_LIST[key].product_no}"></label>` +
-        `      </div>` +
-        `    </div>` +
-        `  </div>` +
+    console.log(L_PRODUCTS_LIST);
+    if (L_PRODUCTS_LIST.length > 0) {
+      for (let key in L_PRODUCTS_LIST) {
+        const productHTML =
+          `<div class="product">` +
+          `  <div class="prd_no">${L_PRODUCTS_LIST[key].product_no}</div>` +
+          `  <div class="prd_img">` +
+          `    <img` +
+          `      src="${L_PRODUCTS_LIST[key].detail_image}"` +
+          `      alt=""` +
+          `    />` +
+          `  </div>` +
+          `  <div class="name">${L_PRODUCTS_LIST[key].product_name}</div>` +
+          `  <div class="prd_price">${L_PRODUCTS_LIST[key].price}</div>` +
+          `  <div class="use_status switch_ct">` +
+          `    <div>` +
+          `      <div>` +
+          `        <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} type="checkbox" />` +
+          `        <label class="switch_label" for="useStatus_${L_PRODUCTS_LIST[key].product_no}"></label>` +
+          `      </div>` +
+          `    </div>` +
+          `  </div>` +
+          `</div>`;
+        productsElm.innerHTML += productHTML;
+        index++;
+      }
+    } else {
+      const emptyStoreElm =
+        `<div class="emtpy_product_ct">` +
+        ` <div class="emtpy_product">` +
+        `   <img src="/icons/empty_box.svg" alt="빈상자 아이콘">` +
+        `   <span>등록된 상품이 존재하지 않습니다.</span>` +
+        ` </div>` +
         `</div>`;
-      productsElm.innerHTML += productHTML;
 
-      index++;
+      productsElm.innerHTML += emptyStoreElm;
     }
   };
 
@@ -88,6 +122,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const onUseStatus = async (useStatusElm) => {
+    const loadingGuard = createLoadingGaurd();
+    paintLoadingGuard(loadingGuard);
     try {
       const productId = useStatusElm.dataset.productId;
       const useStatus = useStatusElm.checked;
@@ -107,6 +143,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
       console.error(error);
     }
+
+    setTimeout(() => {
+      removeLoadingGuard(loadingGuard);
+    }, 2000);
   };
 
   const useStatusHandler = () => {

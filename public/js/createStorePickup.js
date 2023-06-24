@@ -3,9 +3,9 @@ const API_BASE_URL = 'http://localhost:8080';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_SHOWING_DISTANCE = Number,
-  L_STORE_LIST = Array,
-  L_MARKERS = Array,
-  L_INFO_WINDOWS = Array,
+  L_STORE_LIST = [],
+  L_MARKERS = [],
+  L_INFO_WINDOWS = [],
   L_SHOWING_INFO_WIN,
   L_USER_NAVER_COORD;
 
