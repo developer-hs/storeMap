@@ -45,3 +45,25 @@ export const getRootPropertyValue = (propertyName) => {
   // 속성 값을 반환
   return computedStyle.getPropertyValue(propertyName);
 };
+
+export const createLoadingGaurd = () => {
+  const loadingGuard = document.createElement('div');
+  loadingGuard.classList.add('loading_guard');
+  const guardChildsHTML = [
+    `<i class="xi-spinner-2 xi-spin"></i>`,
+    `<div>로딩중 입니다.</div>`,
+  ].join('');
+
+  loadingGuard.innerHTML += guardChildsHTML;
+
+  return loadingGuard;
+};
+
+export const paintLoadingGuard = (loadingGuard) => {
+  const contentElm = document.getElementById('content');
+  contentElm.prepend(loadingGuard);
+};
+
+export const removeLoadingGuard = (loadingGuard) => {
+  loadingGuard.remove();
+};

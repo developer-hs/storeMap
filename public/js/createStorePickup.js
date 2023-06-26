@@ -44,9 +44,24 @@ class StoreMapAPI {
     }
   }
 
+  /**
+   * @description 스토어 리스트를 받아옴
+   * @returns { Array }
+   */
   async getStoreList() {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/stores`);
+      if (res.status === 200) {
+        return res.data;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async getUseProducts() {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/products/use_status`);
       if (res.status === 200) {
         return res.data;
       }
@@ -1025,6 +1040,13 @@ const storePickupInit = async () => {
 const getStoreMapData = async () => {
   const storeMap = document.getElementById('storeMap');
   const storeMapAPI = new StoreMapAPI();
+  const useProducts = await storeMapAPI.getUseProducts();
+  // const productNo = iProductNo || undefined;
+
+  console.log(useProducts, 'useProducts');
+  // if (!productNo) {
+  //   return;
+  // }
 
   try {
     L_STORE_LIST = await storeMapAPI.getStoreList();

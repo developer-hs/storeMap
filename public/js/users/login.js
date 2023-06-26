@@ -3,17 +3,17 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const loginBtn = document.getElementById('login_btn');
 
-  const getEmail = () => {
-    return document.getElementById('store_map_email').value;
+  const getMallId = () => {
+    return document.getElementById('storeMapMallId').value;
   };
   const getPW = () => {
     return document.getElementById('store_map_pw').value;
   };
 
   const onLogin = async () => {
-    const email = getEmail();
+    const mallId = getMallId();
     const password = getPW();
-    const form = { email, password };
+    const form = { mallId, password };
 
     try {
       const res = await axios.post('/api/users/login', form);
@@ -21,7 +21,12 @@ window.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '/stores';
       }
     } catch (error) {
-      onAlertModal(`${error.response.data.message}`, 300);
+      if (error.response.status === 401) {
+        onAlertModal(`${error.response.data.message}`, 420);
+      } else {
+        onAlertModal(`${error.response.data.message}`, 300);
+      }
+
       console.error(error);
     }
   };

@@ -1,0 +1,5 @@
+<script>
+  alert('<%- message %>');
+  const referrer = document.referrer;
+  window.location.href = `/token/refresh?redirect_uri=${referrer}`;
+</script>

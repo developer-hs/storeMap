@@ -24,3 +24,13 @@ export const setToken = (res, accessToken, refreshToken) => {
     secure: SECURE,
   });
 };
+
+export const setCafe24AccessToken = async (res, accessToken) => {
+  await res.cookie('cafe24_access_token', accessToken, {
+    httpOnly: true,
+    secure: true,
+    maxAge: 1200000, // 2시간
+  });
+
+  return { ok: true, message: '성공적으로 저장 되었습니다.' };
+};

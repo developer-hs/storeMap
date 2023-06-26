@@ -6,7 +6,7 @@ import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
 import axios from 'axios';
 
-import { __dirname, setToken } from './utils/utils.js';
+import { __dirname, setCafe24AccessToken, setToken } from './utils/utils.js';
 import getAdminJs from './admin.js';
 import db from './app/mongodb/models/index.js';
 import userRoutes from './app/users/routes/index.js';
@@ -15,7 +15,10 @@ import widgetRoutes from './app/widgets/routes/index.js';
 import productRoutes from './app/products/routes/index.js';
 
 import { User } from './app/users/models/user.js';
-import { CAFE24_AUTH } from './app/config/index.js';
+import { CAFE24_AUTH, SECURE } from './app/config/index.js';
+import { refresh, cafe24TokenRefresh } from './app/users/jwt/refresh.js';
+import { verifyAccessToken } from './app/users/jwt/jwt_utils.js';
+import { authJWT } from './app/users/middleware/auth.js';
 
 process.env.NODE_ENV =
   process.env.NODE_ENV &&
@@ -81,20 +84,42 @@ const connectDB = async () => {
     });
 };
 
-const appRouting = () => {
+const appRouting = async () => {
   userRoutes(app);
   storeRoutes(app);
   widgetRoutes(app);
   productRoutes(app);
-
   app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/views/index.html');
+  });
+
+  app.get('/token/refresh', async (req, res) => {
+    const redirectURI = req.query.redirect_uri || '/stores';
+
+    try {
+      const tokenRes = await refresh(req, res);
+      if (!tokenRes.ok) {
+        return res.status(500).send({ ok: false, message: tokenRes.message });
+      }
+      const newAccessToken = tokenRes.data.newAccessToken;
+      const refreshToken = tokenRes.data.refreshToken;
+      setToken(res, newAccessToken, refreshToken);
+
+      return res.redirect(redirectURI);
+    } catch (error) {
+      return res.render('auth/redirectLogin.ejs', {
+        message: '다시 로그인 해 주세요.',
+      });
+    }
   });
 
   app.get('/cafe24/oauth', (req, res) => {
     return res.sendFile(__dirname + '/views/auth/index.html');
   });
 
+  /**
+   * @description 로그인 시 카페24 토큰 발급
+   */
   app.post('/cafe24/oauth/:mallId', async (req, res) => {
     let user;
     const { mallId } = req.params;
@@ -128,11 +153,6 @@ const appRouting = () => {
             };
             // 유저가 존재하지 않을경우 -> 첫방문일 경우
             user = new User(userForm);
-            user.save();
-
-            user.generateToken((accessToken, refreshToken) => {
-              setToken(res, accessToken, refreshToken);
-            });
           }
         } catch (error) {
           // 유저 생성에 실패하였을 경우
@@ -142,14 +162,13 @@ const appRouting = () => {
           });
         }
 
-        user.cafe24RefreshToken = tokenRes.data.refresh_token;
-        await user.save();
-
-        res.cookie('cafe24_access_token', tokenRes.data.access_token, {
-          httpOnly: true,
-          secure: true,
-          maxAge: 1200000, // 2시간
+        user.generateToken((accessToken, refreshToken) => {
+          setToken(res, accessToken, refreshToken);
         });
+        user.cafe24RefreshToken = tokenRes.data.refresh_token;
+        setCafe24AccessToken(res, tokenRes.data.access_token);
+
+        await user.save();
 
         return res
           .status(200)

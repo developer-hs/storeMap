@@ -1,33 +1,11 @@
 window.addEventListener('DOMContentLoaded', async () => {
-  const { onAlertModal } = await import('../utils/utils.js');
+  const utils = await import('../utils/utils.js');
   let L_PRODUCTS_LIST = [];
 
-  const mallId = sessionStorage.getItem('mall_id');
+  let mallId = sessionStorage.getItem('mall_id');
 
   const getPrdCntElm = () => {
     return document.getElementById('prdCnt');
-  };
-
-  const createLoadingGaurd = () => {
-    const loadingGuard = document.createElement('div');
-    loadingGuard.classList.add('loading_guard');
-    const guardChildsHTML = [
-      `<i class="xi-spinner-2 xi-spin"></i>`,
-      `<div>로딩중 입니다.</div>`,
-    ].join('');
-
-    loadingGuard.innerHTML += guardChildsHTML;
-
-    return loadingGuard;
-  };
-
-  const paintLoadingGuard = (loadingGuard) => {
-    const contentElm = document.getElementById('content');
-    contentElm.prepend(loadingGuard);
-  };
-
-  const removeLoadingGuard = (loadingGuard) => {
-    loadingGuard.remove();
   };
 
   const getProducts = async () => {
@@ -45,7 +23,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const paintProducts = () => {
     let index = 1;
     const productsElm = document.getElementById('products');
-    console.log(L_PRODUCTS_LIST);
+
     if (L_PRODUCTS_LIST.length > 0) {
       for (let key in L_PRODUCTS_LIST) {
         const productHTML =
@@ -122,8 +100,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const onUseStatus = async (useStatusElm) => {
-    const loadingGuard = createLoadingGaurd();
-    paintLoadingGuard(loadingGuard);
+    const loadingGuard = utils.createLoadingGaurd();
+    utils.paintLoadingGuard(loadingGuard);
     try {
       const productId = useStatusElm.dataset.productId;
       const useStatus = useStatusElm.checked;
@@ -138,15 +116,15 @@ window.addEventListener('DOMContentLoaded', async () => {
       );
 
       if (res.status === 201) {
-        onAlertModal('설정이 완료되었습니다.');
+        setTimeout(() => {
+          utils.removeLoadingGuard(loadingGuard);
+          utils.onAlertModal('설정이 완료되었습니다.');
+        }, 2000);
       }
     } catch (error) {
       console.error(error);
+      utils.removeLoadingGuard(loadingGuard);
     }
-
-    setTimeout(() => {
-      removeLoadingGuard(loadingGuard);
-    }, 2000);
   };
 
   const useStatusHandler = () => {
@@ -162,6 +140,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const init = async () => {
+    if (!mallId) {
+      mallId = 'rlagudtjq2016';
+    }
     await getProducts();
     paintProducts();
     usingProductInit();

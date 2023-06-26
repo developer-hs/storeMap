@@ -1,7 +1,5 @@
 window.addEventListener('DOMContentLoaded', async () => {
-  const { onAlertModal, reload, confirmCheck } = await import(
-    '../utils/utils.js'
-  );
+  const utils = await import('../utils/utils.js');
   /**
    * @return {Element} 삭제버튼 Element 를 반환하는 함수
    */
@@ -131,16 +129,16 @@ window.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    const removeChk = confirmCheck('정말 삭제하시겠습니까?');
+    const removeChk = utils.confirmCheck('정말 삭제하시겠습니까?');
 
     if (removeChk) {
       if (checkedStores.length === 1) {
         // 삭제할 매장이 한개일 때
         try {
-          const res = await axios.delete(`stores/store/${checkedStores[0]}`);
+          const res = await axios.delete(`/stores/store/${checkedStores[0]}`);
           if (res.status === 200) {
-            onAlertModal('매장이 삭제되었습니다.');
-            reload();
+            utils.onAlertModal('매장이 삭제되었습니다.');
+            utils.reload();
           }
         } catch (error) {
           console.error(error);
@@ -155,10 +153,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-          const res = await axios.delete(`stores/many?${storesId}`);
+          const res = await axios.delete(`/stores/many?${storesId}`);
           if (res.status === 200) {
-            onAlertModal('매장이 삭제되었습니다.');
-            reload();
+            utils.onAlertModal('매장이 삭제되었습니다.');
+            utils.reload();
           }
         } catch (error) {
           console.error(error);
@@ -184,6 +182,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const onCoordSet = async () => {
     let geoRes;
+    const loadingGuard = utils.createLoadingGaurd();
+    utils.paintLoadingGuard(loadingGuard);
     try {
       geoRes = await axios.get('/stores/geocode/many', {});
       if (geoRes.status === 202) {
@@ -213,7 +213,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       try {
         const updateRes = await axios.put('/stores/geocode/many', geoRes.data);
         if (updateRes.status === 200) {
-          reload();
+          utils.reload();
         }
       } catch (error) {
         console.error(error);
@@ -276,9 +276,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
       if (res.status === 200) {
         if (useStatusElm.checked) {
-          onAlertModal('노출설정 되었습니다');
+          utils.onAlertModal('노출설정 되었습니다');
         } else {
-          onAlertModal('노출설정이 비활성화 되었습니다');
+          utils.onAlertModal('노출설정이 비활성화 되었습니다');
         }
       }
     } catch (error) {
@@ -311,7 +311,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axios.put('/api/stores/use_status/many', form);
       if (res.status === 200) {
-        onAlertModal('성공적으로 설정 되었습니다.');
+        utils.onAlertModal('성공적으로 설정 되었습니다.');
         const useStatusElms = getCheckedUseStatusElms();
         useStatusElms.forEach((useStatusElm) => {
           useStatusElm.checked = useStatus;
