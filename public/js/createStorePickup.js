@@ -13,7 +13,9 @@ let PREV_MARKER, L_MAP;
 
 let userMarkers = [];
 class StoreMapAPI {
-  constructor() {}
+  constructor() {
+    this.productId = iProductNo;
+  }
 
   async UISetting() {
     try {
@@ -59,11 +61,13 @@ class StoreMapAPI {
     }
   }
 
-  async getUseProducts() {
+  async productShowCheck() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/products/use_status`);
+      const res = await axios.get(
+        `${API_BASE_URL}/api/products/show/${this.productId}/check`
+      );
       if (res.status === 200) {
-        return res.data;
+        return res.data.ok;
       }
     } catch (error) {
       console.error(error);
@@ -1040,13 +1044,11 @@ const storePickupInit = async () => {
 const getStoreMapData = async () => {
   const storeMap = document.getElementById('storeMap');
   const storeMapAPI = new StoreMapAPI();
-  const useProducts = await storeMapAPI.getUseProducts();
-  // const productNo = iProductNo || undefined;
-
-  console.log(useProducts, 'useProducts');
-  // if (!productNo) {
-  //   return;
-  // }
+  const showCheck = await storeMapAPI.productShowCheck();
+  console.log(showCheck);
+  if (!showCheck) {
+    return;
+  }
 
   try {
     L_STORE_LIST = await storeMapAPI.getStoreList();
