@@ -3,6 +3,7 @@ const API_BASE_URL = 'http://localhost:8080';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_SHOWING_DISTANCE = Number,
+  L_STORE_MAP_ADDITIONAL_OPT,
   L_STORE_LIST = [],
   L_MARKERS = [],
   L_INFO_WINDOWS = [],
@@ -12,6 +13,7 @@ let L_GEOLOCATION_WIDGET = Boolean,
 let PREV_MARKER, L_MAP;
 
 let userMarkers = [];
+
 class StoreMapAPI {
   constructor() {
     this.productId = iProductNo;
@@ -73,6 +75,26 @@ class StoreMapAPI {
       console.error(error);
     }
   }
+
+  /**
+   * @description 실제 쇼핑몰에서 스토어맵 옵션에 해당하는 옵션 엘리먼트를 가져옴
+   * @returns {HTMLElement?}
+   */
+  getStoreMapAdditionalOpt() {
+    const prdOptionChildElms = document.querySelector(
+      '.xans-product-option .xans-product-addoption'
+    ).children;
+
+    Array.from(prdOptionChildElms).forEach((childElm) => {
+      if (childElm.innerText === '삭제시[스토어_픽업_앱]에서_OFF_권장[필수]') {
+        return childElm.nextElementSibling.querySelector(
+          "input[id*='add_option']"
+        );
+      }
+    });
+
+    return undefined;
+  }
 }
 
 const getRootPropertyValue = (propertyName) => {
@@ -86,6 +108,7 @@ const getRootPropertyValue = (propertyName) => {
   return computedStyle.getPropertyValue(propertyName);
 };
 /**
+ * @description 맵 노출 전 스토어맵 오픈시키는 버튼
  * @return {HTMLElement}
  */
 const getPickupStoreBtnElm = () => {
@@ -142,9 +165,16 @@ const getAddrElm = () => {
 /**
  * @returns {String}
  */
-
 const getSearchedAddr = () => {
   return document.getElementById('address').value;
+};
+
+/**
+ * @description 실제 쇼핑몰에서 스토어맵 옵션에 해당하는 옵션 엘리먼트의 값을 선택한 매장의 이름으로 지정
+ * @param {String} name
+ */
+const setAdditionalOpt = (name) => {
+  L_STORE_MAP_ADDITIONAL_OPT.value = name;
 };
 
 const setSearchedAddr = (store) => {
@@ -159,6 +189,7 @@ const setSearchedAddr = (store) => {
   };
 
   typeCall(setSearchTxtStoreName, setSearchTxtStoreAddr);
+  setAdditionalOpt(store.name);
   AddrElm.dataset.storeId = store._id;
 };
 /**
@@ -767,6 +798,7 @@ const onQuickSearch = (store) => {
 
   HideQuickSearchElm(); // 서치리스트 한개만큼에 스타일 지정
 };
+
 const quickSearchHandler = (store) => {
   const storeElm = paintSearchStore(store);
   storeElm.addEventListener('click', () => {
@@ -774,9 +806,29 @@ const quickSearchHandler = (store) => {
   });
 };
 
+const sortQuickSearch = () => {
+  const result = Object.values(quickSearchArray).sort((a, b) => {
+    if (searchedValue === a.name[0]) {
+      return -1;
+    }
+    if (searchedValue === b.name[0]) {
+      return -1;
+    }
+
+    if (a.name[0] < b.name[0]) {
+      return -1;
+    }
+    if (a.name[0] > b.name[0]) {
+      return 1;
+    }
+  });
+
+  return result;
+};
+
 /**
- * 검색어에 따라 검색결과를 생성하고 클릭 이벤트를 등록하며, 검색결과에 따라 서치리스트의 높이를 조정합니다.
- * 검색결과 클릭 시 검색어에 해당하는 위치로 지도를 이동시키고 검색창에 검색어를 입력합니다.
+ * @description 검색어에 따라 검색결과를 생성하고 클릭 이벤트를 등록하며, 검색결과에 따라 서치리스트의 높이를 조정합니다.
+ * @description 검색결과 클릭 시 검색어에 해당하는 위치로 지도를 이동시키고 검색창에 검색어를 입력합니다.
  *
  * @param {HTMLInputElement} addr - 검색어가 입력된 input 엘리먼트
  */
@@ -818,29 +870,10 @@ const quickSearch = () => {
     }
   }
 
-  const sortQuickSearch = () => {
-    const result = Object.values(quickSearchArray).sort((a, b) => {
-      if (searchedValue === a.name[0]) {
-        return -1;
-      }
-      if (searchedValue === b.name[0]) {
-        return -1;
-      }
-
-      if (a.name[0] < b.name[0]) {
-        return -1;
-      }
-      if (a.name[0] > b.name[0]) {
-        return 1;
-      }
-    });
-
-    return result;
-  };
-
-  quickSearchArray = typeCall(sortQuickSearch, () => {
-    return quickSearchArray;
-  });
+  const type = getSearchType();
+  if (type === 'stroe') {
+    quickSearchArray = sortQuickSearch(quickSearchArray);
+  }
 
   for (let key in quickSearchArray) {
     const store = quickSearchArray[key];
@@ -980,6 +1013,10 @@ const pickupInit = () => {
   firstSearchHandler();
 };
 
+/**
+ * @description
+ * @return {void}
+ */
 const onPickupStoreBtn = async () => {
   const pickUpStore = document.getElementById('pickupStore');
   pickUpStore.classList.add('on');
@@ -1042,15 +1079,24 @@ const storePickupInit = async () => {
 };
 
 const APIInit = async () => {
-  const storeMap = document.getElementById('storeMap');
+  const storeMap = document.getElementById('pickupStore');
   const storeMapAPI = new StoreMapAPI();
   const showCheck = await storeMapAPI.productShowCheck();
-  console.log(showCheck);
+
   if (!showCheck) {
     return;
   }
 
   try {
+    L_STORE_MAP_ADDITIONAL_OPT = storeMapAPI.getStoreMapAdditionalOpt();
+
+    if (!L_STORE_MAP_ADDITIONAL_OPT) {
+      console.error(
+        '카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.'
+      );
+      return;
+    }
+
     L_STORE_LIST = await storeMapAPI.getStoreList();
     if (!L_STORE_LIST) {
       return;

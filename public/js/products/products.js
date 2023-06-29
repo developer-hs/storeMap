@@ -50,6 +50,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       for (let key in L_PRODUCTS_LIST) {
         const productHTML =
           `<div class="product">` +
+          `  <i class="xi-spinner-2 xi-spin"></i>` +
           `  <div class="prd_no">${L_PRODUCTS_LIST[key].product_no}</div>` +
           `  <div class="prd_img">` +
           `    <img` +
@@ -60,12 +61,8 @@ window.addEventListener('DOMContentLoaded', async () => {
           `  <div class="name">${L_PRODUCTS_LIST[key].product_name}</div>` +
           `  <div class="prd_price">${L_PRODUCTS_LIST[key].price}</div>` +
           `  <div class="use_status switch_ct">` +
-          `    <div>` +
-          `      <div>` +
           `        <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} type="checkbox" />` +
           `        <label class="switch_label" for="useStatus_${L_PRODUCTS_LIST[key].product_no}"></label>` +
-          `      </div>` +
-          `    </div>` +
           `  </div>` +
           `</div>`;
         productsElm.innerHTML += productHTML;
@@ -156,6 +153,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         form
       );
 
+      useStatusElm.parentNode.parentNode.classList.add('loading');
+      setTimeout(() => {
+        useStatusElm.parentNode.parentNode.classList.remove('loading');
+      }, 2000);
       if (res.status === 201 || res.status === 200) {
         console.log(res.data);
         const apiCallLimit = res.data.xApiCallLimit;
@@ -171,6 +172,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     } catch (error) {
       console.error(error);
+      utils.onAlertModal(error.message);
       // utils.removeLoadingGuard(loadingGuard);
     }
   };

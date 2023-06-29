@@ -42,6 +42,7 @@
 
 #products .product {
   display: flex;
+  position: relative;
 }
 
 #products .product .prd_img {
@@ -121,4 +122,31 @@ body .filter_ct .search_prd_num {
 
 #searchPrdNumBtn {
   height: 100%;
+}
+
+#products .product i.xi-spin {
+  display: none;
+}
+#products .product.loading i.xi-spin {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 999;
+  font-size: 2rem;
+}
+#products .product.loading::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: var(--default-radius);
+  z-index: 999;
 }
