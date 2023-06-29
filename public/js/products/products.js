@@ -1,22 +1,44 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const utils = await import('../utils/utils.js');
   let L_PRODUCTS_LIST = [];
-
   let mallId = sessionStorage.getItem('mall_id');
 
   const getPrdCntElm = () => {
     return document.getElementById('prdCnt');
   };
 
+  const getUseStatusBatchPrcsBtn = () => {
+    return document.getElementById('useStatusBatchPrcsUBtn');
+  };
+  const getSearchPrdNumBtn = () => {
+    return document.getElementById('searchPrdNumBtn');
+  };
+
+  const getSearchPrdNumElm = () => {
+    return document.getElementById('searchPrdNum');
+  };
+
+  const getActivationLimitElm = () => {
+    return document.getElementById('activationLimit');
+  };
+  const getDeactivationLimitElm = () => {
+    return document.getElementById('deactivationLimit');
+  };
+
   const getProducts = async () => {
+    const param = new URLSearchParams(window.location.search);
+    const sinceProductNo = param.get('since_product_no') || 0;
     try {
-      const res = await axios.get(`/api/products/${mallId}`);
+      const res = await axios.get(
+        `/api/products/${mallId}?since_product_no=${sinceProductNo}`
+      );
       if (res.status === 200) {
-        L_PRODUCTS_LIST = res.data;
+        L_PRODUCTS_LIST = res.data.reverse();
         getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
       }
     } catch (error) {
       console.error(error);
+      window.location.href = '/users/login/redirect';
     }
   };
 
@@ -62,6 +84,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  /**
+   * @description 스토어맵이 노출중인 상품의 스위치를 세팅해줌
+   * @param {Object[]} products
+   */
   const setUsingPrd = (products) => {
     products.forEach(async (product) => {
       const getSwitchElm = document.querySelector(
@@ -81,6 +107,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
+  /**
+   *
+   * @returns {Object[]}
+   */
   const getUsingProducts = async () => {
     try {
       const res = await axios.get('/api/products/use_status');
@@ -99,31 +129,67 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const setActivationLimit = (limit) => {
+    getActivationLimitElm().innerText = limit;
+  };
+
+  const setDeactivationLimit = (limit) => {
+    getDeactivationLimitElm().innerText = limit;
+  };
+
   const onUseStatus = async (useStatusElm) => {
-    const loadingGuard = utils.createLoadingGaurd();
-    utils.paintLoadingGuard(loadingGuard);
     try {
+      // const loadingGuard = utils.createLoadingGaurd();
+      // utils.paintLoadingGuard(loadingGuard);
       const productId = useStatusElm.dataset.productId;
       const useStatus = useStatusElm.checked;
-      const form = {
-        productId: productId,
-        useStatus: useStatus,
-      };
+
+      const form = [
+        {
+          productId: productId,
+          useStatus: useStatus,
+        },
+      ];
 
       const res = await axios.post(
         `/api/products/product/${mallId}/option`,
         form
       );
 
-      if (res.status === 201) {
-        setTimeout(() => {
-          utils.removeLoadingGuard(loadingGuard);
-          utils.onAlertModal('설정이 완료되었습니다.');
-        }, 2000);
+      if (res.status === 201 || res.status === 200) {
+        console.log(res.data);
+        const apiCallLimit = res.data.xApiCallLimit;
+        if (res.data.type === 'create') {
+          setActivationLimit(apiCallLimit);
+        } else if (res.data.type === 'update') {
+          setDeactivationLimit(apiCallLimit);
+        } else if (res.data.type === 'pass') {
+        }
+        useStatusElm.checked = useStatus;
+        // utils.removeLoadingGuard(loadingGuard);
+        utils.onAlertModal('설정이 완료되었습니다.');
       }
     } catch (error) {
       console.error(error);
-      utils.removeLoadingGuard(loadingGuard);
+      // utils.removeLoadingGuard(loadingGuard);
+    }
+  };
+
+  const onUseStatusBatchPrcsBtn = () => {
+    try {
+      const useStatusElms = document.querySelectorAll("input[id*='useStatus']");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onSearchPrdNumBtn = () => {
+    const searchPrdNum = document.getElementById('searchPrdNum').value;
+    if (searchPrdNum) {
+      const currentUrl = new URL(window.location.href);
+      const currentUrlParams = currentUrl.searchParams;
+      currentUrlParams.set('since_product_no', searchPrdNum);
+      window.location.href = currentUrl;
     }
   };
 
@@ -133,20 +199,53 @@ window.addEventListener('DOMContentLoaded', async () => {
     );
 
     useStatusElms.forEach((useStatusElm) => {
-      useStatusElm.addEventListener('input', () => {
+      useStatusElm.addEventListener('click', (e) => {
+        e.preventDefault();
         onUseStatus(useStatusElm);
       });
     });
+  };
+
+  const useStatusBatchPrcsBtnHandler = () => {
+    getUseStatusBatchPrcsBtn().addEventListener(
+      'click',
+      onUseStatusBatchPrcsBtn
+    );
+  };
+
+  const searchPrdNumBtnHandler = () => {
+    getSearchPrdNumBtn().addEventListener('click', onSearchPrdNumBtn);
+  };
+
+  const searchPrdNumInit = () => {
+    const param = new URLSearchParams(window.location.search);
+    const sincePrdNo = param.get('since_product_no');
+
+    if (sincePrdNo) {
+      getSearchPrdNumElm().value = sincePrdNo;
+    }
+  };
+
+  const handlers = () => {
+    useStatusBatchPrcsBtnHandler();
+    useStatusHandler();
+    searchPrdNumBtnHandler();
+  };
+
+  const processInit = async () => {
+    await getProducts();
+    paintProducts();
+    usingProductInit();
+    searchPrdNumInit();
   };
 
   const init = async () => {
     if (!mallId) {
       mallId = 'rlagudtjq2016';
     }
-    await getProducts();
-    paintProducts();
-    usingProductInit();
-    useStatusHandler();
+
+    await processInit();
+    handlers();
   };
 
   init();

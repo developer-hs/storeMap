@@ -31,6 +31,7 @@
 }
 
 #products .use_status {
+  position: relative;
   width: 10%;
 }
 
@@ -99,4 +100,25 @@
 .emtpy_product > span {
   font-size: 1rem;
   font-weight: 500;
+}
+
+.filter_ct .text-field {
+  display: flex;
+  justify-content: right;
+  margin-bottom: 24px;
+  height: 50px;
+}
+
+.filter_ct .search_prd_num_ct {
+  position: relative;
+  margin-right: 12px;
+}
+
+body .filter_ct .search_prd_num {
+  width: 100%;
+  height: 100%;
+}
+
+#searchPrdNumBtn {
+  height: 100%;
 }

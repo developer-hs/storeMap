@@ -1041,7 +1041,7 @@ const storePickupInit = async () => {
   pickupStoreBtnHandler();
 };
 
-const getStoreMapData = async () => {
+const APIInit = async () => {
   const storeMap = document.getElementById('storeMap');
   const storeMapAPI = new StoreMapAPI();
   const showCheck = await storeMapAPI.productShowCheck();
@@ -1068,4 +1068,4 @@ const getStoreMapData = async () => {
   }
 };
 
-getStoreMapData();
+APIInit();

@@ -93,6 +93,12 @@ const appRouting = async () => {
     return res.sendFile(__dirname + '/views/index.html');
   });
 
+  app.get('/users/login/redirect', (req, res) => {
+    return res.render('auth/redirectLogin.ejs', {
+      message: '세션이 만료되었습니다. 다시 로그인 해 주세요.',
+      cateId: 'redirectLogin',
+    });
+  });
   app.get('/token/refresh', async (req, res) => {
     const redirectURI = req.query.redirect_uri || '/stores';
 
