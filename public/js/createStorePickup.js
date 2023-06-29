@@ -3,11 +3,8 @@ window.addEventListener('DOMContentLoaded', () => {
   const API_BASE_URL = 'http://localhost:8080';
 
   let L_GEOLOCATION_WIDGET = Boolean,
-    L_SHOWING_DISTANCE = Number,
     L_STORE_MAP_ADDITIONAL_OPT,
     L_STORE_LIST = [],
-    L_MARKERS = [],
-    L_INFO_WINDOWS = [],
     L_SHOWING_INFO_WIN,
     L_USER_NAVER_COORD;
 
@@ -20,6 +17,10 @@ window.addEventListener('DOMContentLoaded', () => {
       this.productId = iProductNo;
     }
 
+    /**
+     * 스토어맵 디자인 정보를 받아옴
+     * @returns {void}
+     */
     async UISetting() {
       try {
         const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
@@ -64,6 +65,10 @@ window.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+    /**
+     * @description 현재 상품이 스토어맵을 사용하는지 여부를 받아옴
+     * @returns {Boolean}
+     */
     async productShowCheck() {
       try {
         const res = await axios.get(
@@ -1082,7 +1087,6 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   const APIInit = async () => {
-    const storeMap = document.getElementById('pickupStore');
     const storeMapAPI = new StoreMapAPI();
     const showCheck = await storeMapAPI.productShowCheck();
 
@@ -1108,6 +1112,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       const res = await axios.get(API_BASE_URL + '/api/stores_map/tags');
       if (res.status === 200) {
+        const storeMap = document.getElementById('storeMap');
         storeMap.innerHTML = res.data;
 
         storePickupInit(storeMapAPI);
