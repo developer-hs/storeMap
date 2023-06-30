@@ -30,10 +30,22 @@ class StoreMapAPI {
         } else {
           L_GEOLOCATION_WIDGET = true;
         }
+        // --ui-color: #000;
+        // --ui-text-color: #fff;
+        // --ui-distance-text-color: #000;
+        // --ui-active-text-color: #000;
+        // --ui-title-text-color: #000;
+        // --ui-address-text-color: #e1e1e1;
+        // --ui-map-title-text-color: #fff;
+        // --ui-map-address-text-color: #e1e1e1;
         document.documentElement.style.setProperty('--ui-color', UI.uiColor);
         document.documentElement.style.setProperty(
-          '--ui-distance-color',
-          UI.distanceColor
+          '--ui-title-text-color',
+          UI.titleTextColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-distance-text-color',
+          UI.distanceTextColor
         );
         document.documentElement.style.setProperty(
           '--ui-active-text-color',
@@ -42,6 +54,18 @@ class StoreMapAPI {
         document.documentElement.style.setProperty(
           '--ui-text-color',
           UI.textColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-address-text-color',
+          UI.addressTextColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-map-title-text-color',
+          UI.mapTitleTextColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-map-address-text-color',
+          UI.mapAddressTextColor
         );
       }
     } catch (error) {
@@ -180,10 +204,14 @@ const getSearchedAddr = () => {
  * @description 실제 쇼핑몰에서 스토어맵 옵션에 해당하는 옵션 엘리먼트의 값을 선택한 매장의 이름으로 지정
  * @param {String} name
  */
-const setAdditionalOpt = (name) => {
-  L_STORE_MAP_ADDITIONAL_OPT.value = name;
+const setAdditionalOpt = (store) => {
+  L_STORE_MAP_ADDITIONAL_OPT.value = `${store.name} - ${store.address}`;
 };
 
+/**
+ * @description 선택한 매장의 검색 타입에 알맞은 데이터를 input#address 에 넣어줌 매장 선택 모든동작이 이 함수를 거침
+ * @param {Object} store
+ */
 const setSearchedAddr = (store) => {
   const AddrElm = getAddrElm();
 
@@ -196,7 +224,7 @@ const setSearchedAddr = (store) => {
   };
 
   typeCall(setSearchTxtStoreName, setSearchTxtStoreAddr);
-  setAdditionalOpt(store.name);
+  setAdditionalOpt(store);
   AddrElm.dataset.storeId = store._id;
 };
 /**
@@ -388,7 +416,7 @@ const createStoreChildElmAsString = (store) => {
     `<div class="left">` +
     `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${store.name}</h1>` +
     `<div class="addr_ct">` +
-    `<span style="color: rgb(151, 151, 151);">${store.address}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
+    `<span class="address" style="color: rgb(151, 151, 151);">${store.address}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
     `</div>` +
     `</div>` +
     `<div class="right">` +
