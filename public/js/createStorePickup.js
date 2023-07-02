@@ -67,6 +67,22 @@ class StoreMapAPI {
           '--ui-map-address-text-color',
           UI.mapAddressTextColor
         );
+        document.documentElement.style.setProperty(
+          '--ui-quicksearch-title-text-color',
+          UI.quickSearchTitleTextColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-quicksearch-address-text-color',
+          UI.quickSearchAddressTextColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-quicksearch-title-hover-color',
+          UI.quickSearchTitleTextHoverColor
+        );
+        document.documentElement.style.setProperty(
+          '--ui-quicksearch-address-hover-color',
+          UI.quickSearchAddressTextHoverColor
+        );
       }
     } catch (error) {
       console.error(error);
@@ -614,7 +630,7 @@ const getPickupAlert = () => {
  * @returns {Element} - 생성된 주소 문자열
  **/
 const getSearchListCtElm = () => {
-  return document.getElementById('search_list_ct'); // 서치리스트 컨테이너 요소를 가져옴
+  return document.getElementById('searchListCt'); // 서치리스트 컨테이너 요소를 가져옴
 };
 
 /**
@@ -690,8 +706,8 @@ const typeCall = (store_callback, dong_callback) => {
  */
 
 const findStoreBySearched = () => {
-  const storeId = document.querySelector('#search_list_ct > .store')
-    ? document.querySelector('#search_list_ct > .store').dataset.storeId
+  const storeId = document.querySelector('#searchListCt > .store')
+    ? document.querySelector('#searchListCt > .store').dataset.storeId
     : getAddrElm().dataset.storeId;
 
   if (storeId) {

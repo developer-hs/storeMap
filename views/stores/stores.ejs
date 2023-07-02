@@ -43,35 +43,45 @@
   </div>
   <div class="content-head">
     <div class="area">
-      <div class="title">
-        <span>매장 관리</span>
-        <div class="store_count">
-          (
+      <div class="page_title">
+        <div class="title_ct">
+          <span class="title">STORE MANAGEMENT</span>
+          <span class="sub_title">매장 관리 페이지</span>
+        </div>
+        <div class="store_count count">
           <span id="storeCount">
             <%- totalCount %>
           </span>
-          )
         </div>
       </div>
       <div>
         <div class="head_btn_area">
-          <div class="create-btn" id="storeCreateBtn">
-            <a href="/stores/store?type=c">매장 생성</a>
+          <div class="active-btn success" id="storeCreateBtn">
+            <a class="c-success" href="/stores/store?type=c">
+              <img class="icon_pencil mr-2" src="/icons/pencil.svg" alt="">
+              <!-- <i class="c-success xi-pen mr-2"></i> -->
+              매장 생성
+            </a>
           </div>
-          <div id="coordSetBtn">
-            <span>일괄 좌표 설정</span>
+          <div class="active-btn danger" id="coordSetBtn">
+            <a class="c-danger" href="javascript:void();">
+              <img class="icon_target_location mr-2" src="/icons/location.svg" alt="">
+              일괄 좌표 설정
+            </a>
           </div>
         </div>
       </div>
     </div>
-    <% if (stores.length > 0) { %>
-    <div class="area filter_btn_ct">
-      <div id="filterBtn">
-        <img class="filter_icon" src="/icons/filter_blue.svg" alt="필터아이콘">
-        Filter
+  </div>
+  <div class="mb-4"> 
+      <% if (stores.length > 0) { %>
+      <div class="area filter_btn_ct">
+        <div id="filterBtn">
+          <img class="filter_icon" src="/icons/filter.svg" alt="필터아이콘">
+          Filter
+        </div>
       </div>
-    </div>
-    <% } %>
+      <% } %>
   </div>
   <div class="store_table">
     <div class="table-head">
@@ -79,23 +89,22 @@
         <input id="allCheckBtn" type="checkbox" />
       </div>
       <div class="name">
-        <span>매장명</span>
+        <span><i class="xi-shop mr-2"></i>매장명</span>
       </div>
       <div class="addr">
-        <span>매장주소</span>
+        <span><i class="xi-map-o mr-2"></i>매장주소</span>
       </div>
       <div class="use_status">
-        <span>노출여부</span>
+        <span><i class="xi-eye mr-2"></i>노출여부</span>
       </div>
       <div class="coord">
-        <span>좌표설정</span>
+        <span><i class="xi-maker mr-2"></i>좌표설정</span>
       </div>
     </div>
-
     <% if (stores.length > 0) { %>
       <div id="stores">
         <% for(var i = 0; i < stores.length; i++){ %>
-          <div class="store" id="<%- stores[i]._id %>">
+          <div class="store <% if (stores[i].useStatus === true) { %> use <% } %>" id="<%- stores[i]._id %>">
             <div class="check_btn_area">
               <input class="check_btn" type="checkbox" />
             </div>
@@ -106,21 +115,11 @@
               <div class="store_addr"><%- stores[i].address %></div>
             </a>
             <div class="use_status switch_ct">
-              <div>
-                <div>
-                  <input class="switch_input" id="useStatus<%- i %>" data-store-id="<%- stores[i]._id %>" type="checkbox" <% if (stores[i].useStatus === true) { %> checked <% } %>/>
-                  <label class="switch_label" for="useStatus<%- i %>"></label>
-                </div>
-              </div>
+              <div class="icon <% if (stores[i].useStatus === true) { %> on <% } else { %> off <% } %>"></div>
             </div>
-            <% if (stores[i].latitude && stores[i].longitude){ %>
-            <div class="coord on"><img src="/icons/check.svg" alt="체크아이콘">
+            <div class="coord">
+              <div class="icon <% if (stores[i].latitude && stores[i].longitude){ %> on <% } else { %> off <% } %>"></div>
             </div>
-            <% } else { %>
-            <div class="coord off">
-              <img src="/icons/x.svg" alt="엑스아이콘">
-            </div>
-            <% } %>
           </div>
         <% } %>
         <div class="btn_area_ct card">

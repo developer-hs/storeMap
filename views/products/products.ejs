@@ -3,12 +3,13 @@
 <div id="content">
   <div class="content-head">
     <div class="area">
-      <div class="title">
-        <span>상품 설정</span>
-        <div class="prd_cnt">
-          (
+      <div class="page_title">
+        <div class="title_ct">
+          <span class="title">PRODUCT MANAGEMENT</span>
+          <span class="sub_title">상품 관리 페이지</span>
+        </div>
+        <div class="prd_cnt count">
           <span id="prdCnt">0</span>
-          )
         </div>
       </div>
       <div class="use_status_btn_area displaynone">
@@ -56,13 +57,13 @@
     </div>
     <div class="right">
       <div class="api_limit_ct">
-        <div class="activation_limit">
-          <div class="title">활성화 호출 제한</div>
+        <div class="activation_limit limit">
+          <div class="title mr-2">활성화 호출 제한</div>
           <span class="current_limit" id="activationLimit">0</span>
           <span class="max_limit">40</span>
         </div>
-        <div class="deactivation_limit">
-          <div class="title">비활성화 호출 제한</div>
+        <div class="deactivation_limit limit">
+          <div class="title mr-2">비활성화 호출 제한</div>
           <span class="current_limit" id="deactivationLimit">0</span>
           <span class="max_limit">40</span>
         </div>
@@ -73,24 +74,25 @@
           <div class="description">
             <span class="circle">⦁</span>
             <span>
-              <span>
-                일괄 활성화 시 상품 개수가 40개 미만일 경우에는 즉시 처리됩니다.
-              </span>
+              <span>활성화시킨 상품에만 스토어맵이 활성화됩니다.</span>
             </span>
           </div>
-          <div class="description important">
+          <div class="description">
             <span class="circle">⦁</span>
-            <span class="important">
-              일괄 활성화 시 상품 개수가 40 이상일 경우에는 카페24 API 호출
-              제한으로 인해 상품개수 X 2초 의 딜레이가 발생합니다
+            <span>
+              카페24 API 호출 제한으로 인해 상품 활성화 후 활성화시킨 상품에
+              대한 다음 동작까지 약 2초의 딜레이가 발생합니다.
             </span>
           </div>
-          <div class="description important">
+          <div class="description">
             <span class="circle">⦁</span>
-            <span class="important">
-              수동으로 활성화 시 카페24 API 호출 제한으로 인해 다음 동작까지
-              2초의 딜레이가 발생합니다.
-            </span>
+            <div class="flex-column">
+              <p>
+                카페24 API 호출 제한으로 인해 과도한 호출이 발생할 경우 몇 분간
+                상품 설정이 제한될 수 있습니다. 이 경우 잠시 기다린 후 설정해
+                주세요
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,10 +1,12 @@
 #side_nav_ct {
-  padding: var(--top-margin) 0 0 24px;
+  padding: var(--top-margin) 0 0 12px;
+  background-color: var(--color-main-bg);
   width: 200px;
   height: 100%;
 }
 
 #side_nav_ct .cate {
+  position: relative;
   margin: 18px 0;
   display: flex;
   justify-content: center;
@@ -12,22 +14,21 @@
   box-sizing: border-box;
 }
 #side_nav_ct .cate > a {
+  color: #aaa;
   padding: 16px 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 24px;
   font-size: 1rem;
 }
 
 #side_nav_ct .cate.on {
-  position: relative;
   box-shadow: -15px 0px 25px 0 rgba(1, 1, 1, 0.1);
   border-radius: var(--lg-radius);
 }
 
 #side_nav_ct .cate.on > a {
-  color: var(--color-primary);
+  color: var(--color-success);
   font-weight: 600;
 }
 #side_nav_ct .cate.on::before {
@@ -37,4 +38,24 @@
   right: 0;
   width: 24px;
   height: 96px;
+}
+
+#side_nav_ct .icon {
+  position: absolute;
+  left: 15px;
+  width: 25px;
+}
+
+#side_nav_ct svg {
+  position: absolute;
+  left: 15px;
+  width: 25px;
+}
+
+#side_nav_ct .cate svg [class*='cls'] {
+  fill: #aaa;
+}
+
+#side_nav_ct .cate.on svg [class*='cls'] {
+  fill: var(--color-success);
 }

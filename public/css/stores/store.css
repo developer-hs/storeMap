@@ -30,7 +30,7 @@ input#excelUploadBtn {
   height: 100%;
 }
 .store_ct .btn_area {
-  margin-top: 36px;
+  margin-top: 72px;
   position: relative;
   display: flex;
   justify-content: right;
@@ -53,27 +53,25 @@ input#excelUploadBtn {
 }
 
 #excelBtnCt {
-  border: 1px solid #1d6f42;
-  background-color: #1d6f42;
+  border: 1px solid var(--color-excel);
   margin-right: 12px;
-  -webkit-box-shadow: 0px 23px 15px -10px rgba(29, 111, 66, 0.2);
-  box-shadow: 0px 23px 15px -10px rgba(29, 111, 66, 0.2);
+  -webkit-box-shadow: 0px 23px 15px -10px rgba(29, 111, 66, 0.05);
+  box-shadow: 0px 23px 15px -10px rgba(29, 111, 66, 0.05);
 }
 
 #smapleExcelDwldBtn {
-  -webkit-box-shadow: 0px 23px 15px -10px rgba(29, 111, 66, 0.1);
-  box-shadow: 0px 23px 15px -10px rgba(29, 111, 66, 0.1);
+  -webkit-box-shadow: 0px 23px 15px -10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 23px 15px -10px rgba(0, 0, 0, 0.05);
 }
 
 #excelBtnCt,
 #smapleExcelDwldBtn {
   cursor: pointer;
-  border-radius: var(--lg-radius);
+  border-radius: var(--default-radius);
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
   width: 100%;
 }
 
@@ -119,17 +117,16 @@ input#excelUploadBtn {
   z-index: 1000;
 }
 #excelUploadModalBg > #excelUploadModal label[for='excelUploadBtn'] {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 50px;
-  border-radius: var(--lg-radius);
-  border: 1px solid #eee;
-  font-size: 1.175rem;
+  border-radius: var(--default-radius);
+  border: 1px solid var(--color-excel);
+  font-size: 1rem;
   cursor: pointer;
-  background-color: #1d6f42;
-  color: #eee;
+  color: var(--color-excel);
 }
 
 #latLongCt {
@@ -168,14 +165,13 @@ input#excelUploadBtn {
 }
 
 .excel_btn_area .create_btn {
-  color: #fff;
+  color: var(--color-excel);
 }
 
 .excel_btn_area .create_btn,
 .excel_btn_area .sample_dwld_btn {
-  font-size: 1.125rem;
-  width: 200px;
-  height: 50px;
+  font-size: 1rem;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -187,11 +183,11 @@ input#excelUploadBtn {
   align-items: center;
   width: 100%;
   height: 100%;
-  font-size: 1.125rem;
+  font-size: 1rem;
 }
 
 .excel_btn_area #smapleExcelDwldBtn {
-  border: 1px solid #1d6f42;
+  border: 1px solid var(--color-black);
 }
 
 .excel_btn_area {
@@ -204,6 +200,7 @@ input#excelUploadBtn {
 }
 .left .switch_ct > div {
   position: initial;
+  justify-content: right;
 }
 .left .switch_input:checked + .switch_label {
   background-color: var(--color-success);
@@ -220,6 +217,11 @@ input#excelUploadBtn {
 }
 
 #excelUploadModal .description {
-  font-size: 1rem;
-  color: var(--color-black);
+  font-size: 0.875rem;
+  color: var(--color-l-black);
+}
+
+.icon_upload {
+  position: absolute;
+  left: 20px;
 }

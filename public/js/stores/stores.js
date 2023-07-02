@@ -43,7 +43,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         return chkBtn.checked;
       })
       .map((data) => {
-        return data.parentNode.parentNode.querySelector('input[id*=useStatus]');
+        return data.parentNode.parentNode.querySelector('.use_status .icon');
       });
 
     return result;
@@ -248,6 +248,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const urlParams = url.searchParams;
     urlParams.set('limit', filterLimit);
     urlParams.set('align', filterAlign);
+    urlParams.set('page', 1);
 
     window.location.href = url;
   };
@@ -302,19 +303,26 @@ window.addEventListener('DOMContentLoaded', async () => {
       return;
     }
 
-    let form = {};
+    let form = [];
 
-    chkedStores.forEach((storeId, index) => {
-      form[index] = { storeId, useStatus: useStatus };
+    chkedStores.forEach((storeId) => {
+      form.push({ storeId, useStatus: useStatus });
     });
 
     try {
       const res = await axios.put('/api/stores/use_status/many', form);
       if (res.status === 200) {
+        console.log(res);
         utils.onAlertModal('성공적으로 설정 되었습니다.');
         const useStatusElms = getCheckedUseStatusElms();
         useStatusElms.forEach((useStatusElm) => {
-          useStatusElm.checked = useStatus;
+          if (useStatus) {
+            useStatusElm.classList.remove('off');
+            useStatusElm.classList.add('on');
+          } else {
+            useStatusElm.classList.remove('on');
+            useStatusElm.classList.add('off');
+          }
         });
       }
     } catch (error) {

@@ -67,3 +67,37 @@ export const paintLoadingGuard = (loadingGuard) => {
 export const removeLoadingGuard = (loadingGuard) => {
   loadingGuard.remove();
 };
+
+export const slideUp = (element, duration) => {
+  element.style.transitionProperty = 'height, margin, padding';
+  element.style.transitionDuration = duration + 'ms';
+  element.style.height = element.offsetHeight + 'px';
+  element.offsetHeight; // 리플로우 강제 발생
+  element.style.overflow = 'hidden';
+
+  element.style.height = '0';
+  element.style.paddingTop = '0';
+  element.style.paddingBottom = '0';
+  element.style.marginTop = '0';
+  element.style.marginBottom = '0';
+
+  setTimeout(function () {
+    element.style.removeProperty('padding-top');
+    element.style.removeProperty('padding-bottom');
+    element.style.removeProperty('margin-top');
+    element.style.removeProperty('margin-bottom');
+    element.style.removeProperty('transition-duration');
+    element.style.removeProperty('transition-property');
+  }, duration);
+};
+
+export const slideDown = (element, height, duration) => {
+  element.style.transitionProperty = 'height, margin, padding';
+  element.style.transitionDuration = duration + 'ms';
+  element.style.overflow = 'hidden';
+  element.style.height = height + 'px';
+
+  setTimeout(function () {
+    element.style.removeProperty('overflow');
+  }, duration);
+};

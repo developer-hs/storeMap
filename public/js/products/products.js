@@ -59,7 +59,9 @@ window.addEventListener('DOMContentLoaded', async () => {
           `    />` +
           `  </div>` +
           `  <div class="name">${L_PRODUCTS_LIST[key].product_name}</div>` +
-          `  <div class="prd_price">${L_PRODUCTS_LIST[key].price}</div>` +
+          `  <div class="prd_price">₩${parseInt(
+            L_PRODUCTS_LIST[key].price
+          ).toLocaleString(navigator.language)}</div>` +
           `  <div class="use_status switch_ct">` +
           `        <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} type="checkbox" />` +
           `        <label class="switch_label" for="useStatus_${L_PRODUCTS_LIST[key].product_no}"></label>` +
@@ -91,6 +93,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         `.use_status input[id=useStatus_${product.productId}]`
       );
       if (getSwitchElm) {
+        getSwitchElm.parentNode.parentNode.classList.add('use');
         getSwitchElm.checked = true;
       } else {
         try {
@@ -158,13 +161,18 @@ window.addEventListener('DOMContentLoaded', async () => {
         useStatusElm.parentNode.parentNode.classList.remove('loading');
       }, 2000);
       if (res.status === 201 || res.status === 200) {
-        console.log(res.data);
         const apiCallLimit = res.data.xApiCallLimit;
         if (res.data.type === 'create') {
           setActivationLimit(apiCallLimit);
         } else if (res.data.type === 'update') {
           setDeactivationLimit(apiCallLimit);
         } else if (res.data.type === 'pass') {
+        }
+
+        if (useStatus) {
+          useStatusElm.parentNode.parentNode.classList.add('use');
+        } else {
+          useStatusElm.parentNode.parentNode.classList.remove('use');
         }
         useStatusElm.checked = useStatus;
         // utils.removeLoadingGuard(loadingGuard);

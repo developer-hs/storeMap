@@ -9,9 +9,10 @@ node_modules/
 
 # ignore app folders
 app/
-
 cert/
+public/icons/
 
 config.js
 testCreateStorePickup.js
 app.yaml
+

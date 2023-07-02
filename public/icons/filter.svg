@@ -1,1 +1,13 @@
-<svg id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg"><g><path d="m0 0v93.925l202.086 205.19v212.885l107.828-68.379v-144.506l202.086-205.19v-93.925zm482 29.963v42.891h-452v-42.891zm-202.086 256.972v140.219l-47.828 30.33v-170.549l-181.333-184.118h410.494z"/></g></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #6288fd;
+      }
+    </style>
+  </defs>
+  <g id="Capa_1" data-name="Capa 1">
+    <path class="cls-1" d="M0,0V2.94l6.32,6.41v6.65l3.37-2.14v-4.52l6.32-6.41V0H0ZM15.06,.94v1.34H.94V.94H15.06Zm-6.32,8.03v4.38l-1.49,.95v-5.33L1.59,3.21H14.41l-5.67,5.75Z"/>
+  </g>
+</svg>

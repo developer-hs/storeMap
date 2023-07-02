@@ -13,13 +13,22 @@
   href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"
 />
 <div id="content">
+  <div class="save_alert" id="saveAlert">설정에 변경사항이 존재합니다.</div>
   <div class="content-head">
     <div class="area">
-      <div class="title"><span>스타일 설정</span></div>
+      <div class="page_title">
+        <div class="title_ct">
+          <span class="title">WIDGET STYLE SETTING</span>
+          <span class="sub_title">위젯 스타일 설정 페이지</span>
+        </div>
+      </div>
     </div>
   </div>
   <div class="widget_ct">
     <div class="left">
+      <div class="renew_btn" id="renewBtn">
+        <i class="xi-renew"></i>
+      </div>
       <div class="section lg">
         <div class="ui_ct">
           <div>
@@ -42,6 +51,7 @@
           </div>
         </div>
       </div>
+
       <div class="section">
         <div
           class="pickr_ct"
@@ -52,36 +62,142 @@
           <div class="" id="uiMainColor"></div>
         </div>
       </div>
-      <div class="section">
-        <div
-          class="pickr_ct"
-          id="uiActiveTextColorCt"
-          data-color="<%- widget.activeTextColor %>"
-        >
-          <span>글자(선택) 색상</span>
-          <div class="" id="uiActiveTextColor"></div>
+
+      <div class="section_ct">
+        <div class="section_title">검색 타입 스타일</div>
+        <div class="section_content">
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiTextColorCt"
+              data-color="<%- widget.textColor %>"
+            >
+              <span>검색타입 글자 색상</span>
+              <div class="" id="uiTextColor"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiActiveTextColorCt"
+              data-color="<%- widget.activeTextColor %>"
+            >
+              <span>검색타입 글자(선택) 색상</span>
+              <div class="" id="uiActiveTextColor"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="section">
-        <div
-          class="pickr_ct"
-          id="uiTextColorCt"
-          data-color="<%- widget.textColor %>"
-        >
-          <span>글자 색상</span>
-          <div class="" id="uiTextColor"></div>
+
+      <div class="section_ct">
+        <div class="section_title" id="storeListSection">
+          매장 리스트 스타일
+        </div>
+        <div class="section_content">
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiTitleTextColorCt"
+              data-color="<%- widget.titleTextColor %>"
+            >
+              <span>매장 글자(이름) 색상</span>
+              <div class="" id="uiTitleTextColor"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiAddressTextColorCt"
+              data-color="<%- widget.addressTextColor %>"
+            >
+              <span>매장 글자(주소) 색상</span>
+              <div class="" id="uiAddressTextColor"></div>
+            </div>
+          </div>
+          <div
+            class="section <% if (widget.ui === 'default') { %> displaynone <% } %>"
+          >
+            <div
+              class="pickr_ct"
+              id="uiDistanceTextColorCt"
+              data-color="<%- widget.distanceTextColor %>"
+            >
+              <span>매장 글자(거리) 색상</span>
+              <div class="" id="uiDistanceTextColor"></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div
-        class="section <% if (widget.ui === 'default') { %> displaynone <% } %>"
-      >
-        <div
-          class="pickr_ct"
-          id="uiDistanceColorCt"
-          data-color="<%- widget.distanceColor %>"
-        >
-          <span>거리 색상</span>
-          <div class="" id="uiDistanceColor"></div>
+
+      <div class="section_ct">
+        <div class="section_title">지도 스타일</div>
+        <div class="section_content">
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiMapTitleTextColorCt"
+              data-color="<%- widget.mapTitleTextColor %>"
+            >
+              <span>맵 글자(선택 매장명) 색상</span>
+              <div class="" id="uiMapTitleTextColor"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiMapAddressTextColorCt"
+              data-color="<%- widget.mapAddressTextColor %>"
+            >
+              <span>맵 글자(선택 매장주소) 색상</span>
+              <div class="" id="uiMapAddressTextColor"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section_ct">
+        <div class="section_title">자동완성 검색어 스타일</div>
+        <div class="section_content">
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiQuickSearchTitleTextColorCt"
+              data-color="<%- widget.quickSearchTitleTextColor %>"
+            >
+              <span>자동완성 글자(매장명) 색상</span>
+              <div class="" id="uiQuickSearchTitleTextColor"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiQuickSearchAddressTextColorCt"
+              data-color="<%- widget.quickSearchAddressTextColor %>"
+            >
+              <span>자동완성 글자(주소) 색상</span>
+              <div class="" id="uiQuickSearchAddressTextColor"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiQuickSearchTitleTextHoverColorCt"
+              data-color="<%- widget.quickSearchTitleTextHoverColor %>"
+            >
+              <span>자동완성 마우스오버(매장명) 색상</span>
+              <div class="" id="uiQuickSearchTitleTextHoverColor"></div>
+            </div>
+          </div>
+          <div class="section">
+            <div
+              class="pickr_ct"
+              id="uiQuickSearchAddressTextHoverColorCt"
+              data-color="<%- widget.quickSearchAddressTextHoverColor %>"
+            >
+              <span>자동완성 마우스오버(주소) 색상</span>
+              <div class="" id="uiQuickSearchTitleAddressTextHoverColor"></div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="btn_area">
@@ -117,8 +233,27 @@
               placeholder="검색할 주소"
               value=""
             />
-            <i id="submit" class="xi-search"></i>
-            <div id="search_list_ct"></div>
+            <i
+              id="submit"
+              class="xi-search"
+              style="color: <%- widget.uiColor %>"
+            ></i>
+            <div id="searchListCt" style="display: block; height: 90px">
+              <div class="store" data-store-id="6498fe71830c17336c50d863">
+                <div class="store_name">
+                  <h1 style="color: <%- widget.quickSearchTitleTextColor %>">
+                    카페24
+                  </h1>
+                </div>
+                <div class="store_addr">
+                  <span
+                    style="color: <%- widget.quickSearchAddressTextColor %>"
+                  >
+                    서울특별시 동작구 보라매로5길 15
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="store_list_ct on">
             <div
@@ -133,7 +268,11 @@
                     <div class="left">
                       <h1
                         class="store_name"
-                        style="font-size: 16px; padding-bottom: 6px"
+                        style="
+                          font-size: 16px;
+                          padding-bottom: 6px;
+                          color: <%- widget.titleTextColor %>;
+                        "
                       >
                         테스트 매장_
                         <%- i %>
@@ -141,12 +280,15 @@
                       <div class="addr_ct">
                         <span
                           class="distance <% if (widget.ui === 'default') { %> displaynone <% } %>"
-                          style="color: <%- widget.distanceColor %>"
+                          style="color: <%- widget.distanceTextColor %>"
                         >
                           <%- i %>
                           Km
                         </span>
-                        <span style="color: rgb(151, 151, 151)">
+                        <span
+                          class="address"
+                          style="color: <%- widget.addressTextColor %>"
+                        >
                           테스트 주소_
                           <%- i %>
                         </span>
@@ -164,6 +306,7 @@
                     </div>
                     <div class="right">
                       <svg
+                        style="fill: <%- widget.uiColor%>"
                         class="store_pick_btn"
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 30 30"
@@ -199,15 +342,23 @@
         </div>
         <div
           id="mapTitle"
-          style="
-            display: block;
-            background-color: <%- widget.uiColor %>;
-            color: <%- widget.activeTextColor %>;
-          "
+          style="display: block; background-color: <%- widget.uiColor %>"
         >
           <div class="title">
-            <div>
+            <div
+              class="selected_store_name"
+              style="color: <%- widget.mapTitleTextColor %>"
+            >
               <span class="pickup_store">픽업 매장</span>
+              <span id="storeName">카페24</span>
+            </div>
+            <div>
+              <span
+                id="storeAddress"
+                style="color: <%- widget.mapAddressTitleTextColor %>"
+              >
+                서울특별시 동작구 보라매로5길 15
+              </span>
             </div>
           </div>
         </div>
