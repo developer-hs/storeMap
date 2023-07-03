@@ -1,4 +1,9 @@
-export const onAlertModal = (message, width = 200, height = 60) => {
+export const onAlertModal = (
+  message,
+  width = 200,
+  height = 60,
+  duration = 1300
+) => {
   const body = document.querySelector('body');
   const alertModal = document.createElement('div');
   const alertContent = document.createElement('div');
@@ -16,11 +21,11 @@ export const onAlertModal = (message, width = 200, height = 60) => {
 
   setTimeout(() => {
     alertModal.classList.remove('on');
-  }, 1300);
+  }, duration);
 
   setTimeout(() => {
     alertModal.remove();
-  }, 1500);
+  }, duration + 200);
 };
 
 export const reload = () => {

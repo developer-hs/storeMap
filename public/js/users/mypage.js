@@ -1,4 +1,5 @@
 window.addEventListener('DOMContentLoaded', async () => {
+  const URL_PATTERN = /^https:\/\/([^/]+)(\/[^/.]+)*$/;
   const { getRootPropertyValue, onAlertModal, reload } = await import(
     '../utils/utils.js'
   );
@@ -17,19 +18,24 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const originCheck = () => {
     const origin = getOrigin();
-    if (!origin) {
+    if (!URL_PATTERN.test(origin)) {
       const dangerColor = getRootPropertyValue('--color-danger');
       getOriginElm().style.borderColor = dangerColor;
     } else {
-      const blackColor = getRootPropertyValue('--color-black');
+      const blackColor = getRootPropertyValue('--color-success');
       getOriginElm().style.borderColor = blackColor;
     }
   };
 
   const onOriginSave = async () => {
+    const origin = getOrigin();
+
+    if (!URL_PATTERN.test(origin)) {
+      return onAlertModal('도메인 형식을 다시 확인해 주세요.', 250, 60, 2000);
+    }
     try {
       const originUpdateForm = {
-        origin: getOrigin(),
+        origin: origin,
       };
       const res = await axios.put('/users/origin', originUpdateForm);
       if (res.status === 200) {
@@ -51,6 +57,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const mypageInit = () => {
+    originCheck();
     originHandler();
     originSaveBtnHandler();
   };
