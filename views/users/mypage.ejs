@@ -14,6 +14,14 @@
   <div class="card">
     <div class="content_col">
       <div class="info_ct">
+        <div class="text-field id">
+          <input type="text" id="id" value="<%- user.mallId %>" />
+          <label for="id">아이디</label>
+        </div>
+        <div class="text-field">
+          <input type="password" id="password" value="" />
+          <label for="password">비밀번호</label>
+        </div>
         <div class="text-field">
           <input type="text" id="name" value="<%- user.name %>" />
           <label for="name">이름</label>
@@ -21,10 +29,6 @@
         <div class="text-field">
           <input type="text" id="email" value="<%- user.email %>" />
           <label for="email">이메일</label>
-        </div>
-        <div class="text-field">
-          <input type="password" id="password" value="" />
-          <label for="password">비밀번호</label>
         </div>
       </div>
       <div class="oprigin_ct">

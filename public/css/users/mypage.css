@@ -42,3 +42,18 @@
   margin: 0 auto;
   width: 600px;
 }
+
+.text-field.id {
+  cursor: not-allowed;
+  position: relative;
+}
+
+.text-field.id::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.015);
+}

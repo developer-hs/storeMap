@@ -9,6 +9,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getPW = () => {
     return document.getElementById('store_map_pw').value;
   };
+  const inputElms = () => {
+    return document.querySelectorAll('input');
+  };
 
   const onLogin = async () => {
     const mallId = getMallId();
@@ -16,7 +19,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const form = { mallId, password };
 
     try {
-      const res = await axios.post('/api/users/login', form);
+      const res = await axios.post('/api/v1/users/user/login', form);
       if (res.status === 200) {
         window.location.href = '/stores';
       }
@@ -32,4 +35,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   loginBtn.addEventListener('click', onLogin);
+
+  inputElms().forEach((inputElm) => {
+    inputElm.addEventListener('keyup', (e) => {
+      const key = e.key || e.keyCode;
+
+      if (key === 'Enter' || key === 13) {
+        onLogin();
+      }
+    });
+  });
 });

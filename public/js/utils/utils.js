@@ -1,9 +1,4 @@
-export const onAlertModal = (
-  message,
-  width = 200,
-  height = 60,
-  duration = 1300
-) => {
+export const onAlertModal = (message, width = 200, height = 60, duration = 1300) => {
   const body = document.querySelector('body');
   const alertModal = document.createElement('div');
   const alertContent = document.createElement('div');
@@ -54,10 +49,7 @@ export const getRootPropertyValue = (propertyName) => {
 export const createLoadingGaurd = () => {
   const loadingGuard = document.createElement('div');
   loadingGuard.classList.add('loading_guard');
-  const guardChildsHTML = [
-    `<i class="xi-spinner-2 xi-spin"></i>`,
-    `<div>로딩중 입니다.</div>`,
-  ].join('');
+  const guardChildsHTML = [`<i class="xi-spinner-2 xi-spin"></i>`, `<div>로딩중 입니다.</div>`].join('');
 
   loadingGuard.innerHTML += guardChildsHTML;
 
@@ -106,3 +98,23 @@ export const slideDown = (element, height, duration) => {
     element.style.removeProperty('overflow');
   }, duration);
 };
+
+export const emailIsValid = (email) => {
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return EMAIL_PATTERN.test(email);
+};
+
+export const originIsValid = (origin) => {
+  const URL_PATTERN = /^https:\/\/([^/]+)(\/[^/.]+)*$/;
+  return URL_PATTERN.test(origin);
+};
+
+export const passwordIsValid = (password) => {
+  // 비밀번호를 검증할 정규식 패턴
+  const pattern = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  // 정규식 패턴과 비밀번호를 비교하여 검증 결과 반환
+  return pattern.test(password);
+};
+
+export default this;

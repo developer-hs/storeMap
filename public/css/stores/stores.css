@@ -300,6 +300,7 @@ body {
 
 .filter_ct {
   position: absolute;
+  visibility: hidden;
   right: 0;
   top: 50%;
   width: 340px;
@@ -314,6 +315,7 @@ body {
 
 .filter_ct.on {
   transform: translate3d(0, -50%, 0);
+  visibility: visible;
 }
 
 .filter_ct .filter_title {

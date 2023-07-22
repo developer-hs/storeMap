@@ -15,10 +15,8 @@ import widgetRoutes from './app/widgets/routes/index.js';
 import productRoutes from './app/products/routes/index.js';
 
 import { User } from './app/users/models/user.js';
-import { CAFE24_AUTH, SECURE } from './app/config/index.js';
-import { refresh, cafe24TokenRefresh } from './app/users/jwt/refresh.js';
-import { verifyAccessToken } from './app/users/jwt/jwt_utils.js';
-import { authJWT } from './app/users/middleware/auth.js';
+import { CAFE24_AUTH } from './app/config/index.js';
+import { refresh } from './app/users/jwt/refresh.js';
 
 process.env.NODE_ENV =
   process.env.NODE_ENV &&
@@ -99,6 +97,7 @@ const appRouting = async () => {
       cateId: 'redirectLogin',
     });
   });
+
   app.get('/token/refresh', async (req, res) => {
     const redirectURI = req.query.redirect_uri || '/stores';
 

@@ -4,8 +4,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     return document.getElementById('signBtn');
   };
 
-  const getEmailValue = () => {
-    return document.getElementById('email').value;
+  const getIdValue = () => {
+    return document.getElementById('id').value;
   };
 
   const getPasswordValue = () => {
@@ -18,11 +18,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const onSign = async () => {
-    const email = getEmailValue();
+    const email = getIdValue();
     const password = getPasswordValue();
     const platform = getPlatform();
     try {
-      const res = await axios.post('/api/users/register', {
+      const res = await axios.post('/api/v1/users/user', {
         email,
         password,
         platform,

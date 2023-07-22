@@ -29,16 +29,15 @@ window.addEventListener('DOMContentLoaded', async () => {
     const param = new URLSearchParams(window.location.search);
     const sinceProductNo = param.get('since_product_no') || 0;
     try {
-      const res = await axios.get(
-        `/api/products/${mallId}?since_product_no=${sinceProductNo}`
-      );
+      const res = await axios.get(`/api/products/${mallId}?since_product_no=${sinceProductNo}`);
       if (res.status === 200) {
         L_PRODUCTS_LIST = res.data.reverse();
         getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
       }
     } catch (error) {
       console.error(error);
-      window.location.href = '/users/login/redirect';
+      alert('세션이 만료되었습니다 다시 접속해 주세요.');
+      window.location.href = `https://${mallId}.cafe24.com/disp/admin/shop1/myapps/list`;
     }
   };
 
@@ -59,9 +58,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           `    />` +
           `  </div>` +
           `  <div class="name">${L_PRODUCTS_LIST[key].product_name}</div>` +
-          `  <div class="prd_price">₩${parseInt(
-            L_PRODUCTS_LIST[key].price
-          ).toLocaleString(navigator.language)}</div>` +
+          `  <div class="prd_price">₩${parseInt(L_PRODUCTS_LIST[key].price).toLocaleString(navigator.language)}</div>` +
           `  <div class="use_status switch_ct">` +
           `        <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} type="checkbox" />` +
           `        <label class="switch_label" for="useStatus_${L_PRODUCTS_LIST[key].product_no}"></label>` +
@@ -89,17 +86,13 @@ window.addEventListener('DOMContentLoaded', async () => {
    */
   const setUsingPrd = (products) => {
     products.forEach(async (product) => {
-      const getSwitchElm = document.querySelector(
-        `.use_status input[id=useStatus_${product.productId}]`
-      );
+      const getSwitchElm = document.querySelector(`.use_status input[id=useStatus_${product.productId}]`);
       if (getSwitchElm) {
         getSwitchElm.parentNode.parentNode.classList.add('use');
         getSwitchElm.checked = true;
       } else {
         try {
-          const res = await axios.delete(
-            `/products/product/${product.productId}`
-          );
+          const res = await axios.delete(`/products/product/${product.productId}`);
         } catch (error) {
           console.error(error);
         }
@@ -151,10 +144,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         },
       ];
 
-      const res = await axios.post(
-        `/api/products/product/${mallId}/option`,
-        form
-      );
+      const res = await axios.post(`/api/products/product/${mallId}/option`, form);
 
       useStatusElm.parentNode.parentNode.classList.add('loading');
       setTimeout(() => {
@@ -204,9 +194,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const useStatusHandler = () => {
-    const useStatusElms = document.querySelectorAll(
-      '.use_status .switch_input'
-    );
+    const useStatusElms = document.querySelectorAll('.use_status .switch_input');
 
     useStatusElms.forEach((useStatusElm) => {
       useStatusElm.addEventListener('click', (e) => {
@@ -217,10 +205,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const useStatusBatchPrcsBtnHandler = () => {
-    getUseStatusBatchPrcsBtn().addEventListener(
-      'click',
-      onUseStatusBatchPrcsBtn
-    );
+    getUseStatusBatchPrcsBtn().addEventListener('click', onUseStatusBatchPrcsBtn);
   };
 
   const searchPrdNumBtnHandler = () => {

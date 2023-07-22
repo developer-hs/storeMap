@@ -41,20 +41,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     return document.getElementById('uiMapAddressTextColorCt').dataset.color;
   };
   const getQuickSearchTitleTextColor = () => {
-    return document.getElementById('uiQuickSearchTitleTextColorCt').dataset
-      .color;
+    return document.getElementById('uiQuickSearchTitleTextColorCt').dataset.color;
   };
   const getQuickSearchAddressTextColor = () => {
-    return document.getElementById('uiQuickSearchAddressTextColorCt').dataset
-      .color;
+    return document.getElementById('uiQuickSearchAddressTextColorCt').dataset.color;
   };
   const getQuickSearchTitleTextHoverColor = () => {
-    return document.getElementById('uiQuickSearchTitleTextHoverColorCt').dataset
-      .color;
+    return document.getElementById('uiQuickSearchTitleTextHoverColorCt').dataset.color;
   };
   const getQuickSearchAddressTextHoverColor = () => {
-    return document.getElementById('uiQuickSearchAddressTextHoverColorCt')
-      .dataset.color;
+    return document.getElementById('uiQuickSearchAddressTextHoverColorCt').dataset.color;
   };
   const getDistanceTextElm = () => {
     return document.getElementById('uiDistanceTextColorCt');
@@ -141,13 +137,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     QUICKSEARCH_TITLE_TEXT_COLOR = getQuickSearchTitleTextColor();
     QUICKSEARCH_ADDR_TEXT_COLOR = getQuickSearchAddressTextColor();
     QUICKSEARCH_TITLE_TEXT_HOVER_COLOR = getQuickSearchTitleTextHoverColor();
-    QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR =
-      getQuickSearchAddressTextHoverColor();
+    QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR = getQuickSearchAddressTextHoverColor();
 
     getQuickSearchStoreElm().addEventListener('mouseover', () => {
       getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_HOVER_COLOR;
-      getQuickSearchAddrElm().style.color =
-        QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
+      getQuickSearchAddrElm().style.color = QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
     });
     getQuickSearchStoreElm().addEventListener('mouseout', () => {
       getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_COLOR;
@@ -217,60 +211,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Simple example, see optional options for more configuration.
-    const mainUIColorPickr = Pickr.create(
-      createPickrConfig('#uiMainColor', getMainColor())
-    );
+    const mainUIColorPickr = Pickr.create(createPickrConfig('#uiMainColor', getMainColor()));
 
-    const ActiveTextColorPickr = Pickr.create(
-      createPickrConfig('#uiActiveTextColor', getActiveTextColor())
-    );
+    const ActiveTextColorPickr = Pickr.create(createPickrConfig('#uiActiveTextColor', getActiveTextColor()));
 
-    const TextColorPickr = Pickr.create(
-      createPickrConfig('#uiTextColor', getTextColor())
-    );
+    const TextColorPickr = Pickr.create(createPickrConfig('#uiTextColor', getTextColor()));
 
-    const TitleTextColorPickr = Pickr.create(
-      createPickrConfig('#uiTitleTextColor', getTitleTextColor())
-    );
+    const TitleTextColorPickr = Pickr.create(createPickrConfig('#uiTitleTextColor', getTitleTextColor()));
 
-    const addressTextColorPickr = Pickr.create(
-      createPickrConfig('#uiAddressTextColor', getAddressTextColor())
-    );
+    const addressTextColorPickr = Pickr.create(createPickrConfig('#uiAddressTextColor', getAddressTextColor()));
 
-    const distanceTextColorPickr = Pickr.create(
-      createPickrConfig('#uiDistanceTextColor', getDistanceTextColor())
-    );
+    const distanceTextColorPickr = Pickr.create(createPickrConfig('#uiDistanceTextColor', getDistanceTextColor()));
 
-    const mapTitleTextColorPickr = Pickr.create(
-      createPickrConfig('#uiMapTitleTextColor', getMapTitleTextColor())
-    );
-    const mapAddressTextColorPickr = Pickr.create(
-      createPickrConfig('#uiMapAddressTextColor', getMapAddressTextColor())
-    );
+    const mapTitleTextColorPickr = Pickr.create(createPickrConfig('#uiMapTitleTextColor', getMapTitleTextColor()));
+    const mapAddressTextColorPickr = Pickr.create(createPickrConfig('#uiMapAddressTextColor', getMapAddressTextColor()));
     const mapQuickSearchTitleTextColorPickr = Pickr.create(
-      createPickrConfig(
-        '#uiQuickSearchTitleTextColor',
-        getQuickSearchTitleTextColor()
-      )
+      createPickrConfig('#uiQuickSearchTitleTextColor', getQuickSearchTitleTextColor())
     );
 
     const quickSearchAddressTextColorPickr = Pickr.create(
-      createPickrConfig(
-        '#uiQuickSearchAddressTextColor',
-        getQuickSearchAddressTextColor()
-      )
+      createPickrConfig('#uiQuickSearchAddressTextColor', getQuickSearchAddressTextColor())
     );
     const quickSearchTitleTextHoverColorPickr = Pickr.create(
-      createPickrConfig(
-        '#uiQuickSearchTitleTextHoverColor',
-        getQuickSearchTitleTextHoverColor()
-      )
+      createPickrConfig('#uiQuickSearchTitleTextHoverColor', getQuickSearchTitleTextHoverColor())
     );
     const quickSearchAddressTextHoverColorPickr = Pickr.create(
-      createPickrConfig(
-        '#uiQuickSearchTitleAddressTextHoverColor',
-        getQuickSearchAddressTextHoverColor()
-      )
+      createPickrConfig('#uiQuickSearchTitleAddressTextHoverColor', getQuickSearchAddressTextHoverColor())
     );
 
     mainUIColorPickr.on('save', (color, instance) => {
@@ -371,8 +337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         QUICKSEARCH_TITLE_TEXT_HOVER_COLOR = selectedColor;
         getQuickSearchStoreElm().addEventListener('mouseover', () => {
           getQuickSearchTitleElm().style.color = selectedColor;
-          getQuickSearchAddrElm().style.color =
-            QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
+          getQuickSearchAddrElm().style.color = QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
         });
       });
     });
@@ -382,14 +347,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const selectedColor = colorToString(color);
         QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR = selectedColor;
         getQuickSearchStoreElm().addEventListener('mouseover', () => {
-          getQuickSearchTitleElm().style.color =
-            QUICKSEARCH_TITLE_TEXT_HOVER_COLOR;
+          getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_HOVER_COLOR;
           getQuickSearchAddrElm().style.color = selectedColor;
         });
       });
     });
 
     getRenewBtnElm().addEventListener('click', () => {
+      document.getElementById('defaultUI').click();
       mainUIColorPickr.setColor('#000000');
       ActiveTextColorPickr.setColor('#ffffff');
       TextColorPickr.setColor('#000000');
@@ -476,13 +441,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const sectionCtElms = getSectionCtElms();
     sectionCtElms.forEach((sectionCtElm) => {
       const sectionTitle = sectionCtElm.querySelector('.section_title');
-      const sectionStyle = getComputedStyle(
-        sectionCtElm.querySelector('.section')
-      );
+      const sectionStyle = getComputedStyle(sectionCtElm.querySelector('.section'));
       const sectionContent = sectionCtElm.querySelector('.section_content');
-      const sectionMargin = parseInt(
-        sectionStyle.margin.split(' ')[0].replace('px', '')
-      );
+      const sectionMargin = parseInt(sectionStyle.margin.split(' ')[0].replace('px', ''));
       const sectionHeight = parseInt(sectionStyle.height.replace('px', ''));
       sectionTitle.addEventListener('click', () => {
         if (sectionCtElm.classList.contains('tab_on')) {
@@ -490,10 +451,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           utils.slideUp(sectionContent, 300);
         } else {
           const sectionContentHeight =
-            (sectionMargin + sectionHeight) *
-              sectionContent.querySelectorAll('.section:not(.displaynone)')
-                .length +
-            sectionMargin;
+            (sectionMargin + sectionHeight) * sectionContent.querySelectorAll('.section:not(.displaynone)').length + sectionMargin;
 
           sectionCtElm.classList.add('tab_on');
           utils.slideDown(sectionContent, sectionContentHeight, 300);
