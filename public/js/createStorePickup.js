@@ -39,50 +39,17 @@ class StoreMapAPI {
         // --ui-map-title-text-color: #fff;
         // --ui-map-address-text-color: #e1e1e1;
         document.documentElement.style.setProperty('--ui-color', UI.uiColor);
-        document.documentElement.style.setProperty(
-          '--ui-title-text-color',
-          UI.titleTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-distance-text-color',
-          UI.distanceTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-active-text-color',
-          UI.activeTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-text-color',
-          UI.textColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-address-text-color',
-          UI.addressTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-map-title-text-color',
-          UI.mapTitleTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-map-address-text-color',
-          UI.mapAddressTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-quicksearch-title-text-color',
-          UI.quickSearchTitleTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-quicksearch-address-text-color',
-          UI.quickSearchAddressTextColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-quicksearch-title-hover-color',
-          UI.quickSearchTitleTextHoverColor
-        );
-        document.documentElement.style.setProperty(
-          '--ui-quicksearch-address-hover-color',
-          UI.quickSearchAddressTextHoverColor
-        );
+        document.documentElement.style.setProperty('--ui-title-text-color', UI.titleTextColor);
+        document.documentElement.style.setProperty('--ui-distance-text-color', UI.distanceTextColor);
+        document.documentElement.style.setProperty('--ui-active-text-color', UI.activeTextColor);
+        document.documentElement.style.setProperty('--ui-text-color', UI.textColor);
+        document.documentElement.style.setProperty('--ui-address-text-color', UI.addressTextColor);
+        document.documentElement.style.setProperty('--ui-map-title-text-color', UI.mapTitleTextColor);
+        document.documentElement.style.setProperty('--ui-map-address-text-color', UI.mapAddressTextColor);
+        document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', UI.quickSearchTitleTextColor);
+        document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', UI.quickSearchAddressTextColor);
+        document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', UI.quickSearchTitleTextHoverColor);
+        document.documentElement.style.setProperty('--ui-quicksearch-address-hover-color', UI.quickSearchAddressTextHoverColor);
       }
     } catch (error) {
       console.error(error);
@@ -110,9 +77,7 @@ class StoreMapAPI {
    */
   async productShowCheck() {
     try {
-      const res = await axios.get(
-        `${API_BASE_URL}/api/products/show/${this.productId}/check`
-      );
+      const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`);
       if (res.status === 200) {
         return res.data.ok;
       }
@@ -126,18 +91,11 @@ class StoreMapAPI {
    * @returns {HTMLElement?}
    */
   getStoreMapAdditionalOpt() {
-    const prdOptChildElms = document.querySelector(
-      '.xans-product-option .xans-product-addoption'
-    ).children;
+    const prdOptChildElms = document.querySelector('.xans-product-option .xans-product-addoption').children;
 
     for (let i = 0; i < prdOptChildElms.length; i++) {
-      if (
-        prdOptChildElms[i].innerText ===
-        '삭제시[스토어_픽업_앱]에서_OFF_권장[필수]'
-      ) {
-        return prdOptChildElms[i].nextElementSibling.querySelector(
-          "input[id*='add_option']"
-        );
+      if (prdOptChildElms[i].innerText === '삭제시[스토어_픽업_앱]에서_OFF_권장[필수]') {
+        return prdOptChildElms[i].nextElementSibling.querySelector("input[id*='add_option']");
       }
     }
     return undefined;
@@ -522,9 +480,7 @@ const paintStoreList = () => {
       addSlide(swiperSlide);
     }
 
-    document
-      .querySelector('#pickupStore .store_list_ct .cont')
-      .classList.add('on');
+    document.querySelector('#pickupStore .store_list_ct .cont').classList.add('on');
     cnt++;
   }
 
@@ -549,9 +505,7 @@ const createPagination = () => {
       clickable: true,
       type: 'bullets',
       renderBullet: function (index, className) {
-        return `<span data-index=${index} class=${className}> ${
-          index + 1
-        } </span>`;
+        return `<span data-index=${index} class=${className}> ${index + 1} </span>`;
       },
     },
     navigation: {
@@ -560,50 +514,28 @@ const createPagination = () => {
     },
     on: {
       slideChange: function () {
-        const lastNum = document.querySelector(
-          '.swiper-pagination-bullets span:nth-last-child(1)'
-        ).dataset.index;
-        const activePage = document.querySelector(
-          '.swiper-pagination-bullet-active'
-        );
+        const lastNum = document.querySelector('.swiper-pagination-bullets span:nth-last-child(1)').dataset.index;
+        const activePage = document.querySelector('.swiper-pagination-bullet-active');
         const activeIndex = activePage.dataset.index;
         if (activeIndex % paging === 0) {
           for (let i = 0; i < activeIndex; i++) {
-            document.querySelector(
-              `.swiper-pagination-bullet[data-index="${i}"]`
-            ).style.display = 'none';
+            document.querySelector(`.swiper-pagination-bullet[data-index="${i}"]`).style.display = 'none';
           }
           for (let o = 0; o < paging; o++) {
             if (parseInt(activeIndex) + o > lastNum) {
               break;
             }
-            document.querySelector(
-              `.swiper-pagination-bullet[data-index="${
-                parseInt(activeIndex) + o
-              }"]`
-            ).style.display = 'inline-block';
+            document.querySelector(`.swiper-pagination-bullet[data-index="${parseInt(activeIndex) + o}"]`).style.display = 'inline-block';
           }
         } else if (Number(activePage.innerText) % paging === 0) {
-          for (
-            let i = activePage.innerText - paging;
-            i < activePage.innerText;
-            i++
-          ) {
-            document.querySelector(
-              `.swiper-pagination-bullet[data-index="${i}"]`
-            ).style.display = 'inline-block';
+          for (let i = activePage.innerText - paging; i < activePage.innerText; i++) {
+            document.querySelector(`.swiper-pagination-bullet[data-index="${i}"]`).style.display = 'inline-block';
           }
-          for (
-            let i = parseInt(activePage.innerText);
-            i < parseInt(activePage.innerText) + paging;
-            i++
-          ) {
+          for (let i = parseInt(activePage.innerText); i < parseInt(activePage.innerText) + paging; i++) {
             if (i > lastNum) {
               break;
             }
-            document.querySelector(
-              `.swiper-pagination-bullet[data-index="${i}"]`
-            ).style.display = 'none';
+            document.querySelector(`.swiper-pagination-bullet[data-index="${i}"]`).style.display = 'none';
           }
         }
       },
@@ -627,10 +559,10 @@ const getPickupAlert = () => {
 };
 
 /**
- * @returns {Element} - 생성된 주소 문자열
+ * @returns {HTMLElement} 서치리스트 컨테이너 요소를 가져옴
  **/
 const getSearchListCtElm = () => {
-  return document.getElementById('searchListCt'); // 서치리스트 컨테이너 요소를 가져옴
+  return document.getElementById('searchListCt');
 };
 
 /**
@@ -722,11 +654,7 @@ const findStoreBySearched = () => {
 };
 
 const createStoreMarker = (store) => {
-  const content = [
-    '<div>',
-    `       <img src="../icons/store.svg" width="35" height="35" alt="현재 위치"/>`,
-    '</div>',
-  ].join('');
+  const content = ['<div>', `<img src="../icons/store.svg" width="35" height="35" alt="현재 위치"/>`, '</div>'].join('');
 
   const marker = new naver.maps.Marker({
     map: L_MAP, // 검색된 좌표를 지도에 표시
@@ -841,11 +769,7 @@ const initQuickSearchListCt = () => {
 const onQuickSearch = (store) => {
   setSearchedAddr(store);
 
-  if (mapOpenChk()) {
-    firstOpenMap();
-  } else {
-    searchAddrToCoord();
-  }
+  searchAddrToCoord();
 
   HideQuickSearchElm(); // 서치리스트 한개만큼에 스타일 지정
 };
@@ -912,9 +836,7 @@ const quickSearch = () => {
 
     const searchTarget = typeCall(getStoreName, getStoreAddress);
 
-    if (
-      removeAllSpaces(searchTarget).includes(removeAllSpaces(searchedValue))
-    ) {
+    if (removeAllSpaces(searchTarget).includes(removeAllSpaces(searchedValue))) {
       if (quickSearchArray.length === QUICK_SEARCH_LIMIT) break;
       searchListCt.style.display = 'block';
       quickSearchArray.push(store);
@@ -1120,10 +1042,7 @@ const storePickupInit = async () => {
   storeSearchingHandler();
 
   if (L_GEOLOCATION_WIDGET) {
-    navigator.geolocation.getCurrentPosition(
-      geoLocationSuccess,
-      geoLocationErrCallback
-    );
+    navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationErrCallback);
   }
 
   pickupStoreBtnHandler();
@@ -1141,9 +1060,7 @@ const APIInit = async () => {
     L_STORE_MAP_ADDITIONAL_OPT = storeMapAPI.getStoreMapAdditionalOpt();
 
     if (!L_STORE_MAP_ADDITIONAL_OPT) {
-      console.error(
-        '카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.'
-      );
+      console.error('카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.');
       return;
     }
 
@@ -1158,11 +1075,13 @@ const APIInit = async () => {
       const storeMap = document.getElementById('storeMap');
       storeMap.innerHTML = res.data;
 
-      storePickupInit(storeMapAPI);
+      storePickupInit();
     }
   } catch (error) {
     console.error(error);
   }
 };
 
-APIInit();
+window.addEventListener('DOMContentLoaded', () => {
+  APIInit();
+});
