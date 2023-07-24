@@ -203,30 +203,18 @@ body {
   overflow-y: scroll;
   opacity: 0 !important;
 }
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide.swiper-slide-active {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide.swiper-slide-active {
   opacity: 1 !important;
 }
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide::-webkit-scrollbar {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide::-webkit-scrollbar {
   width: 6px; /* 스크롤바의 너비 */
 }
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide::-webkit-scrollbar-thumb {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide::-webkit-scrollbar-thumb {
   height: 30%; /* 스크롤바의 길이 */
   background: var(--ui-color); /* 스크롤바의 색상 */
   border-radius: 10px;
 }
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide::-webkit-scrollbar-track {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.5); /*스크롤바 뒷 배경 색상*/
 }
 #pickupStore .store_list_ct .store-info-container div.swiper-slide > .store {
@@ -236,29 +224,15 @@ body {
   border-top: 1px solid #ededed;
 }
 
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide
-  > .store
-  .chk_btn {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide > .store .chk_btn {
   fill: var(--ui-color);
 }
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide
-  > .store
-  .right {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide > .store .right {
   display: flex;
   align-items: center;
   justify-content: right;
 }
-#pickupStore
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide
-  > div:nth-last-child(1) {
+#pickupStore .store_list_ct .store-info-container div.swiper-slide > div:nth-last-child(1) {
   border-bottom: 1px solid #ebebeb;
   margin-bottom: 20px;
 }
@@ -284,10 +258,7 @@ body {
   right: 33%;
   color: #666;
 }
-#pickupStore
-  .store_list_ct
-  .swiper-pagination-horizontal
-  .swiper-pagination-bullet:nth-child(n + 11) {
+#pickupStore .store_list_ct .swiper-pagination-horizontal .swiper-pagination-bullet:nth-child(n + 11) {
   display: none;
 }
 .swiper-pagination-lock {
