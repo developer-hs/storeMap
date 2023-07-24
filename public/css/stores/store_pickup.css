@@ -346,6 +346,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
   font-size: 14px;
 }
 #pickupStore #searchListCt .store_name h1 {
+  font-weight: bold;
   color: var(--ui-quicksearch-title-text-color);
   padding-bottom: 6px;
   box-sizing: border-box;

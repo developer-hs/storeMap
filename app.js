@@ -18,11 +18,7 @@ import { User } from './app/users/models/user.js';
 import { CAFE24_AUTH } from './app/config/index.js';
 import { refresh } from './app/users/jwt/refresh.js';
 
-process.env.NODE_ENV =
-  process.env.NODE_ENV &&
-  process.env.NODE_ENV.trim().toLowerCase() == 'production'
-    ? 'production'
-    : 'development';
+process.env.NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production' ? 'production' : 'development';
 
 export const app = express();
 
@@ -137,13 +133,9 @@ const appRouting = async () => {
 
     try {
       // cafe24 access token 요청
-      const tokenRes = await axios.post(
-        `https://${mallId}.cafe24api.com/api/v2/oauth/token`,
-        form,
-        {
-          headers: headers,
-        }
-      );
+      const tokenRes = await axios.post(`https://${mallId}.cafe24api.com/api/v2/oauth/token`, form, {
+        headers: headers,
+      });
 
       if (tokenRes.status === 200) {
         try {
@@ -175,16 +167,12 @@ const appRouting = async () => {
 
         await user.save();
 
-        return res
-          .status(200)
-          .json({ ok: true, message: '정상적으로 처리되었습니다.' });
+        return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
       }
     } catch (error) {
       //cafe24 access token 요청 에 실패하였을 경우
       console.error(error);
-      return res
-        .status(400)
-        .json({ ok: false, message: 'access token 요청 실패!', error: error });
+      return res.status(400).json({ ok: false, message: 'access token 요청 실패!', error: error });
     }
   });
 

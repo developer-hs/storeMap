@@ -749,9 +749,11 @@ const HideQuickSearchElm = () => {
 // 서치리스트에 검색 결과를 하나만 표시하는 함수
 const showQuickSearchJustOne = () => {
   const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
+  const quickSearchStoreElms = searchListCt.querySelectorAll('.store');
+  const height = quickSearchStoreElms[0].clientHeight * quickSearchStoreElms.length;
   searchListCt.style.display = 'initial'; // 서치리스트를 보이게 함
   searchListCt.innerHTML = ''; // 서치리스트 내용을 비움
-  searchListCt.style.height = L_HEIGHT + 10 + 'px'; // 서치리스트 높이를 설정
+  searchListCt.style.height = height + 10 + 'px'; // 서치리스트 높이를 설정
 };
 
 // 검색 결과를 표시하는 함수
