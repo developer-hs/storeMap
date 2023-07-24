@@ -7,20 +7,115 @@
     <title>Document</title>
   </head>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
-  />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <link rel="stylesheet" href="/css/stores/store_pickup.css" />
   <body>
     <div id="storeMap"></div>
+    <div id="totalProducts" class="">
+      <p class="ec-base-help txtWarn txt11">수량을 선택해주세요.</p>
+      <p class="ec-base-help txtWarn txt11 displaynone">위 옵션선택 박스를 선택하시면 아래에 상품이 추가됩니다.</p>
+      <table border="1" summary="">
+        <caption>
+          상품 목록
+        </caption>
+        <colgroup>
+          <col style="width: 284px" />
+          <col style="width: 80px" />
+          <col style="width: 110px" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">상품명</th>
+            <th scope="col">상품수</th>
+            <th scope="col">가격</th>
+          </tr>
+        </thead>
+        <tbody class="">
+          <tr>
+            <td>seop sample item5</td>
+            <td>
+              <span class="quantity">
+                <input id="quantity" name="quantity_opt[]" style="" value="1" type="text" />
+                <a href="javascript:;" class="up QuantityUp"
+                  ><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/btn_count_up.gif" alt="수량증가"
+                /></a>
+                <a href="javascript:;" class="down QuantityDown"
+                  ><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/btn_count_down.gif" alt="수량감소"
+                /></a>
+              </span>
+            </td>
+            <td class="right">
+              <span class="quantity_price"
+                >45,000원<input type="hidden" name="option_box_price" class="option_box_price" value="45000" item_code="P00000BW000A"
+              /></span>
+              <span class="mileage displaynone" style="display: none">(<img src="" /> &nbsp;<span class="mileage_price"></span>)</span>
+            </td>
+          </tr>
+          <tr id="totalProductsOption" class="xans-element- xans-product xans-product-option option xans-record-">
+            <!--
+                        $use_per_add_option = yes
+                        $default_option = yes
+                        -->
+            <td class="middle" colspan="3">
+              <table border="1" summary="">
+                <caption>
+                  옵션 정보
+                </caption>
+                <colgroup>
+                  <col style="width: 105px" />
+                  <col style="width: auto" />
+                </colgroup>
+                <tbody>
+                  <tr class="xans-element- xans-product xans-product-addoption xans-record-">
+                    <th scope="row">삭제시[스토어_픽업_앱]에서_OFF_권장[필수]</th>
+                    <td>
+                      <input
+                        id="add_option_0"
+                        name="add_option0"
+                        require="T"
+                        maxlength="100"
+                        class="input_addoption input_peraddoption"
+                        value=""
+                        type="text"
+                      />
+                      <span class="txtByte" title="현재글자수/최대글자수">(<strong class="length">0</strong>/100)</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+        <!-- 옵션선택 또는 세트상품 선택시 상품이 추가되는 영역입니다. 쇼핑몰 화면에는 아래와 같은 마크업구조로 표시됩니다. 삭제시 기능이 정상동작 하지 않습니다. -->
+        <tbody>
+          <!-- tr>
+                        <td>
+                            <p class="product">
+                                $상품명<br />
+                                <span>$옵션</span>
+                            </p>
+                        </td>
+                        <td>
+                            <span class="quantity">
+                                <input type="text" class="quantity_opt" />
+                                &nbsp;<a href="javascript:;" class="up eProductQuantityUpClass"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/btn_count_up.gif" alt="수량증가" /></a>
+                                <a href="javascript:;" class="down eProductQuantityDownClass"><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/btn_count_down.gif" alt="수량감소" /></a>
+                            </span>
+                            <a href="#none"><img src="//img.echosting.cafe24.com/design/skin/default/product/btn_price_delete.gif" alt="삭제" class="option_box_del" /></a>
+                        </td>
+                        <td class="right">
+                            <span>$가격</span>
+                            <span class="mileage">(<img src="//img.echosting.cafe24.com/design/skin/admin/ko_KR/product/ico_pay_point.gif" /> &nbsp;<span class="mileage_price">$적립금</span>)</span>
+                        </td>
+                    </tr -->
+        </tbody>
+        <!-- // 옵션선택 또는 세트상품 선택시 상품이 추가되는 영역입니다. 쇼핑몰 화면에는 아래와 같은 마크업구조로 표시됩니다. 삭제시 기능이 정상동작 하지 않습니다. -->
+      </table>
+    </div>
   </body>
 
-  <script
-    type="text/javascript"
-    src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=314f4enpbp&submodules=geocoder"
-  ></script>
+  <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=314f4enpbp&submodules=geocoder"></script>
 
   <script src="js/testCreateStorePickup.js" defer></script>
 </html>

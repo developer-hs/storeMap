@@ -186,7 +186,7 @@ const setAdditionalOpt = (store) => {
  * @description 선택한 매장의 검색 타입에 알맞은 데이터를 input#address 에 넣어줌 매장 선택 모든동작이 이 함수를 거침
  * @param {Object} store
  */
-const setSearchedAddr = (store) => {
+const setSearchAddrValue = (store) => {
   const AddrElm = getAddrElm();
 
   const setSearchTxtStoreName = () => {
@@ -198,7 +198,6 @@ const setSearchedAddr = (store) => {
   };
 
   typeCall(setSearchTxtStoreName, setSearchTxtStoreAddr);
-  setAdditionalOpt(store);
   AddrElm.dataset.storeId = store._id;
 };
 /**
@@ -206,10 +205,6 @@ const setSearchedAddr = (store) => {
  */
 const getSubmitElm = () => {
   return document.getElementById('submit');
-};
-
-const onSubmit = () => {
-  getSubmitElm().click();
 };
 
 /**
@@ -248,33 +243,28 @@ const createNaverMap = () => {
   L_MAP.setCursor('pointer');
 };
 
-// 검색어를 받아 좌표를 검색하는 함수
-const initGeocoder = () => {
-  quickSearch();
+// 매장정보(enter , search)검색 시 작동하는 함수
+const searchHandler = () => {
   // 검색어 입력창에서 Enter 키를 눌렀을 때 좌표 검색 함수를 실행한다
   getAddrElm().addEventListener('keydown', (e) => {
     const keyCode = e.keyCode || e.which;
     if (keyCode === 13) {
-      searchAddrToCoord();
+      if (!searchStoreIsValid()) {
+        // 비슷한 검색어 조차 찾을 수 없을경우
+        return;
+      }
+      pickup(findStoreBySearched());
     }
   });
   // 검색 버튼을 클릭했을 때 좌표 검색 함수를 실행한다
   getSubmitElm().addEventListener('click', (e) => {
     e.preventDefault();
-    searchAddrToCoord();
+    if (!searchStoreIsValid()) {
+      // 비슷한 검색어 조차 찾을 수 없을경우
+      return;
+    }
+    pickup(findStoreBySearched());
   });
-
-  if (!getSearchedAddr()) {
-    getAddrElm().focus();
-    return;
-  }
-  // 페이지 로딩 시 검색어가 있으면 좌표 검색 함수를 실행하고, 없으면 검색어 입력창에 포커스를 준다
-  if (getSearchedAddr() && !mapOpenChk()) {
-    searchAddrToCoord();
-  } else {
-    getMapElm().classList.remove('off');
-    searchAddrToCoord();
-  }
 };
 
 // --------------------------------------------------------------------------------------------
@@ -293,6 +283,7 @@ const showMap = () => {
   map.style.display = 'block';
   map.style.visibility = 'visible';
   map.style.opacity = 1;
+  getAddrElm().focus();
 };
 
 /**
@@ -314,59 +305,84 @@ const mapOpenChk = () => {
 const firstOpenMap = () => {
   showMap();
   createNaverMap();
-  initGeocoder(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
+  searchHandler(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
 };
 
 /**
  * @description 매장 검색, 동 검색 선택 버튼 클릭 시 동작하는 함수
  * @returns {void}
  */
-const onSearchType = () => {
+const onSearchType = (searchTypeElm) => {
   // 검색 타입 변경 버튼 이벤트 추가
-  const searchTypes = document.querySelectorAll('.search_type');
-  searchTypes.forEach((searchType) => {
-    searchType.addEventListener('click', () => {
-      if (searchType.classList.contains('on')) {
-        return;
-      }
+  if (searchTypeElm.classList.contains('on')) {
+    return;
+  }
 
-      // 현재 선택된 검색 타입 버튼의 on 클래스 제거, 클릭한 검색 타입 버튼에 on 클래스 추가
-      document.querySelector('.search_type.on').classList.remove('on');
-      searchType.classList.add('on');
+  // 현재 선택된 검색 타입 버튼의 on 클래스 제거, 클릭한 검색 타입 버튼에 on 클래스 추가
+  document.querySelector('.search_type.on').classList.remove('on');
+  searchTypeElm.classList.add('on');
 
-      HideQuickSearchElm();
-      // 검색어 input 요소 초기화
-      initSearchedAddr();
+  HideQuickSearchElm();
+  // 검색어 input 요소 초기화
+  initSearchedAddr();
+};
+
+const searchTypeHandler = () => {
+  const searchTypeElms = document.querySelectorAll('.search_type');
+  searchTypeElms.forEach((searchTypeElm) => {
+    searchTypeElm.addEventListener('click', () => {
+      onSearchType(searchTypeElm);
     });
   });
 };
 
+const searchStoreIsValid = () => {
+  const store = findStoreBySearched();
+  if (!store) {
+    return false;
+  }
+
+  return true;
+};
 /**
  * @param {storePickupBtnElm:HTMLElement, store:Object} 매장 정보를 받아옴
  */
 const PickupBtnHandler = (storePickupBtnElm, store) => {
   storePickupBtnElm.addEventListener('click', () => {
-    onPickup(store);
+    pickup(store);
   });
 };
 
-const onPickup = (store) => {
-  HideQuickSearchElm(); // 서치리스트 숨김
-  setSearchedAddr(store);
-  paintSearchStore(store); // 서치리스트에 매장 정보를 표시하는 함수
+/**
+ *
+ * @param {Object} store
+ * @param {Boolean} pickBtn
+ * @returns {Boolean?}
+ */
+const pickup = (store, pick = true) => {
+  setSearchAddrValue(store); // 주소 입력창에 정보를 채워줌
+  if (!searchStoreIsValid()) {
+    return false;
+  }
+
   searchAddrToCoord();
+  HideQuickSearchElm(); // 서치리스트 숨김
+  setAdditionalOpt(store); // 실제 옵션에 값을 담아줌
+  getStoreName().innerText = store.name;
+  getStoreAddress().innerText = store.address;
+  showPickupAlert(); // 픽업 알림창 띄워줌
+};
+
+const quickSearchHandler = (store) => {
+  const storeElm = paintSearchStore(store);
+  storeElm.addEventListener('click', () => {
+    pickup(store);
+  });
 };
 
 const onInfoWindow = (store) => {
-  setSearchedAddr(store); // 서치 인풋에 타입별 값을 채워넣음
-
+  setSearchAddrValue(store); // 서치 인풋에 타입별 값을 채워넣음
   const infoWindow = createPickupInfoWindow(store);
-
-  if (L_GEOLOCATION_WIDGET) {
-    // 선택한 마커 기준으로 스토어리스트를 다시 그려줌
-    setDistance(store.naverCoord);
-    paintStoreList();
-  }
 
   if (infoWindow.getMap()) {
     infoWindow.close();
@@ -381,6 +397,12 @@ const onInfoWindow = (store) => {
 
 const markerHandler = (store) => {
   naver.maps.Event.addListener(store.marker, 'click', (e) => {
+    if (L_GEOLOCATION_WIDGET) {
+      // 선택한 마커 기준으로 스토어리스트를 다시 그려줌
+      setDistance(store.naverCoord);
+      paintStoreList();
+    }
+
     onInfoWindow(store);
   });
 };
@@ -415,6 +437,8 @@ const createStoreChildElmAsString = (store) => {
  * @returns {void}
  */
 const paintStoreList = () => {
+  console.log(new Error().stack); // 호출 스택 정보를 출력하여 호출한 함수를 확인
+
   let cnt = 0;
   let swiperSlide = createNewSlide(); // 슬라이더 생성
   let storeList = [...L_STORE_LIST];
@@ -438,7 +462,7 @@ const paintStoreList = () => {
   }
 
   let storeLen = Object.keys(storeList).length; // 매장 갯수
-
+  console.log(storeLen);
   for (let key in storeList) {
     const store = storeList[key];
     if (cnt && cnt % 5 === 0) {
@@ -600,7 +624,7 @@ const copyAddrHandler = () => {
  * @description 매장 픽업 완료 알림 요소를 화면에 띄우고, 1.5초 후에 숨기는 함수
  * @returns {void}
  */
-const StorePickupAlert = () => {
+const showPickupAlert = () => {
   getPickupAlert().classList.add('on');
   setTimeout(() => {
     getPickupAlert().classList.remove('on');
@@ -693,41 +717,26 @@ const createUserMarker = (naverCoord) => {
   userMarkers.push(userMarker);
 };
 
-const storePickup = () => {
-  const store = findStoreBySearched(); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
-  StorePickupAlert(); // 픽업 알림창 띄워줌
-  getStoreName().innerText = store.name;
-  getStoreAddress().innerText = store.address;
-  HideQuickSearchElm();
-};
-
 // 입력된 주소로 좌표를 검색하고, 해당 좌표를 지도에 표시하는 함수
 const searchAddrToCoord = () => {
   const store = findStoreBySearched(); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
   if (!store) {
-    // 입력된 주소에 해당하는 매장이 없으면 알림창을 띄우고 리턴
     alert('입력하신 매장명이 존재하지 않습니다.');
     return;
   }
-
   if (L_GEOLOCATION_WIDGET) {
-    setDistance(store.naverCoord);
-    storeListUp();
+    setDistance(store.naverCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
+    paintStoreList();
     L_MAP.setCenter(store.naverCoord);
   } else {
     const marker = createStoreMarker(store);
-
     if (PREV_MARKER) {
       PREV_MARKER.setMap(null);
     }
     PREV_MARKER = marker;
-    naver.maps.Event.addListener(store.marker, 'click', (e) => {
-      onInfoWindow(store);
-    });
   }
 
   onInfoWindow(store);
-  storePickup();
 };
 
 // 검색 결과를 숨기는 함수
@@ -764,21 +773,6 @@ const removeAllSpaces = (text) => {
 
 const initQuickSearchListCt = () => {
   getSearchListCtElm().innerHTML = '';
-};
-
-const onQuickSearch = (store) => {
-  setSearchedAddr(store);
-
-  searchAddrToCoord();
-
-  HideQuickSearchElm(); // 서치리스트 한개만큼에 스타일 지정
-};
-
-const quickSearchHandler = (store) => {
-  const storeElm = paintSearchStore(store);
-  storeElm.addEventListener('click', () => {
-    onQuickSearch(store);
-  });
 };
 
 const sortQuickSearch = () => {
@@ -857,28 +851,14 @@ const quickSearch = () => {
 };
 
 const storeSearchingHandler = () => {
-  getAddrElm().addEventListener('input', () => {
-    quickSearch();
-  });
-};
-
-const onFirstSearch = () => {
-  if (mapOpenChk()) {
-    firstOpenMap();
-  }
-};
-
-const firstSearchHandler = () => {
-  getAddrElm().addEventListener('keydown', (e) => {
-    const keyCode = e.keyCode || e.which;
-    if (keyCode === 13) {
-      // Enter Key
-      onFirstSearch();
+  const addrElm = getAddrElm();
+  addrElm.addEventListener('input', () => {
+    // 검색어가 없을경우 주소 입력창의 storeId 데이터 삭제
+    if (getSearchedAddr() === '') {
+      addrElm.dataset.storeId = '';
     }
-  });
 
-  getSubmitElm().addEventListener('click', (e) => {
-    onFirstSearch();
+    quickSearch();
   });
 };
 
@@ -901,7 +881,7 @@ const createPickupInfoWindow = (store) => {
     '  </div>',
     '   <div class="btn-box">',
     `   	<div class="close-btn" onclick=\"closeInfoWindow()\">닫기</div>`,
-    `   	<div class="pickup-btn" onclick=\"storePickup()\">여기서픽업</div>`,
+    `   	<div class="pickup-btn" onclick=\"pickup(findStoreBySearched())\">여기서픽업</div>`,
     '   </div>',
     '</div>',
   ].join('');
@@ -937,7 +917,7 @@ const createNaverCoord = (latitude, longitude) => {
 };
 
 /**
- * @description UI 가 distance 일때 사용되는 함수 기준이되는 거리를 받아서 스토어 리스트에 거리를 생성
+ * @description UI 가 distance 일때 사용되는 함수 기준이되는 거리를 받아서 스토어 리스트에 거리를 생성 후 거리순으로 정렬
  * @param {naverCoord} targetNaverCoord
  */
 const setDistance = (targetNaverCoord) => {
@@ -983,7 +963,6 @@ const geoLocationPickupInit = () => {
 const pickupInit = () => {
   firstOpenMap();
   storeListUp();
-  firstSearchHandler();
 };
 
 /**
@@ -1038,7 +1017,7 @@ const pickupStoreBtnHandler = () => {
 };
 
 const storePickupInit = async () => {
-  onSearchType(); // 검색타입 변경 시 작동하는 함수
+  searchTypeHandler(); // 검색타입 변경 시 작동하는 함수
   storeSearchingHandler();
 
   if (L_GEOLOCATION_WIDGET) {
