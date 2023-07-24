@@ -1,4 +1,3 @@
-const L_HEIGHT = 80;
 const API_BASE_URL = 'http://localhost:8080';
 
 let L_GEOLOCATION_WIDGET = Boolean,
@@ -749,8 +748,8 @@ const HideQuickSearchElm = () => {
 // 서치리스트에 검색 결과를 하나만 표시하는 함수
 const showQuickSearchJustOne = () => {
   const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
-  const quickSearchStoreElms = searchListCt.querySelectorAll('.store');
-  const height = quickSearchStoreElms[0].clientHeight * quickSearchStoreElms.length;
+  const quickSearchStoreElm = searchListCt.querySelector('.store');
+  const height = quickSearchStoreElm.clientHeight;
   searchListCt.style.display = 'initial'; // 서치리스트를 보이게 함
   searchListCt.innerHTML = ''; // 서치리스트 내용을 비움
   searchListCt.style.height = height + 10 + 'px'; // 서치리스트 높이를 설정
@@ -805,8 +804,9 @@ const sortQuickSearch = () => {
  */
 const quickSearch = () => {
   let searchedValue = getSearchedAddr();
-  const searchListCt = getSearchListCtElm();
-  const storesLen = searchListCt.querySelectorAll('.store').length;
+  const searchListCtElm = getSearchListCtElm();
+  const quickSearchStoreElm = searchListCtElm.querySelector('store');
+  const storesLen = searchListCtElm.querySelectorAll('.store').length;
 
   initQuickSearchListCt(); // 서치리스트 초기화
   if (storesLen === 0) {
@@ -834,7 +834,7 @@ const quickSearch = () => {
 
     if (removeAllSpaces(searchTarget).includes(removeAllSpaces(searchedValue))) {
       if (quickSearchArray.length === QUICK_SEARCH_LIMIT) break;
-      searchListCt.style.display = 'block';
+      searchListCtElm.style.display = 'block';
       quickSearchArray.push(store);
     }
   }
@@ -849,7 +849,8 @@ const quickSearch = () => {
     quickSearchHandler(store);
   }
 
-  searchListCt.style.height = quickSearchArray.length * L_HEIGHT + 10 + 'px';
+  const height = quickSearchStoreElm.clientHeight * storesLen;
+  searchListCtElm.style.height = height + 10 + 'px';
 };
 
 const storeSearchingHandler = () => {
