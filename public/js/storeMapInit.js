@@ -1,4 +1,3 @@
-const iProductNo = 44;
 const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
 
 class StoreMapInitAPI {
@@ -38,7 +37,7 @@ class StoreMapInitAPI {
         // prdOptChildElms[i].parentNode.style.cssText = 'position:absolute; top:-100%; left:-100%; opacity:0; visibility:hidden';
         const storeOptElm = prdOptChildElms[i].nextElementSibling.querySelector("input[id*='add_option']");
         this.L_STORE_MAP_ADDITIONAL_OPT = storeOptElm;
-        this.recieveOptValue();
+        this.receiveOptValue();
       }
     }
 
@@ -80,7 +79,7 @@ class StoreMapInitAPI {
     this.iframe.contentWindow.postMessage({ scrollY }, '*');
   };
 
-  recieveOptValue = () => {
+  receiveOptValue = () => {
     window.addEventListener(
       'message',
       function (e) {
@@ -94,7 +93,7 @@ class StoreMapInitAPI {
     );
   };
 
-  recieveFrameHeight = () => {
+  receiveFrameHeight = () => {
     window.addEventListener(
       'message',
       function (e) {
@@ -110,14 +109,39 @@ class StoreMapInitAPI {
     this.iframe = document.createElement('iframe');
     this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:auto; border:none;';
-    this.recieveFrameHeight();
+    this.receiveStoresEmpty();
+    this.receiveFrameHeight();
+    this.receiveTrigger();
 
     this.storeMapElm.appendChild(this.iframe);
-    this.postMsgTrigger();
+  };
+
+  receiveTrigger = () => {
+    // iframe 에서 성공적으로 initialize 되었다면 trigger 를 반환하여 postMsgTrigger 실행
+    window.addEventListener('message', (e) => {
+      if (e.data.trigger) {
+        this.postMsgTrigger();
+      }
+    });
   };
 
   postMsgTrigger = () => {
-    this.iframe.contentWindow.postMessage({ trigger: true }, '*');
+    // iframe 안에서 origin 을 받기위한 postMessage
+    if (this.iframe.contentWindow) {
+      this.iframe.contentWindow.postMessage({ trigger: true }, '*');
+    }
+  };
+
+  receiveStoresEmpty = () => {
+    // iframe 에서 상품 리스트가 비었다면 empty 전송 iframe 제거
+    window.addEventListener(
+      'message',
+      function (e) {
+        if (e.data.empty) {
+          this.iframe.remove();
+        }
+      }.bind(this)
+    );
   };
 }
 

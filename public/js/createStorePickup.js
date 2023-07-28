@@ -13,8 +13,7 @@ let userMarkers = [];
 
 class StoreMapAPI {
   constructor() {
-    this.receiveTrigger();
-    this.postMsgFrameHeight();
+    this.init();
   }
 
   /**
@@ -23,7 +22,7 @@ class StoreMapAPI {
    */
   async UISetting() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { origin: this.origin });
+      const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { params: { origin: this.origin } });
       if (res.status === 200) {
         const UI = res.data;
         if (UI.ui === 'default') {
@@ -61,16 +60,28 @@ class StoreMapAPI {
    * @description 스토어 리스트를 받아옴
    * @returns { Array }
    */
-  async getStoreList() {
+  getStoreList = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/stores`, { params: { origin: this.origin } });
+
       if (res.status === 200) {
-        return res.data;
+        L_STORE_LIST = res.data;
+        if (L_STORE_LIST.length >= 1) {
+          await this.UISetting();
+          storePickupInit();
+        } else {
+          this.UISettingpostMsgStoresEmpty();
+        }
       }
     } catch (error) {
       console.error(error);
     }
-  }
+  };
+
+  postMsgStoresEmpty = () => {
+    // 상품 리스트가 비었다면 empty 전송하여 iframe 제거
+    window.parent.postMessage({ empty: true }, '*');
+  };
 
   postMsgFrameHeight = () => {
     const pickupStoreElm = getPickupStoreElm();
@@ -84,13 +95,28 @@ class StoreMapAPI {
     pickupSteElmObv.observe(pickupStoreElm, config);
   };
 
+  postMsgTrigger = () => {
+    // iframe 이 성공적으로 initialize 되었다면 trigger 전송
+    window.parent.postMessage({ trigger: true }, '*');
+  };
+
   receiveTrigger = () => {
-    window.parent.addEventListener('message', (e) => {
-      if (e.data.trigger) {
-        console.log(e.origin);
-        this.origin = e.origin;
-      }
-    });
+    // 부모 페이지에서 성공적으로 trigger 를 받았다면 다시 trigger 반환하여 origin 추출
+    window.addEventListener(
+      'message',
+      async function (e) {
+        if (e.data.trigger) {
+          this.postMsgFrameHeight();
+          this.origin = e.origin;
+          await this.getStoreList();
+        }
+      }.bind(this)
+    );
+  };
+
+  init = () => {
+    this.receiveTrigger();
+    this.postMsgTrigger();
   };
 }
 
@@ -1011,19 +1037,7 @@ const storePickupInit = async () => {
 };
 
 const APIInit = async () => {
-  const storeMapAPI = new StoreMapAPI();
-
-  try {
-    L_STORE_LIST = await storeMapAPI.getStoreList();
-    if (!L_STORE_LIST) {
-      return;
-    }
-    await storeMapAPI.UISetting();
-
-    storePickupInit();
-  } catch (error) {
-    console.error(error);
-  }
+  new StoreMapAPI();
 };
 
 window.addEventListener('DOMContentLoaded', () => {
