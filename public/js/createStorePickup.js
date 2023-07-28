@@ -1,5 +1,4 @@
 const L_HEIGHT = 80;
-const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],
@@ -22,7 +21,7 @@ class StoreMapAPI {
    */
   async UISetting() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
+      const res = await axios.get(`/api/users/ui`);
       if (res.status === 200) {
         const UI = res.data;
         if (UI.ui === 'default') {
@@ -62,7 +61,7 @@ class StoreMapAPI {
    */
   async getStoreList() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/stores`);
+      const res = await axios.get(`/api/stores`);
       if (res.status === 200) {
         return res.data;
       }
