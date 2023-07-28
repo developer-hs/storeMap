@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
+const API_BASE_URL = 'http://localhost:8080';
 
 class StoreMapInitAPI {
   constructor() {

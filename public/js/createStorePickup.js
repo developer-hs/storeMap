@@ -1,5 +1,5 @@
 const L_HEIGHT = 80;
-const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
+const API_BASE_URL = 'http://localhost:8080';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],
@@ -367,8 +367,7 @@ const onOverlay = (store) => {
     closeOpenedOverlay();
   }
   L_SHOWING_OVERLAY = overlay; // 닫기버튼 클릭시 없애기 위함
-  L_MAP.setLevel(3, { animate: true });
-
+  L_MAP.setLevel(3, { anchor: store.kakaoCoord });
   L_MAP.setCenter(store.marker.getPosition());
   overlay.setMap(L_MAP);
 };
@@ -647,20 +646,28 @@ const findStoreBySearched = () => {
   return false; // 일치하는 매장이 없으면 false 반환
 };
 
-const createStoreMarker = (store) => {
-  const imageSrc = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg', // 마커이미지의 주소입니다
+const createKakaoMarker = (kakao_coord, marker_img_url) => {
+  const imageSrc = marker_img_url, // 마커이미지의 주소입니다
     imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
     imageOption = { offset: new kakao.maps.Point(11, 35) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
   // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
   const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-    markerPosition = new kakao.maps.LatLng(store.latitude, store.longitude); // 마커가 표시될 위치입니다
+    markerPosition = kakao_coord; // 마커가 표시될 위치입니다
 
   // 마커를 생성합니다
   const marker = new kakao.maps.Marker({
     position: markerPosition,
     image: markerImage, // 마커이미지 설정
   });
+
+  return marker;
+};
+
+const createStoreMarker = (store) => {
+  const markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg';
+  const kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
+  const marker = createKakaoMarker(kakaoCoord, markerImgURI);
 
   // 마커가 지도 위에 표시되도록 설정합니다
   marker.setMap(L_MAP);
@@ -673,24 +680,13 @@ const createUserMarker = () => {
   userMarkers.forEach((userMarker) => {
     userMarker.setMap(null);
   });
-
-  const imageSrc = 'https://rlagudtjq2016.cafe24.com/assets/icon/current_location.gif', // 마커이미지의 주소입니다
-    imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
-    imageOption = { offset: new kakao.maps.Point(11, 35) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-
-  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-    markerPosition = new kakao.maps.LatLng(L_USER_KAKAO_COORD.latitude, L_USER_KAKAO_COORD.longitude); // 마커가 표시될 위치입니다
-
-  // 마커를 생성합니다
-  const userMarker = new kakao.maps.Marker({
-    position: markerPosition,
-    image: markerImage, // 마커이미지 설정
-  });
+  const markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/current_location.gif';
+  const userMarker = createKakaoMarker(L_USER_KAKAO_COORD, markerImgURI);
 
   // 마커가 지도 위에 표시되도록 설정합니다
   userMarker.setMap(L_MAP);
-
+  L_MAP.setLevel(3, { anchor: L_USER_KAKAO_COORD });
+  L_MAP.setCenter(userMarker.getPosition());
   userMarkers.push(userMarker);
 };
 
@@ -1009,7 +1005,6 @@ const APIInit = async () => {
 
   try {
     L_STORE_LIST = await storeMapAPI.getStoreList();
-    console.log(L_STORE_LIST);
     if (!L_STORE_LIST) {
       return;
     }
