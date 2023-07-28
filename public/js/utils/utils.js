@@ -1,4 +1,4 @@
-export const onAlertModal = (message, width = 200, height = 60, duration = 1300, bgColor = '#000') => {
+export const onAlertModal = (message, width = 200, height = 60, duration = 1300, bgColor = '#000', color = '#fff') => {
   const body = document.querySelector('body');
   const alertModal = document.createElement('div');
   const alertContent = document.createElement('div');
@@ -6,7 +6,8 @@ export const onAlertModal = (message, width = 200, height = 60, duration = 1300,
   alertContent.classList.add('alert_content');
 
   alertContent.innerText = message;
-  alertModal.style.cssText = `width:${width}px; height:${height}px; background-color:${bgColor}`;
+  alertModal.style.cssText = `width:${width}px; height:${height}px; background-color:${bgColor};`;
+  alertContent.style.color = color;
   alertModal.appendChild(alertContent);
   body.appendChild(alertModal);
 

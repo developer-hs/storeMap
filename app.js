@@ -23,6 +23,7 @@ process.env.NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLow
 export const app = express();
 
 const allowlist = [
+  'https://storemap-389307.du.r.appspot.com',
   'http://localhost:8080',
   'https://localhost:8000',
   'http://127.0.0.1:8080',
@@ -32,6 +33,7 @@ const allowlist = [
 
 const corsOptionsDelegate = (req, callback) => {
   let corsOptions;
+
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
     corsOptions = { origin: true, credentials: true }; // reflect (enable) the requested origin in the CORS response
   } else {
