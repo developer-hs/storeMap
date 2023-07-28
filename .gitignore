@@ -14,5 +14,7 @@ public/icons/
 
 config.js
 testCreateStorePickup.js
+prevCreateStorePickup.js
+testStoreMapInit.js
 app.yaml
 

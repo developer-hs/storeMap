@@ -1,10 +1,11 @@
+const L_HEIGHT = 80;
 const API_BASE_URL = 'http://localhost:8080';
 
 let L_GEOLOCATION_WIDGET = Boolean,
-  L_STORE_MAP_ADDITIONAL_OPT,
   L_STORE_LIST = [],
-  L_SHOWING_INFO_WIN,
-  L_USER_NAVER_COORD;
+  L_SHOWING_OVERLAY,
+  L_USER_KAKAO_COORD,
+  L_SCROLL_Y;
 
 let PREV_MARKER, L_MAP;
 
@@ -12,7 +13,7 @@ let userMarkers = [];
 
 class StoreMapAPI {
   constructor() {
-    this.productId = iProductNo;
+    this.postMsgFrameHeight();
   }
 
   /**
@@ -70,35 +71,17 @@ class StoreMapAPI {
     }
   }
 
-  /**
-   * @description 현재 상품이 스토어맵을 사용하는지 여부를 받아옴
-   * @returns {Boolean}
-   */
-  async productShowCheck() {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`);
-      if (res.status === 200) {
-        return res.data.ok;
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  postMsgFrameHeight = () => {
+    const pickupStoreElm = getPickupStoreElm();
+    const pickupSteElmObv = new MutationObserver((mutations) => {
+      const height = pickupStoreElm.clientHeight;
 
-  /**
-   * @description 실제 쇼핑몰에서 스토어맵 옵션에 해당하는 옵션 엘리먼트를 가져옴
-   * @returns {HTMLElement?}
-   */
-  getStoreMapAdditionalOpt() {
-    const prdOptChildElms = document.querySelector('.xans-product-option .xans-product-addoption').children;
+      window.parent.postMessage({ height }, '*');
+    });
 
-    for (let i = 0; i < prdOptChildElms.length; i++) {
-      if (prdOptChildElms[i].innerText === '삭제시[스토어_픽업_앱]에서_OFF_권장[필수]') {
-        return prdOptChildElms[i].nextElementSibling.querySelector("input[id*='add_option']");
-      }
-    }
-    return undefined;
-  }
+    const config = { attributes: true, childList: true, subtree: true };
+    pickupSteElmObv.observe(pickupStoreElm, config);
+  };
 }
 
 const getRootPropertyValue = (propertyName) => {
@@ -177,8 +160,8 @@ const getSearchedAddr = () => {
  * @description 실제 쇼핑몰에서 스토어맵 옵션에 해당하는 옵션 엘리먼트의 값을 선택한 매장의 이름으로 지정
  * @param {String} name
  */
-const setAdditionalOpt = (store) => {
-  L_STORE_MAP_ADDITIONAL_OPT.value = `${store.name} - ${store.address}`;
+const postMsgOptValue = (store) => {
+  window.parent.postMessage({ storeMapOptValue: `${store.name} - ${store.address}` }, '*');
 };
 
 /**
@@ -228,18 +211,17 @@ const initSearchedAddr = () => {
 };
 
 // 네이버 지도를 생성하는 함수
-const createNaverMap = () => {
-  const mapOptions = {
-    center: createNaverCoord(37.3595316, 127.1052133),
-    zoom: 5,
-    mapTypeControl: true,
-  };
+const createKakaoMap = () => {
+  const MapElm = getMapElm(), // 지도를 표시할 div
+    mapOption = {
+      center: new kakao.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
+      level: 13, // 지도의 확대 레벨
+    };
 
+  // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
+  L_MAP = new kakao.maps.Map(MapElm, mapOption);
+  // mapHandler();
   // 지도를 생성하고 기본적인 설정을 한다
-  L_MAP = new naver.maps.Map('map', mapOptions);
-
-  // 커서를 포인터로 변경한다
-  L_MAP.setCursor('pointer');
 };
 
 // 매장정보(enter , search)검색 시 작동하는 함수
@@ -303,7 +285,7 @@ const mapOpenChk = () => {
  */
 const firstOpenMap = () => {
   showMap();
-  createNaverMap();
+  createKakaoMap();
   searchHandler(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
 };
 
@@ -366,10 +348,9 @@ const pickup = (store, pick = true) => {
 
   searchAddrToCoord();
   HideQuickSearchElm(); // 서치리스트 숨김
-  setAdditionalOpt(store); // 실제 옵션에 값을 담아줌
+  postMsgOptValue(store); // 실제 옵션에 값을 담아줌
   getStoreName().innerText = store.name;
   getStoreAddress().innerText = store.address;
-  showPickupAlert(); // 픽업 알림창 띄워줌
 };
 
 const quickSearchHandler = (store) => {
@@ -379,37 +360,42 @@ const quickSearchHandler = (store) => {
   });
 };
 
-const onInfoWindow = (store) => {
+const onOverlay = (store) => {
   setSearchAddrValue(store); // 서치 인풋에 타입별 값을 채워넣음
-  const infoWindow = createPickupInfoWindow(store);
-
-  if (infoWindow.getMap()) {
-    infoWindow.close();
-  } else {
-    L_SHOWING_INFO_WIN = infoWindow; // 닫기버튼 클릭시 없애기 위함
-    L_MAP.setZoom(15);
-
-    L_MAP.setCenter(store.marker.position);
-    infoWindow.open(L_MAP, store.marker);
+  const overlay = createOverlay(store);
+  if (L_SHOWING_OVERLAY) {
+    closeOpenedOverlay();
   }
+  L_SHOWING_OVERLAY = overlay; // 닫기버튼 클릭시 없애기 위함
+  L_MAP.setLevel(3, { animate: true });
+
+  L_MAP.setCenter(store.marker.getPosition());
+  overlay.setMap(L_MAP);
 };
 
 const markerHandler = (store) => {
-  naver.maps.Event.addListener(store.marker, 'click', (e) => {
+  kakao.maps.event.addListener(store.marker, 'click', function () {
     if (L_GEOLOCATION_WIDGET) {
       // 선택한 마커 기준으로 스토어리스트를 다시 그려줌
-      setDistance(store.naverCoord);
+      setDistance(store.kakaoCoord);
       paintStoreList();
     }
 
-    onInfoWindow(store);
+    closeOpenedOverlay();
+    onOverlay(store);
+  });
+};
+
+const mapHandler = () => {
+  kakao.maps.event.addListener(L_MAP, 'click', function () {
+    closeOpenedOverlay();
   });
 };
 
 const createStoreChildElmAsString = (store) => {
   const result =
     `<div class="left">` +
-    `<h1 class="store_name" style="font-size: 16px; padding-bottom: 6px;">${store.name}</h1>` +
+    `<h1 class="store_name">${store.name}</h1>` +
     `<div class="addr_ct">` +
     `<span class="address" style="color: rgb(151, 151, 151);">${store.address}</span><img class="copy_addr" src="https://oneulwineshop.cafe24.com/web/icons/copy.svg" style="width : 15px; height:15px; margin-left: 5px; cursor:pointer;"></img>` +
     `</div>` +
@@ -436,15 +422,13 @@ const createStoreChildElmAsString = (store) => {
  * @returns {void}
  */
 const paintStoreList = () => {
-  console.log(new Error().stack); // 호출 스택 정보를 출력하여 호출한 함수를 확인
-
   let cnt = 0;
   let swiperSlide = createNewSlide(); // 슬라이더 생성
   let storeList = [...L_STORE_LIST];
 
   if (L_GEOLOCATION_WIDGET) {
     storeList.forEach((store) => {
-      store.naverCoord = createNaverCoord(store.latitude, store.longitude);
+      store.kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
       createStoreMarker(store);
       markerHandler(store);
     });
@@ -454,14 +438,14 @@ const paintStoreList = () => {
     });
   } else {
     L_STORE_LIST.forEach((store) => {
-      store.naverCoord = createNaverCoord(store.latitude, store.longitude);
+      store.kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
       createStoreMarker(store);
       markerHandler(store);
     });
   }
 
   let storeLen = Object.keys(storeList).length; // 매장 갯수
-  console.log(storeLen);
+
   for (let key in storeList) {
     const store = storeList[key];
     if (cnt && cnt % 5 === 0) {
@@ -489,7 +473,8 @@ const paintStoreList = () => {
 
       const distanceElm = document.createElement('span');
       distanceElm.classList.add('distance');
-      distanceElm.innerText = `${distance}Km  `;
+      const distanceStr = distance < 1 ? `${distance * 1000}m  ` : `${distance}km  `;
+      distanceElm.innerText = distanceStr;
       storeElm.querySelector('.addr_ct').prepend(distanceElm);
     }
 
@@ -574,18 +559,14 @@ const getCodeCopyAlert = () => {
 };
 
 /**
- * @description 매장 픽업 완료 알림 요소를 반환하는 함수
- * @returns {HTMLElement} 매장 픽업 완료 알림 요소
- */
-const getPickupAlert = () => {
-  return document.getElementById('pickup_alert');
-};
-
-/**
  * @returns {HTMLElement} 서치리스트 컨테이너 요소를 가져옴
  **/
 const getSearchListCtElm = () => {
   return document.getElementById('searchListCt');
+};
+
+const getPickupStoreElm = () => {
+  return document.getElementById('pickupStore');
 };
 
 /**
@@ -618,16 +599,6 @@ const copyAddrHandler = () => {
       onCopyAddr(addrCopyBtn.previousElementSibling.innerText); // 주소 복사 기능을 수행하는 함수
     });
   });
-};
-/**
- * @description 매장 픽업 완료 알림 요소를 화면에 띄우고, 1.5초 후에 숨기는 함수
- * @returns {void}
- */
-const showPickupAlert = () => {
-  getPickupAlert().classList.add('on');
-  setTimeout(() => {
-    getPickupAlert().classList.remove('on');
-  }, 1500);
 };
 
 /**
@@ -677,42 +648,49 @@ const findStoreBySearched = () => {
 };
 
 const createStoreMarker = (store) => {
-  const content = ['<div>', `<img src="../icons/store.svg" width="35" height="35" alt="현재 위치"/>`, '</div>'].join('');
+  const imageSrc = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
+    imageOption = { offset: new kakao.maps.Point(11, 35) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
 
-  const marker = new naver.maps.Marker({
-    map: L_MAP, // 검색된 좌표를 지도에 표시
-    position: store.naverCoord,
-    icon: {
-      content,
-      size: new naver.maps.Size(35, 35),
-      anchor: new naver.maps.Point(11, 35),
-    },
+  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(store.latitude, store.longitude); // 마커가 표시될 위치입니다
+
+  // 마커를 생성합니다
+  const marker = new kakao.maps.Marker({
+    position: markerPosition,
+    image: markerImage, // 마커이미지 설정
   });
+
+  // 마커가 지도 위에 표시되도록 설정합니다
+  marker.setMap(L_MAP);
 
   store.marker = marker;
   return marker;
 };
 
-const createUserMarker = (naverCoord) => {
+const createUserMarker = () => {
   userMarkers.forEach((userMarker) => {
     userMarker.setMap(null);
   });
 
-  const userMarker = new naver.maps.Marker({
-    position: naverCoord,
-    map: L_MAP,
-    icon: {
-      content:
-        '<img src="//ecimg.cafe24img.com/pg241b58340239066/inthework/web/images/map/current_location.gif" alt="" ' +
-        'style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; ' +
-        '-webkit-user-select: none; position: absolute; width: 30px; height: 30px; left: 0px; top: 0px;">',
-      size: new naver.maps.Size(22, 35),
-      anchor: new naver.maps.Point(11, 35),
-    },
+  const imageSrc = 'https://rlagudtjq2016.cafe24.com/assets/icon/current_location.gif', // 마커이미지의 주소입니다
+    imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
+    imageOption = { offset: new kakao.maps.Point(11, 35) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+    markerPosition = new kakao.maps.LatLng(L_USER_KAKAO_COORD.latitude, L_USER_KAKAO_COORD.longitude); // 마커가 표시될 위치입니다
+
+  // 마커를 생성합니다
+  const userMarker = new kakao.maps.Marker({
+    position: markerPosition,
+    image: markerImage, // 마커이미지 설정
   });
 
-  L_MAP.setCenter(naverCoord);
-  L_MAP.setZoom(15);
+  // 마커가 지도 위에 표시되도록 설정합니다
+  userMarker.setMap(L_MAP);
+
   userMarkers.push(userMarker);
 };
 
@@ -724,9 +702,9 @@ const searchAddrToCoord = () => {
     return;
   }
   if (L_GEOLOCATION_WIDGET) {
-    setDistance(store.naverCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
+    setDistance(store.kakaoCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
     paintStoreList();
-    L_MAP.setCenter(store.naverCoord);
+    L_MAP.setCenter(store.kakaoCoord);
   } else {
     const marker = createStoreMarker(store);
     if (PREV_MARKER) {
@@ -735,7 +713,7 @@ const searchAddrToCoord = () => {
     PREV_MARKER = marker;
   }
 
-  onInfoWindow(store);
+  onOverlay(store);
 };
 
 // 검색 결과를 숨기는 함수
@@ -748,11 +726,9 @@ const HideQuickSearchElm = () => {
 // 서치리스트에 검색 결과를 하나만 표시하는 함수
 const showQuickSearchJustOne = () => {
   const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
-  const quickSearchStoreElm = searchListCt.querySelector('.store');
-  const height = quickSearchStoreElm.clientHeight;
   searchListCt.style.display = 'initial'; // 서치리스트를 보이게 함
   searchListCt.innerHTML = ''; // 서치리스트 내용을 비움
-  searchListCt.style.height = height + 10 + 'px'; // 서치리스트 높이를 설정
+  searchListCt.style.height = L_HEIGHT + 10 + 'px'; // 서치리스트 높이를 설정
 };
 
 // 검색 결과를 표시하는 함수
@@ -804,9 +780,8 @@ const sortQuickSearch = () => {
  */
 const quickSearch = () => {
   let searchedValue = getSearchedAddr();
-  const searchListCtElm = getSearchListCtElm();
-  const quickSearchStoreElm = searchListCtElm.querySelector('store');
-  const storesLen = searchListCtElm.querySelectorAll('.store').length;
+  const searchListCt = getSearchListCtElm();
+  const storesLen = searchListCt.querySelectorAll('.store').length;
 
   initQuickSearchListCt(); // 서치리스트 초기화
   if (storesLen === 0) {
@@ -834,7 +809,7 @@ const quickSearch = () => {
 
     if (removeAllSpaces(searchTarget).includes(removeAllSpaces(searchedValue))) {
       if (quickSearchArray.length === QUICK_SEARCH_LIMIT) break;
-      searchListCtElm.style.display = 'block';
+      searchListCt.style.display = 'block';
       quickSearchArray.push(store);
     }
   }
@@ -849,8 +824,7 @@ const quickSearch = () => {
     quickSearchHandler(store);
   }
 
-  const height = quickSearchStoreElm.clientHeight * storesLen;
-  searchListCtElm.style.height = height + 10 + 'px';
+  searchListCt.style.height = quickSearchArray.length * L_HEIGHT + 10 + 'px';
 };
 
 const storeSearchingHandler = () => {
@@ -868,41 +842,33 @@ const storeSearchingHandler = () => {
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
-const closeInfoWindow = () => {
-  if (L_SHOWING_INFO_WIN) {
-    L_SHOWING_INFO_WIN.close();
-    L_SHOWING_INFO_WIN = ''; // 닫기버튼 클릭시 없애기 위함
+const closeOpenedOverlay = () => {
+  if (L_SHOWING_OVERLAY) {
+    L_SHOWING_OVERLAY.setMap(null);
   }
 };
 
-const createPickupInfoWindow = (store) => {
-  const contentString = [
+const createOverlay = (store) => {
+  const content = [
     '<div class="iw_inner">',
     '  <div class="content">',
-    `		<h3>${store.name}</h3>`,
-    `      	 <p style="margin-top:5px;">${store.address}</p>`,
+    `		<h3 style="font-size:1rem; margin:0;">${store.name}</h3>`,
+    `      	 <p style="margin-top:5px; margin-bottom:0; font-size:0.875rem;">${store.address}</p>`,
     '  </div>',
     '   <div class="btn-box">',
-    `   	<div class="close-btn" onclick=\"closeInfoWindow()\">닫기</div>`,
+    `   	<div class="close-btn" onclick=\"closeOpenedOverlay()\">닫기</div>`,
     `   	<div class="pickup-btn" onclick=\"pickup(findStoreBySearched())\">여기서픽업</div>`,
     '   </div>',
     '</div>',
   ].join('');
 
-  const infowindow = new naver.maps.InfoWindow({
-    content: contentString,
-    maxWidth: 200,
-    backgroundColor: '#fff',
-    borderColor: getRootPropertyValue('--ui-color'),
-    borderWidth: 1,
-    anchorSize: new naver.maps.Size(0, 0),
-    anchorSkew: true,
-    anchorColor: '#fff',
-    pixelOffset: new naver.maps.Point(5, -20),
+  const overlay = new kakao.maps.CustomOverlay({
+    content: content,
+    map: L_MAP,
+    position: store.marker.getPosition(),
   });
 
-  L_SHOWING_INFO_WIN = infowindow; // 닫기버튼 클릭시 없애기 위함
-  return infowindow;
+  return overlay;
 };
 
 // 주변 매장 찾기
@@ -915,26 +881,34 @@ const sortCondition = (a, b) => {
   }
 };
 
-const createNaverCoord = (latitude, longitude) => {
-  return new naver.maps.LatLng(latitude, longitude);
+const createKakaoCoord = (latitude, longitude) => {
+  return new kakao.maps.LatLng(latitude, longitude);
 };
 
 /**
  * @description UI 가 distance 일때 사용되는 함수 기준이되는 거리를 받아서 스토어 리스트에 거리를 생성 후 거리순으로 정렬
- * @param {naverCoord} targetNaverCoord
+ * @param {kakaoCoord} targetKakaoCoord
  */
-const setDistance = (targetNaverCoord) => {
-  const _storeInfoContainer = document.querySelector('.store-info-container');
-  _storeInfoContainer.innerHTML = '';
-  var proj = L_MAP.getProjection();
+const setDistance = (targetKakaoCoord) => {
+  const storeInfoCtElm = document.querySelector('.store-info-container');
+  storeInfoCtElm.innerHTML = '';
 
   for (let key in L_STORE_LIST) {
     const store = L_STORE_LIST[key];
-    const storeNaverCoord = createNaverCoord(store.latitude, store.longitude);
-    const distance = proj.getDistance(targetNaverCoord, storeNaverCoord);
+    const storeKakaoCoord = createKakaoCoord(store.latitude, store.longitude);
+    const polyline = new kakao.maps.Polyline({
+      /* map:map, */
+      path: [targetKakaoCoord, storeKakaoCoord],
+      strokeWeight: 2,
+      strokeColor: '#FF00FF',
+      strokeOpacity: 0.8,
+      strokeStyle: 'dashed',
+    });
+
+    //return getTimeHTML(polyline.getLength());//미터단위로 길이 반환;
+    const distance = polyline.getLength();
     store.distance = distance / 1000;
   }
-
   L_STORE_LIST.sort(sortCondition);
 };
 
@@ -942,7 +916,7 @@ const geoLocationSuccess = async ({ coords, timestamp }) => {
   latitude = coords.latitude; // 위도
   longitude = coords.longitude; // 경도
 
-  L_USER_NAVER_COORD = new naver.maps.LatLng(latitude, longitude);
+  L_USER_KAKAO_COORD = createKakaoCoord(latitude, longitude);
   getPickupStoreBtnElm().classList.remove('loading');
   getPickupStoreBtnElm().innerHTML = '';
 };
@@ -958,8 +932,8 @@ const geoLocationErrCallback = (error) => {
 // ----------------------------------------------------------------------------------------------------------------------------------
 const geoLocationPickupInit = () => {
   firstOpenMap();
-  createUserMarker(L_USER_NAVER_COORD);
-  setDistance(L_USER_NAVER_COORD);
+  createUserMarker(L_USER_KAKAO_COORD);
+  setDistance(L_USER_KAKAO_COORD);
   storeListUp();
 };
 
@@ -1032,33 +1006,15 @@ const storePickupInit = async () => {
 
 const APIInit = async () => {
   const storeMapAPI = new StoreMapAPI();
-  const showCheck = await storeMapAPI.productShowCheck();
-
-  if (!showCheck) {
-    return;
-  }
 
   try {
-    L_STORE_MAP_ADDITIONAL_OPT = storeMapAPI.getStoreMapAdditionalOpt();
-
-    if (!L_STORE_MAP_ADDITIONAL_OPT) {
-      console.error('카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.');
-      return;
-    }
-
     L_STORE_LIST = await storeMapAPI.getStoreList();
     if (!L_STORE_LIST) {
       return;
     }
     await storeMapAPI.UISetting();
 
-    const res = await axios.get(API_BASE_URL + '/api/stores_map/tags');
-    if (res.status === 200) {
-      const storeMap = document.getElementById('storeMap');
-      storeMap.innerHTML = res.data;
-
-      storePickupInit();
-    }
+    storePickupInit();
   } catch (error) {
     console.error(error);
   }

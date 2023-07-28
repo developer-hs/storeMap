@@ -1,28 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
+<html lang="ko" style="overflow: hidden">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="/css/stores/store_pickup.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
-    />
+    <link rel="stylesheet" type="text/css" href="/css/stores/store_pickup.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   </head>
   <body>
     <div id="copy_alert">
       <span>주소가 복사 되었습니다!</span>
-    </div>
-    <div id="pickup_alert">
-      <span>매장이 선택 되었습니다!</span>
     </div>
     <div class="loading" id="pickUpStoreBtn">
       <div class="guard"></div>
@@ -62,23 +50,10 @@
       </div>
       <div
         id="map"
-        class="off"
-        style="
-          display: none;
-          width: 100%;
-          height: 300px;
-          position: relative;
-          overflow: hidden;
-          visibility: hidden;
-          opacity: 0;
-        "
+        style="display: none; width: 100%; height: 300px; position: relative; overflow: hidden; visibility: hidden; opacity: 0"
       ></div>
     </div>
   </body>
-  <script
-    type="text/javascript"
-    src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=314f4enpbp&submodules=geocoder"
-    defer
-  ></script>
-  <script src="js/createStorePickup.js"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0ce9c1baed22e0b9924a0bd697727b9b"></script>
+  <script type="text/javascript" src="js/testCreateStorePickup.js"></script>
 </html>

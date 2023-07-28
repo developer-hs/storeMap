@@ -177,7 +177,7 @@ const appRouting = async () => {
   });
 
   app.get('/test', (req, res) => {
-    return res.sendFile(__dirname + '/routes/stores/test.html');
+    return res.sendFile(__dirname + '/public/test.html');
   });
 
   app.get('/oauth', (req, res) => {
