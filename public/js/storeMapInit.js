@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
 
 class StoreMapInitAPI {
   constructor() {
@@ -103,7 +103,7 @@ class StoreMapInitAPI {
 
   createFrame = () => {
     this.iframe = document.createElement('iframe');
-    this.iframe.src = '/store_pickup.html';
+    this.iframe.src = 'https://storemap-389307.du.r.appspot.com/store_pickup.html';
     this.iframe.style.cssText = 'width:100%; height:auto; border:none;';
     this.recieveFrameHeight();
   };
