@@ -1008,6 +1008,7 @@ const APIInit = async () => {
 
   try {
     L_STORE_LIST = await storeMapAPI.getStoreList();
+    console.log(L_STORE_LIST);
     if (!L_STORE_LIST) {
       return;
     }
