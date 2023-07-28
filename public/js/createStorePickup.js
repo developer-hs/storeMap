@@ -86,7 +86,7 @@ class StoreMapAPI {
 
   receiveTrigger = () => {
     window.parent.addEventListener('message', (e) => {
-      if (e.trigger) {
+      if (e.data.trigger) {
         console.log(e.origin);
         this.origin = e.origin;
       }

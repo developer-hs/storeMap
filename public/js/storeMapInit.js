@@ -14,7 +14,10 @@ class StoreMapInitAPI {
    */
   async productShowCheck() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`);
+      const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`, {
+        params: { origin: window.location.origin },
+      });
+
       if (res.status === 200) {
         return res.data.ok;
       }
