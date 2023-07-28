@@ -103,7 +103,7 @@ class StoreMapInitAPI {
 
   createFrame = () => {
     this.iframe = document.createElement('iframe');
-    this.iframe.src = 'https://cdn.jsdelivr.net/gh/gygy2006/storeMap/public/store_pickup.html';
+    this.iframe.src = 'https://storemap-389307.du.r.appspot.com/store_pickup.html';
     this.iframe.style.cssText = 'width:100%; height:auto; border:none;';
     this.recieveFrameHeight();
   };
