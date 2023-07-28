@@ -23,7 +23,7 @@ class StoreMapAPI {
    */
   async UISetting() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
+      const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { origin: this.origin });
       if (res.status === 200) {
         const UI = res.data;
         if (UI.ui === 'default') {
@@ -63,7 +63,7 @@ class StoreMapAPI {
    */
   async getStoreList() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/stores`);
+      const res = await axios.get(`${API_BASE_URL}/api/stores`, { params: { origin: this.origin } });
       if (res.status === 200) {
         return res.data;
       }
@@ -88,6 +88,7 @@ class StoreMapAPI {
     window.parent.addEventListener('message', (e) => {
       if (e.trigger) {
         console.log(e.origin);
+        this.origin = e.origin;
       }
     });
   };
