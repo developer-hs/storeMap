@@ -1,5 +1,5 @@
 const L_HEIGHT = 80;
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],
@@ -13,6 +13,7 @@ let userMarkers = [];
 
 class StoreMapAPI {
   constructor() {
+    this.receiveTrigger();
     this.postMsgFrameHeight();
   }
 
@@ -81,6 +82,14 @@ class StoreMapAPI {
 
     const config = { attributes: true, childList: true, subtree: true };
     pickupSteElmObv.observe(pickupStoreElm, config);
+  };
+
+  receiveTrigger = () => {
+    window.parent.addEventListener('message', (e) => {
+      if (e.trigger) {
+        console.log(e.origin);
+      }
+    });
   };
 }
 

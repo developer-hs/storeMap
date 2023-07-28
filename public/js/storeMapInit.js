@@ -1,8 +1,10 @@
-const API_BASE_URL = 'http://localhost:8080';
+const iProductNo = 44;
+const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
 
 class StoreMapInitAPI {
   constructor() {
     this.productId = iProductNo;
+    this.storeMapElm = document.getElementById('storeMap');
     this.L_STORE_MAP_ADDITIONAL_OPT;
     this.setStoreMapAdditionalOpt();
   }
@@ -106,6 +108,13 @@ class StoreMapInitAPI {
     this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:auto; border:none;';
     this.recieveFrameHeight();
+
+    this.storeMapElm.appendChild(this.iframe);
+    this.postMsgTrigger();
+  };
+
+  postMsgTrigger = () => {
+    this.iframe.contentWindow.postMessage({ trigger: true }, '*');
   };
 }
 
@@ -119,8 +128,6 @@ const storeMapInit = async () => {
 
   try {
     storeMapInitAPI.createFrame();
-    const storeMap = document.getElementById('storeMap');
-    storeMap.appendChild(storeMapInitAPI.iframe);
   } catch (error) {
     console.error(error);
   }
