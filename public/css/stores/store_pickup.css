@@ -398,7 +398,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
   position: relative;
   display: flex;
   transform: translate3d(5%, 60%, 0);
-  border: 1px solid #000;
+  border: 1px solid var(--ui-color);
   border-radius: 10px;
   overflow: hidden;
   flex-direction: column;
