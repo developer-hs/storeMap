@@ -297,6 +297,7 @@ code {
   display: none !important;
 }
 body #pickupStore .store_list_ct .swiper-pagination {
+  display: flex;
   position: initial;
   width: auto;
 }
@@ -304,11 +305,13 @@ body #pickupStore .store_list_ct .swiper-pagination {
   width: 30px;
   height: 30px;
   text-align: center;
-  line-height: 30px;
   font-size: 12px;
   color: #151515;
   opacity: 1;
   background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 #pickupStore .store_list_ct .swiper-pagination-bullet-active {
   color: var(--ui-active-text-color);
