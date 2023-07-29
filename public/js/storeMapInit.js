@@ -33,7 +33,7 @@ class StoreMapInitAPI {
     const prdOptChildElms = document.querySelectorAll('.xans-product-option .xans-product-addoption');
 
     for (let i = 0; i < prdOptChildElms.length; i++) {
-      if (prdOptChildElms[i].innerHTML.indexOf('삭제시[스토어_픽업_앱]에서_OFF_권장[필수]') !== -1) {
+      if (prdOptChildElms[i].innerHTML.indexOf('스토어픽업') !== -1) {
         prdOptChildElms[i].style.cssText = 'position:absolute; top:-100%; left:-100%; opacity:0; visibility:hidden';
         const storeOptElm = prdOptChildElms[i].querySelector("input[id*='add_option']");
         this.L_STORE_MAP_ADDITIONAL_OPT = storeOptElm;
