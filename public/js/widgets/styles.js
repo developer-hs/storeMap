@@ -52,6 +52,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getQuickSearchAddressTextHoverColor = () => {
     return document.getElementById('uiQuickSearchAddressTextHoverColorCt').dataset.color;
   };
+  const getOverlayTitleTextColor = () => {
+    return document.getElementById('uiOverlayTitleTextColorCt').dataset.color;
+  };
+  const getOverlayAddressTextColor = () => {
+    return document.getElementById('uiOverlayAddressTextColorCt').dataset.color;
+  };
+  const getOverlayCloseBtnTextColor = () => {
+    return document.getElementById('uiOverlayCloseBtnTextColorCt').dataset.color;
+  };
+  const getOverlayPickupBtnTextColor = () => {
+    return document.getElementById('uiOverlayPickupBtnTextColorCt').dataset.color;
+  };
   const getDistanceTextElm = () => {
     return document.getElementById('uiDistanceTextColorCt');
   };
@@ -115,7 +127,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getSaveAlert = () => {
     return document.getElementById('saveAlert');
   };
-
+  const getOverlayElm = () => {
+    return document.querySelector('#map .iw_inner');
+  };
+  const getOverlayCloseBtnElm = () => {
+    return document.querySelector('#map .close-btn');
+  };
+  const getOverlayPickupBtnElm = () => {
+    return document.querySelector('#map .pickup-btn');
+  };
+  const getOverlayTitleElm = () => {
+    return document.getElementById('overlayTitle');
+  };
+  const getOverlayAddressElm = () => {
+    return document.getElementById('overlayAddress');
+  };
   const getUIType = () => {
     const uiElms = getUIInputElms();
     for (let i = 0; i < uiElms.length; i++) {
@@ -138,6 +164,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     QUICKSEARCH_ADDR_TEXT_COLOR = getQuickSearchAddressTextColor();
     QUICKSEARCH_TITLE_TEXT_HOVER_COLOR = getQuickSearchTitleTextHoverColor();
     QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR = getQuickSearchAddressTextHoverColor();
+    OVERLAY_TITLE_TEXT_COLOR = getOverlayTitleTextColor();
+    OVERLAY_ADDRESS_TEXT_COLOR = getOverlayAddressTextColor();
+    OVERLAY_CLOSE_BTN_TEXT_COLOR = getOverlayCloseBtnTextColor();
+    OVERLAY_PICKUP_BTN_TEXT_COLOR = getOverlayPickupBtnTextColor();
 
     getQuickSearchStoreElm().addEventListener('mouseover', () => {
       getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_HOVER_COLOR;
@@ -212,23 +242,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Simple example, see optional options for more configuration.
     const mainUIColorPickr = Pickr.create(createPickrConfig('#uiMainColor', getMainColor()));
-
     const ActiveTextColorPickr = Pickr.create(createPickrConfig('#uiActiveTextColor', getActiveTextColor()));
-
     const TextColorPickr = Pickr.create(createPickrConfig('#uiTextColor', getTextColor()));
-
     const TitleTextColorPickr = Pickr.create(createPickrConfig('#uiTitleTextColor', getTitleTextColor()));
-
     const addressTextColorPickr = Pickr.create(createPickrConfig('#uiAddressTextColor', getAddressTextColor()));
-
     const distanceTextColorPickr = Pickr.create(createPickrConfig('#uiDistanceTextColor', getDistanceTextColor()));
-
     const mapTitleTextColorPickr = Pickr.create(createPickrConfig('#uiMapTitleTextColor', getMapTitleTextColor()));
     const mapAddressTextColorPickr = Pickr.create(createPickrConfig('#uiMapAddressTextColor', getMapAddressTextColor()));
     const mapQuickSearchTitleTextColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchTitleTextColor', getQuickSearchTitleTextColor())
     );
-
     const quickSearchAddressTextColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchAddressTextColor', getQuickSearchAddressTextColor())
     );
@@ -238,6 +261,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const quickSearchAddressTextHoverColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchTitleAddressTextHoverColor', getQuickSearchAddressTextHoverColor())
     );
+    const overlayTitleTextColorPickr = Pickr.create(createPickrConfig('#uiOverlayTitleTextColor', getOverlayTitleTextColor()));
+    const overlayAddressTextColorPickr = Pickr.create(createPickrConfig('#uiOverlayAddressTextColor', getOverlayAddressTextColor()));
+    const overlayCloseBtnTextColorPickr = Pickr.create(createPickrConfig('#uiOverlayCloseBtnTextColor', getOverlayCloseBtnTextColor()));
+    const overlayPickupBtnTextColorPickr = Pickr.create(createPickrConfig('#uiOverlayPickupBtnTextColor', getOverlayPickupBtnTextColor()));
 
     mainUIColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
@@ -246,10 +273,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         getTypeSearchStoreElm().style.backgroundColor = selectedColor;
         getMapTitleElm().style.backgroundColor = selectedColor;
         getSubmitBtnElm().style.color = selectedColor;
+        getOverlayElm().style.cssText = `border-color : ${selectedColor}`;
+        getOverlayCloseBtnElm().style.cssText = `border-top: 1px solid ${selectedColor}`;
+        getOverlayPickupBtnElm().style.cssText = `background-color: ${selectedColor}; border-color: ${selectedColor}`;
+        getActivePageElm().style.backgroundColor = selectedColor;
         getStorePickBtnElms().forEach((getStorePickBtnElm) => {
           getStorePickBtnElm.style.fill = selectedColor;
         });
-        getActivePageElm().style.backgroundColor = selectedColor;
       });
     });
 
@@ -352,6 +382,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       });
     });
+    overlayTitleTextColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        OVERLAY_TITLE_TEXT_COLOR = selectedColor;
+        getOverlayTitleElm().style.color = selectedColor;
+      });
+    });
+    overlayAddressTextColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        OVERLAY_ADDRESS_TEXT_COLOR = selectedColor;
+        getOverlayAddressElm().style.color = selectedColor;
+      });
+    });
+    overlayCloseBtnTextColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        OVERLAY_CLOSE_BTN_TEXT_COLOR = selectedColor;
+        getOverlayCloseBtnElm().style.color = selectedColor;
+      });
+    });
+    overlayPickupBtnTextColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        OVERLAY_PICKUP_BTN_TEXT_COLOR = selectedColor;
+        getOverlayPickupBtnElm().style.color = selectedColor;
+      });
+    });
 
     getRenewBtnElm().addEventListener('click', () => {
       document.getElementById('defaultUI').click();
@@ -367,6 +425,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       quickSearchAddressTextColorPickr.setColor('#979797');
       quickSearchTitleTextHoverColorPickr.setColor('#000000');
       quickSearchAddressTextHoverColorPickr.setColor('#9987cd');
+      overlayCloseBtnTextColorPickr.setColor('#000000');
+      overlayPickupBtnTextColorPickr.setColor('#ffffff');
     });
   };
   const colorToString = (color) => {
@@ -423,6 +483,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       quickSearchAddressTextColor: QUICKSEARCH_ADDR_TEXT_COLOR,
       quickSearchTitleTextHoverColor: QUICKSEARCH_TITLE_TEXT_HOVER_COLOR,
       quickSearchAddressTextHoverColor: QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR,
+      overlayTitleTextColor: OVERLAY_TITLE_TEXT_COLOR,
+      overlayAddressTextColor: OVERLAY_ADDRESS_TEXT_COLOR,
+      overlayCloseBtnTextColor: OVERLAY_CLOSE_BTN_TEXT_COLOR,
+      overlayPickupBtnTextColor: OVERLAY_PICKUP_BTN_TEXT_COLOR,
     };
 
     try {

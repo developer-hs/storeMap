@@ -1,10 +1,10 @@
 :root {
-  --ui-color: #000;
+  --ui-color: #000000;
   --ui-text-color: #fff;
-  --ui-distance-text-color: #000;
-  --ui-active-text-color: #000;
-  --ui-text-color: #000;
-  --ui-title-text-color: #000;
+  --ui-distance-text-color: #000000;
+  --ui-active-text-color: #000000;
+  --ui-text-color: #000000;
+  --ui-title-text-color: #000000;
   --ui-address-text-color: #e1e1e1;
   --ui-map-title-text-color: #fff;
   --ui-map-address-text-color: #e1e1e1;
@@ -12,7 +12,11 @@
   --ui-quicksearch-address-text-color: #979797;
   --ui-quicksearch-title-hover-color: #666666;
   --ui-quicksearch-address-hover-color: #979797;
-  --ui-alert-color: #000;
+  --ui-alert-color: #000000;
+  --ui-overlay-title-text-color: #000000;
+  --ui-overlay-address-text-color: #000000;
+  --ui-overlay-close-btn-text-color: #000000;
+  --ui-overlay-pickup-btn-text-color: #ffffff;
 }
 
 body {
@@ -407,6 +411,13 @@ body #pickupStore .store_list_ct .swiper-pagination {
   background-color: #fff;
   padding: 10px;
 }
+#map .iw_inner .content h3 {
+  color: var(--ui-overlay-title-text-color);
+}
+
+#map .iw_inner .content p {
+  color: var(--ui-overlay-address-text-color);
+}
 
 #map .iw_inner .btn-box {
   display: flex;
@@ -424,6 +435,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
 }
 #map .iw_inner .btn-box .close-btn {
   background-color: #fff;
+  color: var(--ui-overlay-close-btn-text-color);
 }
 
 #map .iw_inner .btn-box .pickup-btn {
@@ -431,7 +443,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
   height: auto;
   display: flex;
   background-color: var(--ui-color);
-  color: #fff;
+  color: var(--ui-overlay-pickup-btn-text-color);
 }
 
 #map > div > div > div > div > div > div > div {

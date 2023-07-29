@@ -121,11 +121,10 @@ body #content {
   font-weight: bold;
 }
 
-#pickupStore.right
-  .store_list_ct
-  .store-info-container
-  div.swiper-slide
-  > div:nth-last-child(1) {
+#pickupStore.right {
+  padding: 24px 12px;
+}
+#pickupStore.right .store_list_ct .store-info-container div.swiper-slide > div:nth-last-child(1) {
   margin-bottom: 0px;
 }
 
@@ -250,4 +249,21 @@ body #content {
 
 .save_alert.on {
   top: var(--btn-default-ht);
+}
+#uiMainColorPreview #map {
+  font-size: 0px;
+  position: relative;
+}
+#uiMainColorPreview #map .iw_inner {
+  position: absolute;
+  width: 200px;
+  top: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  left: 50%;
+}
+#uiMainColorPreview #map .iw_inner .btn-box .close-btn {
+  border-radius: 0px;
+}
+#uiMainColorPreview #map .iw_inner .btn-box .pickup-btn {
+  border-radius: 0px;
 }
