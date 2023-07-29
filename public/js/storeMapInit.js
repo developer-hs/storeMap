@@ -30,12 +30,12 @@ class StoreMapInitAPI {
    * @returns {HTMLElement?}
    */
   setStoreMapAdditionalOpt = () => {
-    const prdOptChildElms = document.querySelector('.xans-product-option .xans-product-addoption').children;
+    const prdOptChildElms = document.querySelectorAll('.xans-product-option .xans-product-addoption');
 
     for (let i = 0; i < prdOptChildElms.length; i++) {
-      if (prdOptChildElms[i].innerText === '삭제시[스토어_픽업_앱]에서_OFF_권장[필수]') {
-        // prdOptChildElms[i].parentNode.style.cssText = 'position:absolute; top:-100%; left:-100%; opacity:0; visibility:hidden';
-        const storeOptElm = prdOptChildElms[i].nextElementSibling.querySelector("input[id*='add_option']");
+      if (prdOptChildElms[i].innerHTML.indexOf('삭제시[스토어_픽업_앱]에서_OFF_권장[필수]') !== -1) {
+        prdOptChildElms[i].style.cssText = 'position:absolute; top:-100%; left:-100%; opacity:0; visibility:hidden';
+        const storeOptElm = prdOptChildElms[i].querySelector("input[id*='add_option']");
         this.L_STORE_MAP_ADDITIONAL_OPT = storeOptElm;
         this.receiveOptValue();
       }
@@ -43,6 +43,7 @@ class StoreMapInitAPI {
 
     if (!this.L_STORE_MAP_ADDITIONAL_OPT) {
       console.error('카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.');
+      this.iframe.remove();
       return;
     }
 
@@ -59,7 +60,7 @@ class StoreMapInitAPI {
     alertContent.innerText = message;
     alertModal.style.cssText = `width:${width}px; height:${height}px; color:${color}; background-color:${bgColor}`;
     alertModal.appendChild(alertContent);
-    body.appendChild(alertModal);
+    body.prepend(alertModal);
 
     setTimeout(() => {
       alertModal.classList.add('on');
@@ -106,9 +107,11 @@ class StoreMapInitAPI {
   };
 
   createFrame = () => {
+    this.addStyleSheet();
+
     this.iframe = document.createElement('iframe');
-    this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
-    this.iframe.style.cssText = 'width:100%; height:auto; border:none;';
+    this.iframe.src = `${API_BASE_URL}/test_store_pickup.html`;
+    this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
     this.receiveStoresEmpty();
     this.receiveFrameHeight();
     this.receiveTrigger();
@@ -142,6 +145,14 @@ class StoreMapInitAPI {
         }
       }.bind(this)
     );
+  };
+
+  addStyleSheet = () => {
+    const scriptElm = document.createElement('link');
+    scriptElm.setAttribute('rel', 'stylesheet');
+    scriptElm.setAttribute('type', 'text/css');
+    scriptElm.setAttribute('href', 'https://cdn.jsdelivr.net/gh/gygy2006/storeMap/public/css/stores/store_pickup.css');
+    document.body.appendChild(scriptElm);
   };
 }
 

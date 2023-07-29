@@ -9,7 +9,6 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-  <link rel="stylesheet" href="/css/stores/store_pickup.css" />
   <body>
     <div id="storeMap"></div>
     <div id="totalProducts" class="">
@@ -17,75 +16,92 @@
       <p class="ec-base-help txtWarn txt11 displaynone">위 옵션선택 박스를 선택하시면 아래에 상품이 추가됩니다.</p>
       <table summary="">
         <caption>
-          상품 목록
+          상품 옵션
         </caption>
-        <colgroup>
-          <col style="width: 284px" />
-          <col style="width: 80px" />
-          <col style="width: 110px" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th scope="col">상품명</th>
-            <th scope="col">상품수</th>
-            <th scope="col">가격</th>
-          </tr>
-        </thead>
-        <tbody class="">
-          <tr>
-            <td>seop sample item5</td>
+        <tbody class="xans-element- xans-product xans-product-option xans-record-">
+          <!-- 참고 : 뉴상품관리 전용 변수가 포함되어 있습니다. 뉴상품관리 이외의 곳에서 사용하면 일부 변수가 정상동작하지 않을 수 있습니다. -->
+          <tr class="xans-element- xans-product xans-product-addoption xans-record-">
+            <th scope="row">삭제시[스토어_픽업_앱]에서_OFF_권장[필수]</th>
             <td>
-              <span class="quantity">
-                <input id="quantity" name="quantity_opt[]" value="1" type="text" />
-                <a href="javascript:;" class="up QuantityUp"
-                  ><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/btn_count_up.gif" alt="수량증가"
-                /></a>
-                <a href="javascript:;" class="down QuantityDown"
-                  ><img src="//img.echosting.cafe24.com/skin/base_ko_KR/product/btn_count_down.gif" alt="수량감소"
-                /></a>
-              </span>
-            </td>
-            <td class="right">
-              <span class="quantity_price"
-                >45,000원<input type="hidden" name="option_box_price" class="option_box_price" value="45000" item_code="P00000BW000A"
+              <span class="inputWrap"
+                ><input id="add_option_0" name="add_option0" require="T" maxlength="100" class="input_addoption" value="" type="text"
               /></span>
-              <span class="mileage displaynone" style="display: none">(<img src="" /> &nbsp;<span class="mileage_price"></span>)</span>
+              <span class="txtByte" title="현재글자수/최대글자수">(<strong class="length">0</strong>/100)</span>
             </td>
           </tr>
-          <tr id="totalProductsOption" class="xans-element- xans-product xans-product-option option xans-record-">
-            <!--
-                        $use_per_add_option = yes
-                        $default_option = yes
-                        -->
-            <td class="middle" colspan="3">
-              <table summary="">
-                <caption>
-                  옵션 정보
-                </caption>
-                <colgroup>
-                  <col style="width: 105px" />
-                  <col style="width: auto" />
-                </colgroup>
-                <tbody>
-                  <tr class="xans-element- xans-product xans-product-addoption xans-record-">
-                    <th scope="row">삭제시[스토어_픽업_앱]에서_OFF_권장[필수]</th>
-                    <td>
-                      <input
-                        id="add_option_0"
-                        name="add_option0"
-                        require="T"
-                        maxlength="100"
-                        class="input_addoption input_peraddoption"
-                        value=""
-                        type="text"
-                      />
-                      <span class="txtByte" title="현재글자수/최대글자수">(<strong class="length">0</strong>/100)</span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+          <tr class="xans-element- xans-product xans-product-option xans-record-">
+            <th scope="row">test</th>
+            <td>
+              <select
+                option_product_no="179"
+                option_select_element="ec-option-select-finder"
+                option_sort_no="1"
+                option_type="E"
+                item_listing_type="S"
+                option_title="test"
+                product_type="product_option"
+                product_option_area="product_option_179_0"
+                name="option1"
+                id="product_option_id1"
+                class="ProductOption0"
+                option_style="select"
+                required="true"
+                option_code="O000000D"
+              >
+                <option value="*" selected="" link_image="">- [필수] 옵션을 선택해 주세요 -</option>
+                <option value="**" disabled="" link_image="">-------------------</option>
+                <option value="29" link_image="">test (+3,000원)</option>
+              </select>
             </td>
           </tr>
+          <tr class="xans-element- xans-product xans-product-option xans-record-">
+            <th scope="row">각인함</th>
+            <td>
+              <ul
+                option_product_no="179"
+                option_select_element="ec-option-select-finder"
+                option_sort_no="2"
+                option_type="E"
+                item_listing_type="S"
+                option_title="각인함"
+                product_type="product_option"
+                product_option_area="product_option_179_0"
+                option_style="button"
+                ec-dev-id="product_option_id2"
+                ec-dev-name="option2"
+                ec-dev-class="ProductOption0"
+                class="ec-product-button"
+                required="true"
+                option_code="O000000C"
+              >
+                <li class="ec-product-disabled" option_value="14" link_image="" title="각인문구입력(선택)">
+                  <a href="#none"><span>각인문구입력(선택)</span></a>
+                </li>
+              </ul>
+              <select
+                required="true"
+                product_option_area_select="product_option_179_0"
+                id="product_option_id2"
+                name="option2"
+                option_title="각인함"
+                option_type="E"
+                item_listing_type="S"
+                option_code="O000000C"
+                class="ProductOption0 displaynone"
+              >
+                <option value="*">empty</option>
+                <option value="14">각인문구입력(선택)</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="displaynone" id="">
+            <td colspan="2" class="selectButton">
+              <a href="#none" onclick=""
+                ><img src="http://img.echosting.cafe24.com/skin/base_ko_KR/product/btn_manual_select.gif" alt="옵션 선택"
+              /></a>
+            </td>
+          </tr>
+          <!-- //참고 -->
         </tbody>
       </table>
     </div>

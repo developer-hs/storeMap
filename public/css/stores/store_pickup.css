@@ -16,6 +16,7 @@
 }
 
 body {
+  margin: 0;
   width: 100%;
 }
 body,
@@ -85,7 +86,7 @@ code {
 }
 #pickupStore {
   display: none;
-  padding: 24px 12px;
+  padding: 24px 0;
   background-color: #fefefe;
 }
 
