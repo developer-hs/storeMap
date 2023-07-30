@@ -5,7 +5,7 @@ class StoreMapInitAPI {
     this.productId = iProductNo;
     this.storeMapElm = document.getElementById('storeMap');
     this.L_STORE_MAP_ADDITIONAL_OPT;
-    this.setStoreMapAdditionalOpt();
+    this.productShowCheck();
   }
   /**
    * @description 현재 상품이 스토어맵을 사용하는지 여부를 받아옴
@@ -18,7 +18,8 @@ class StoreMapInitAPI {
       });
 
       if (res.status === 200) {
-        return res.data.ok;
+        if (res.data.ok) this.setStoreMapAdditionalOpt();
+        else return;
       }
     } catch (error) {
       console.error(error);
@@ -43,11 +44,9 @@ class StoreMapInitAPI {
 
     if (!this.L_STORE_MAP_ADDITIONAL_OPT) {
       console.error('카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.');
-      this.iframe.remove();
-      return;
+    } else {
+      this.createFrame();
     }
-
-    return undefined;
   };
 
   onAlertModal = (message, width = 200, height = 60, duration = 1300, color = '#fff', bgColor = '#000') => {
@@ -112,6 +111,7 @@ class StoreMapInitAPI {
     this.iframe = document.createElement('iframe');
     this.iframe.src = `${API_BASE_URL}/test_store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
+
     this.receiveStoresEmpty();
     this.receiveFrameHeight();
     this.receiveTrigger();
@@ -157,18 +157,7 @@ class StoreMapInitAPI {
 }
 
 const storeMapInit = async () => {
-  const storeMapInitAPI = new StoreMapInitAPI();
-  const showCheck = await storeMapInitAPI.productShowCheck();
-
-  if (!showCheck) {
-    return;
-  }
-
-  try {
-    storeMapInitAPI.createFrame();
-  } catch (error) {
-    console.error(error);
-  }
+  new StoreMapInitAPI();
 };
 
 window.addEventListener('DOMContentLoaded', () => {
