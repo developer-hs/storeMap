@@ -109,7 +109,7 @@ class StoreMapInitAPI {
     this.addStyleSheet();
 
     this.iframe = document.createElement('iframe');
-    this.iframe.src = `${API_BASE_URL}/test_store_pickup.html`;
+    this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
     this.iframe.allow = `geolocation 'self' ${window.location.origin}`;
     this.receiveStoresEmpty();
