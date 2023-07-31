@@ -1,5 +1,5 @@
 const L_HEIGHT = 80;
-const API_BASE_URL = 'https://storemap-389307.du.r.appspot.com';
+const API_BASE_URL = 'https://storemap.store';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],

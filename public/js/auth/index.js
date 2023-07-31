@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const param = new URLSearchParams(window.location.search);
   const code = param.get('code');
   const mallId = getCodeFromSession();
-  const redirectURI = 'https://storemap-389307.du.r.appspot.com/cafe24/oauth';
+  const redirectURI = 'https://storemap.store/cafe24/oauth';
 
   if (!code) {
     alert('잘못된 접근입니다.');

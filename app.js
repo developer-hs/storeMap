@@ -24,6 +24,7 @@ export const app = express();
 
 const allowlist = [
   'https://storemap-389307.du.r.appspot.com',
+  'https://storemap.store',
   'http://localhost:8080',
   'https://localhost:8000',
   'http://127.0.0.1:8080',
