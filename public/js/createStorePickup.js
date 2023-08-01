@@ -50,6 +50,10 @@ class StoreMapAPI {
         document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', UI.quickSearchAddressTextColor);
         document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', UI.quickSearchTitleTextHoverColor);
         document.documentElement.style.setProperty('--ui-quicksearch-address-hover-color', UI.quickSearchAddressTextHoverColor);
+        document.documentElement.style.setProperty('--ui-overlay-title-text-color', UI.overlayTitleTextColor);
+        document.documentElement.style.setProperty('--ui-overlay-address-text-color', UI.overlayAddressTextColor);
+        document.documentElement.style.setProperty('--ui-overlay-close-btn-text-color', UI.overlayCloseBtnTextColor);
+        document.documentElement.style.setProperty('--ui-overlay-pickup-btn-text-color', UI.overlayPickupBtnTextColor);
       }
     } catch (error) {
       console.error(error);
