@@ -21,43 +21,27 @@ class StoreMapAPI {
    * @returns {void}
    */
   async UISetting() {
-    try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { params: { origin: this.origin } });
-      if (res.status === 200) {
-        const UI = res.data;
-        if (UI.ui === 'default') {
-          L_GEOLOCATION_WIDGET = false;
-        } else {
-          L_GEOLOCATION_WIDGET = true;
-        }
-        // --ui-color: #000;
-        // --ui-text-color: #fff;
-        // --ui-distance-text-color: #000;
-        // --ui-active-text-color: #000;
-        // --ui-title-text-color: #000;
-        // --ui-address-text-color: #e1e1e1;
-        // --ui-map-title-text-color: #fff;
-        // --ui-map-address-text-color: #e1e1e1;
-        document.documentElement.style.setProperty('--ui-color', UI.uiColor);
-        document.documentElement.style.setProperty('--ui-title-text-color', UI.titleTextColor);
-        document.documentElement.style.setProperty('--ui-distance-text-color', UI.distanceTextColor);
-        document.documentElement.style.setProperty('--ui-active-text-color', UI.activeTextColor);
-        document.documentElement.style.setProperty('--ui-text-color', UI.textColor);
-        document.documentElement.style.setProperty('--ui-address-text-color', UI.addressTextColor);
-        document.documentElement.style.setProperty('--ui-map-title-text-color', UI.mapTitleTextColor);
-        document.documentElement.style.setProperty('--ui-map-address-text-color', UI.mapAddressTextColor);
-        document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', UI.quickSearchTitleTextColor);
-        document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', UI.quickSearchAddressTextColor);
-        document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', UI.quickSearchTitleTextHoverColor);
-        document.documentElement.style.setProperty('--ui-quicksearch-address-hover-color', UI.quickSearchAddressTextHoverColor);
-        document.documentElement.style.setProperty('--ui-overlay-title-text-color', UI.overlayTitleTextColor);
-        document.documentElement.style.setProperty('--ui-overlay-address-text-color', UI.overlayAddressTextColor);
-        document.documentElement.style.setProperty('--ui-overlay-close-btn-text-color', UI.overlayCloseBtnTextColor);
-        document.documentElement.style.setProperty('--ui-overlay-pickup-btn-text-color', UI.overlayPickupBtnTextColor);
-      }
-    } catch (error) {
-      console.error(error);
+    if (this.widget.ui === 'default') {
+      L_GEOLOCATION_WIDGET = false;
+    } else {
+      L_GEOLOCATION_WIDGET = true;
     }
+    document.documentElement.style.setProperty('--ui-color', this.widget.uiColor);
+    document.documentElement.style.setProperty('--ui-title-text-color', this.widget.titleTextColor);
+    document.documentElement.style.setProperty('--ui-distance-text-color', this.widget.distanceTextColor);
+    document.documentElement.style.setProperty('--ui-active-text-color', this.widget.activeTextColor);
+    document.documentElement.style.setProperty('--ui-text-color', this.widget.textColor);
+    document.documentElement.style.setProperty('--ui-address-text-color', this.widget.addressTextColor);
+    document.documentElement.style.setProperty('--ui-map-title-text-color', this.widget.mapTitleTextColor);
+    document.documentElement.style.setProperty('--ui-map-address-text-color', this.widget.mapAddressTextColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', this.widget.quickSearchTitleTextColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', this.widget.quickSearchAddressTextColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', this.widget.quickSearchTitleTextHoverColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-address-hover-color', this.widget.quickSearchAddressTextHoverColor);
+    document.documentElement.style.setProperty('--ui-overlay-title-text-color', this.widget.overlayTitleTextColor);
+    document.documentElement.style.setProperty('--ui-overlay-address-text-color', this.widget.overlayAddressTextColor);
+    document.documentElement.style.setProperty('--ui-overlay-close-btn-text-color', this.widget.overlayCloseBtnTextColor);
+    document.documentElement.style.setProperty('--ui-overlay-pickup-btn-text-color', this.widget.overlayPickupBtnTextColor);
   }
 
   /**
@@ -71,7 +55,6 @@ class StoreMapAPI {
       if (res.status === 200) {
         L_STORE_LIST = res.data;
         if (L_STORE_LIST.length >= 1) {
-          await this.UISetting();
           storePickupInit();
         } else {
           this.UISettingpostMsgStoresEmpty();
@@ -118,7 +101,28 @@ class StoreMapAPI {
     );
   };
 
+  receiveWidget = () => {
+    window.addEventListener(
+      'message',
+      function (e) {
+        if (e.data.widget) {
+          this.widget = JSON.parse(e.data.widget);
+          this.UISetting();
+
+          if (this.widget.coords) {
+            const latitude = this.widget.coords.latitude; // 위도
+            const longitude = this.widget.coords.longitude; // 경도
+            L_USER_KAKAO_COORD = createKakaoCoord(latitude, longitude);
+          }
+          getPickupStoreBtnElm().classList.remove('loading');
+          getPickupStoreBtnElm().innerHTML = '';
+        }
+      }.bind(this)
+    );
+  };
+
   init = () => {
+    this.receiveWidget();
     this.receiveTrigger();
     this.postMsgTrigger();
   };
@@ -948,21 +952,6 @@ const setDistance = (targetKakaoCoord) => {
   L_STORE_LIST.sort(sortCondition);
 };
 
-const geoLocationSuccess = async ({ coords, timestamp }) => {
-  latitude = coords.latitude; // 위도
-  longitude = coords.longitude; // 경도
-
-  L_USER_KAKAO_COORD = createKakaoCoord(latitude, longitude);
-  getPickupStoreBtnElm().classList.remove('loading');
-  getPickupStoreBtnElm().innerHTML = '';
-};
-
-const geoLocationErrCallback = (error) => {
-  getPickupStoreBtnElm().classList.remove('loading');
-  getPickupStoreBtnElm().innerHTML = '';
-  L_GEOLOCATION_WIDGET = false;
-};
-
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
@@ -986,7 +975,7 @@ const onPickupStoreBtn = async () => {
   const pickUpStore = document.getElementById('pickupStore');
   pickUpStore.classList.add('on');
   getPickupStoreBtnElm().remove();
-
+  console.log(L_USER_KAKAO_COORD);
   if (L_GEOLOCATION_WIDGET) {
     geoLocationPickupInit();
   } else {
@@ -1032,18 +1021,13 @@ const pickupStoreBtnHandler = () => {
 const storePickupInit = async () => {
   searchTypeHandler(); // 검색타입 변경 시 작동하는 함수
   storeSearchingHandler();
-
-  if (L_GEOLOCATION_WIDGET) {
-    navigator.geolocation.getCurrentPosition(geoLocationSuccess, geoLocationErrCallback);
-  }
-
   pickupStoreBtnHandler();
 };
 
-const APIInit = async () => {
+const sotreMapInit = async () => {
   new StoreMapAPI();
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-  APIInit();
+  sotreMapInit();
 });

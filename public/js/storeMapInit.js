@@ -2,11 +2,44 @@ const API_BASE_URL = 'https://storemap.store';
 
 class StoreMapInitAPI {
   constructor() {
+    this.widget;
+    this.iframe;
     this.productId = iProductNo;
     this.storeMapElm = document.getElementById('storeMap');
     this.L_STORE_MAP_ADDITIONAL_OPT;
     this.productShowCheck();
   }
+
+  geoSuccessCb({ coords, timestamp }) {
+    this.widget.coords = { latitude: coords.latitude, longitude: coords.longitude }; // geolocation 값이 iframe에 안넘어가서 따로 받아줌
+    console.log(this.widget, 'init');
+    this.postMsgWidget();
+  }
+  geoErrCb(error) {
+    this.postMsgWidget();
+  }
+
+  setWidget = async () => {
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { params: { origin: window.location.origin } });
+      if (res.status === 200) {
+        this.widget = res.data;
+        if (this.widget.ui === 'distance') {
+          navigator.geolocation.getCurrentPosition(this.geoSuccessCb.bind(this), this.geoErrCb.bind(this)); // 위치주소를 받기까지 기다려야 하기때문에 콜백함수 내에서 postMessage 처리
+        } else {
+          this.postMsgWidget();
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  postMsgWidget = async () => {
+    const widget = JSON.stringify(this.widget);
+    return this.iframe.contentWindow.postMessage({ widget }, '*');
+  };
+
   /**
    * @description 현재 상품이 스토어맵을 사용하는지 여부를 받아옴
    * @returns {Boolean}
@@ -111,7 +144,7 @@ class StoreMapInitAPI {
     this.iframe = document.createElement('iframe');
     this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
-    this.iframe.allow = `geolocation 'self' ${window.location.origin}`;
+    this.setWidget();
     this.receiveStoresEmpty();
     this.receiveFrameHeight();
     this.receiveTrigger();
