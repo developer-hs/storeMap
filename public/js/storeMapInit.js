@@ -12,7 +12,6 @@ class StoreMapInitAPI {
 
   geoSuccessCb({ coords, timestamp }) {
     this.widget.coords = { latitude: coords.latitude, longitude: coords.longitude }; // geolocation 값이 iframe에 안넘어가서 따로 받아줌
-    console.log(this.widget, 'init');
     this.postMsgWidget();
   }
   geoErrCb(error) {
@@ -20,6 +19,7 @@ class StoreMapInitAPI {
   }
 
   setWidget = async () => {
+    console.log('AWD');
     try {
       const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { params: { origin: window.location.origin } });
       if (res.status === 200) {
@@ -144,7 +144,6 @@ class StoreMapInitAPI {
     this.iframe = document.createElement('iframe');
     this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
-    this.setWidget();
     this.receiveStoresEmpty();
     this.receiveFrameHeight();
     this.receiveTrigger();
@@ -157,6 +156,7 @@ class StoreMapInitAPI {
     window.addEventListener('message', (e) => {
       if (e.data.trigger) {
         this.postMsgTrigger();
+        this.setWidget();
       }
     });
   };

@@ -975,7 +975,7 @@ const onPickupStoreBtn = async () => {
   const pickUpStore = document.getElementById('pickupStore');
   pickUpStore.classList.add('on');
   getPickupStoreBtnElm().remove();
-  console.log(L_USER_KAKAO_COORD);
+
   if (L_GEOLOCATION_WIDGET) {
     geoLocationPickupInit();
   } else {
