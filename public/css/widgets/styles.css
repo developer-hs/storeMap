@@ -124,6 +124,10 @@ body #content {
 #pickupStore.right {
   padding: 24px 12px;
 }
+
+#pickupStore.right * {
+  font-family: 'Apple SD';
+}
 #pickupStore.right .store_list_ct .store-info-container div.swiper-slide > div:nth-last-child(1) {
   margin-bottom: 0px;
 }

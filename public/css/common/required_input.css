@@ -1,10 +1,12 @@
-.err_message {
+.err_message,
+.imp_err_message {
   color: var(--color-danger);
   margin-top: 8px;
   padding: 0 20px;
 }
 
-.err_message::before {
+.err_message::before,
+.imp_err_message::before {
   content: '*';
 }
 
@@ -75,4 +77,20 @@
 
 #requiredPassword:focus ~ .pw_pattern {
   display: block;
+}
+
+.text-field input.err {
+  border-color: var(--color-danger);
+}
+
+.text-field input.err + label {
+  color: var(--color-danger);
+}
+
+.text-field input.clear {
+  border-color: var(--color-success);
+}
+
+.text-field input.clear + label {
+  color: var(--color-success);
 }

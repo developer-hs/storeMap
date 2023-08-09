@@ -7,18 +7,21 @@ import path from 'path';
 import axios from 'axios';
 
 import { __dirname, setCafe24AccessToken, setToken } from './utils/utils.js';
-import getAdminJs from './admin.js';
+
 import db from './app/mongodb/models/index.js';
 import userRoutes from './app/users/routes/index.js';
 import storeRoutes from './app/stores/routes/index.js';
 import widgetRoutes from './app/widgets/routes/index.js';
 import productRoutes from './app/products/routes/index.js';
+import orderRoutes from './app/order/routes/index.js';
 
 import { User } from './app/users/models/user.js';
 import { CAFE24_AUTH } from './app/config/index.js';
 import { refresh } from './app/users/jwt/refresh.js';
 
 process.env.NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production' ? 'production' : 'development';
+
+import setAdminJs from './admin.js';
 
 export const app = express();
 
@@ -41,7 +44,7 @@ const corsOptionsDelegate = (req, callback) => {
     corsOptions = { origin: false }; // disable CORS for this request
   }
 
-  callback(null, corsOptions); // callback expects two parameters: error and options
+  callback(null, { origin: true, credentials: true }); // callback expects two parameters: error and options
 };
 
 const appInit = async () => {
@@ -52,15 +55,12 @@ const appInit = async () => {
   app.set('layout', 'layouts/index'); // 레이아웃 파일은 "views/layouts/index.ejs"에 위치해야 합니다.
   app.set('layout extractScripts', true);
   app.set('layout extractStyles', true);
-  app.use(express.json()); //body parser
-  app.use(express.urlencoded({ extended: true })); // body parser
+
   app.use(expressSanitizer());
   // 정적 파일 경로 설정 (선택사항)
-  app.use(express.static('public')); // apply css , js
+  app.use(express.static(__dirname + '/public')); // apply css , js
   app.use(cors(corsOptionsDelegate)); // cors setting
   app.use(cookieParser());
-  const adminJs = await getAdminJs();
-  app.use(adminJs.admin.options.rootPath, adminJs.adminRouter);
 };
 
 const connectDB = async () => {
@@ -86,12 +86,13 @@ const appRouting = async () => {
   storeRoutes(app);
   widgetRoutes(app);
   productRoutes(app);
+  orderRoutes(app);
   app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/views/index.html');
   });
 
   app.get('/users/login/redirect', (req, res) => {
-    return res.render('auth/redirectLogin.ejs', {
+    return res.render('auth/redirect_login.ejs', {
       message: '세션이 만료되었습니다. 다시 로그인 해 주세요.',
       cateId: 'redirectLogin',
     });
@@ -111,8 +112,10 @@ const appRouting = async () => {
 
       return res.redirect(redirectURI);
     } catch (error) {
-      return res.render('auth/redirectLogin.ejs', {
+      console.log(error);
+      return res.render('auth/redirect_login.ejs', {
         message: '다시 로그인 해 주세요.',
+        cateId: 'redirectLogin',
       });
     }
   });
@@ -141,41 +144,40 @@ const appRouting = async () => {
       });
 
       if (tokenRes.status === 200) {
-        try {
-          user = await User.findOne({ mallId: mallId });
+        user = await User.findOne({ mallId: mallId });
 
-          if (!user || user === null) {
-            const userForm = {
-              email: `${mallId}@cafe24.com`,
-              password: mallId,
-              mallId: mallId,
-              platform: 'cafe24',
-            };
-            // 유저가 존재하지 않을경우 -> 첫방문일 경우
-            user = new User(userForm);
-          }
-        } catch (error) {
+        if (!user || user === null) {
+          const userForm = {
+            email: `${mallId}@cafe24.com`,
+            password: mallId,
+            mallId: mallId,
+            platform: 'cafe24',
+          };
+          // 유저가 존재하지 않을경우 -> 첫방문일 경우
+          user = new User(userForm);
+        }
+
+        if (!user || user === null) {
           // 유저 생성에 실패하였을 경우
           return res.status(500).json({
             ok: false,
             message: '유저 생성실패 !',
           });
         }
-
-        user.generateToken((accessToken, refreshToken) => {
-          setToken(res, accessToken, refreshToken);
-        });
-        user.cafe24RefreshToken = tokenRes.data.refresh_token;
-        setCafe24AccessToken(res, tokenRes.data.access_token);
-
-        await user.save();
-
-        return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
       }
+
+      user.generateToken((accessToken, refreshToken) => {
+        setToken(res, accessToken, refreshToken);
+      });
+      user.cafe24RefreshToken = tokenRes.data.refresh_token;
+      setCafe24AccessToken(res, tokenRes.data.access_token);
+
+      await user.save();
+      return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
     } catch (error) {
       //cafe24 access token 요청 에 실패하였을 경우
       console.error(error);
-      return res.status(400).json({ ok: false, message: 'access token 요청 실패!', error: error });
+      return res.status(400).json({ ok: false, message: 'cafe24 access token 요청 실패!', error: error });
     }
   });
 
@@ -194,6 +196,7 @@ const appStart = async () => {
   await appInit();
   await connectDB();
   appRouting();
+  setAdminJs(app);
 };
 
 const init = () => {

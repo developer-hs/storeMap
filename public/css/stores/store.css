@@ -178,6 +178,7 @@ input#excelUploadBtn {
 }
 
 .excel_btn_area .sample_dwld_btn > a {
+  font-family: 'SBAggro';
   display: flex;
   justify-content: center;
   align-items: center;
@@ -224,4 +225,12 @@ input#excelUploadBtn {
 .icon_upload {
   position: absolute;
   left: 20px;
+}
+
+.eye_icon {
+  margin-right: 6px;
+  width: 20px;
+}
+.switch_ct > div > span {
+  margin-left: 0;
 }

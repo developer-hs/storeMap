@@ -1,18 +1,14 @@
 <link rel="stylesheet" type="text/css" href="/css/stores/store.css" />
 <% if (type === "c") { %>
+<!-- 스토어 생성 페이지 일 때 -->
 <div id="excelUploadModalBg">
   <div id="excelUploadModal">
     <div id="createWithExcelBtn">
       <label class="active-btn" for="excelUploadBtn">
-        <img class="icon_upload icon-20" src="/icons/upload.svg" alt="" />
+        <img class="icon_upload icon-20" src="/icons/upload.svg" alt="엑셀 이미지" />
         Excel 파일 업로드
       </label>
-      <input
-        id="excelUploadBtn"
-        name="file"
-        type="file"
-        enctype="multipart/form-data"
-      />
+      <input id="excelUploadBtn" name="file" type="file" enctype="multipart/form-data" />
     </div>
     <div class="description_ct">
       <div class="description">
@@ -22,6 +18,7 @@
     </div>
     <div class="switch_ct" id="useStatusCt">
       <div>
+        <img class="eye_icon" src="/icons/eye.svg" alt="눈 이미지" />
         <span>노출여부</span>
         <div>
           <input class="switch_input" id="excelUseStatus" type="checkbox" />
@@ -42,6 +39,7 @@
         </div>
       </div>
       <% if (type === "c") { %>
+      <!-- 스토어 생성 페이지 일 때 -->
       <div class="excel_btn_area">
         <div id="excelBtnCt">
           <div class="create_btn active-btn" id="excelModalBtn">
@@ -78,35 +76,21 @@
         <div id="latLongCt" class="displaynone">
           <% if (type === "u") { %>
           <div class="text-field lat_field">
-            <input
-              type="text"
-              id="latitude"
-              value="<%- store.latitude %>"
-              disabled
-            />
+            <input type="text" id="latitude" value="<%- store.latitude %>" disabled />
             <label for="storeAddr">위도</label>
           </div>
           <div class="text-field long_field">
-            <input
-              type="text"
-              id="longitude"
-              value="<%- store.longitude %>"
-              disabled
-            />
+            <input type="text" id="longitude" value="<%- store.longitude %>" disabled />
             <label for="storeAddr">경도</label>
           </div>
           <% } %>
         </div>
         <div class="switch_ct">
           <div>
+            <img class="eye_icon" src="/icons/eye.svg" alt="눈 이미지" />
             <span>노출여부</span>
             <% if (store.useStatus === true) { %>
-            <input
-              class="switch_input"
-              type="checkbox"
-              id="storeUseStatus"
-              checked
-            />
+            <input class="switch_input" type="checkbox" id="storeUseStatus" checked />
             <% } else { %>
             <input class="switch_input" type="checkbox" id="storeUseStatus" />
             <% } %>
@@ -143,16 +127,11 @@
         </div>
         <div class="description">
           <span class="circle">⦁</span>
-          <span>
-            노출여부 설정은 매장 생성 후 바로 지도에 노출여부를 결정합니다.
-          </span>
+          <span>노출여부 설정은 매장 생성 후 바로 지도에 노출여부를 결정합니다.</span>
         </div>
         <div class="description important">
           <span class="circle">⦁</span>
-          <span class="important">
-            네이버 지도 API를 사용하기 때문에 네이버에 등록되어 있는 주소 만
-            사용이 가능합니다.
-          </span>
+          <span class="important">카카오맵에 등록되어 있는 주소만 사용이 가능합니다.</span>
         </div>
       </div>
     </div>

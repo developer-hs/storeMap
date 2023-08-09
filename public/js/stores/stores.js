@@ -1,5 +1,8 @@
 window.addEventListener('DOMContentLoaded', async () => {
+  let L_STORE_LIST; // export excel 했을 때 등록 과도한 api 호출 방지하기 위함
   const utils = await import('../utils/utils.js');
+  const { exportExcel } = await import('../utils/export.js');
+
   /**
    * @return {Element} 삭제버튼 Element 를 반환하는 함수
    */
@@ -36,6 +39,15 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getUseStatusBtnElms = () => {
     return document.querySelectorAll("input[id*='useStatus']");
   };
+  const getExportExcelBtnElm = () => {
+    return document.getElementById('exportExcelBtn');
+  };
+  const getdropMenuBtnElm = () => {
+    return document.getElementById('dropMenuBtn');
+  };
+  const getActionMenuBoxElm = () => {
+    return document.getElementById('actionMenuBox');
+  };
 
   const getCheckedUseStatusElms = () => {
     const result = Array.from(getChkBtnElms())
@@ -53,7 +65,8 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @returns {Array<Element>}
    */
   const getCheckedStoreIds = () => {
-    const result = Array.from(getChkBtnElms())
+    const checkStores = document.querySelectorAll('input.check_btn:not(#allCheckBtn)');
+    const result = Array.from(checkStores)
       .filter((chkBtn) => {
         return chkBtn.checked;
       })
@@ -114,6 +127,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
   const getBtnMenu = () => {
     return document.getElementById('btnMenu');
+  };
+  const getDeleteAllBtnElm = () => {
+    return document.getElementById('deleteAllBtn');
+  };
+  const getActveAllBtnElm = () => {
+    return document.getElementById('activateAllBtn');
   };
 
   /**
@@ -184,27 +203,21 @@ window.addEventListener('DOMContentLoaded', async () => {
     let geoRes;
     const loadingGuard = utils.createLoadingGaurd();
     utils.paintLoadingGuard(loadingGuard);
+
     try {
       geoRes = await axios.get('/stores/geocode/many', {});
       if (geoRes.status === 202) {
         console.warn(geoRes.data.message);
+        loadingGuard.remove();
+        utils.onAlertModal(geoRes.data.message);
       }
     } catch (error) {
-      if (error.response.status === 502) {
-        const contentArea = document.getElementById('content-area');
-        const errorTargetElm = document.getElementById(
-          `${error.response.data.id}`
-        );
-        errorTargetElm.classList.add('wrong_addr');
-
-        const rect = errorTargetElm.getBoundingClientRect();
-        contentArea.scrollTo({
-          top: rect.y + contentArea.scrollTop - 60,
-        });
-        alert(
-          `상점명 : ${error.response.data.name}\n상점주소 : ${error.response.data.address}의 주소를 다시 확인해 주세요`
-        );
+      console.log(error);
+      if (error.response.status === 404) {
+        alert(error.response.data.message);
         console.error(error);
+        loadingGuard.remove();
+        utils.reload();
       }
     }
 
@@ -266,10 +279,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const onUseStatusBtn = async (useStatusElm) => {
     try {
       const storeId = useStatusElm.dataset.storeId;
-      const storeAddr =
-        useStatusElm.parentNode.parentNode.parentNode.parentNode.querySelector(
-          '.store_addr'
-        ).innerText;
+      const storeAddr = useStatusElm.parentNode.parentNode.parentNode.parentNode.querySelector('.store_addr').innerText;
 
       const res = await axios.put(`/stores/store/${storeId}`, {
         useStatus: useStatusElm.checked,
@@ -286,9 +296,10 @@ window.addEventListener('DOMContentLoaded', async () => {
       console.error(error);
     }
   };
-  const onBtnMenu = () => {
-    const btnArea = getBtnMenu().parentNode.querySelector('.btn-area');
-    btnArea.classList.toggle('on');
+
+  const toggleBtnMenu = () => {
+    const actionMenuBoxElm = getActionMenuBoxElm();
+    actionMenuBoxElm.classList.toggle('on');
   };
 
   /**
@@ -369,16 +380,71 @@ window.addEventListener('DOMContentLoaded', async () => {
   const filterSubmitHandler = () => {
     getFilterSubmitElm().addEventListener('click', onFilterSubmit);
   };
+  //모든 스토어 삭제
+  const onDeleteAll = async () => {
+    const removeChk = utils.confirmCheck('정말 삭제하시겠습니까?');
+    if (!removeChk) return;
 
-  const BtnMenuHandler = () => {
-    deleteBtnHandler();
-    chkedUseStatusOnBtnHandler();
-    chkedUseStatusOffBtnHandler();
-    getBtnMenu().addEventListener('click', (e) => {
-      if (e.stopPropagation) e.stopPropagation();
-      else e.cancelBubble = true; // IE 대응
-      onBtnMenu();
+    try {
+      const res = await axios.delete('/stores/all');
+      if (res.status === 200) {
+        window.location.href = '/stores';
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const deleteAllBtnHandler = () => {
+    getDeleteAllBtnElm().addEventListener('click', onDeleteAll);
+  };
+
+  const onExport = async () => {
+    let excelData = [];
+    if (!L_STORE_LIST) {
+      const url = '/stores/all';
+      try {
+        const res = await axios.get(url);
+        L_STORE_LIST = res.data;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    L_STORE_LIST.forEach((store) => {
+      excelData.push([store.name, store.address]);
     });
+
+    exportExcel(excelData);
+  };
+  const exportExcelHanler = () => {
+    getExportExcelBtnElm().addEventListener('click', onExport);
+  };
+
+  const onActivationAll = async () => {
+    try {
+      const res = await axios.put('/stores/all/active');
+      if (res.status === 200) {
+        utils.reload();
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const actveAllBtnHandler = () => {
+    getActveAllBtnElm().addEventListener('click', onActivationAll);
+  };
+  const onDropMenuBtn = () => {
+    const dropBoxElm = document.getElementById('dropBox');
+    dropBoxElm.classList.toggle('on');
+  };
+
+  const dropMenuBtnHandler = () => {
+    getdropMenuBtnElm().addEventListener('click', onDropMenuBtn);
+
+    exportExcelHanler();
+    deleteAllBtnHandler();
+    actveAllBtnHandler();
   };
 
   const useStatusBtnHandler = () => {
@@ -392,6 +458,44 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const filterBtnHandler = () => {
     toggleFilterCt();
+  };
+
+  const onCheckBtn = () => {
+    let chk = false;
+    const chkBtnElms = getChkBtnElms();
+    for (let i = 0; i < chkBtnElms.length; i++) {
+      if (chkBtnElms[i].checked) {
+        chk = true;
+        break;
+      }
+    }
+
+    if (chk) {
+      getActionMenuBoxElm().classList.add('on');
+    } else {
+      getActionMenuBoxElm().classList.remove('on');
+    }
+  };
+
+  const checkBtnHandler = () => {
+    getChkBtnElms().forEach((chkBtnElm) => {
+      chkBtnElm.addEventListener('click', onCheckBtn);
+    });
+  };
+
+  const BtnMenuHandler = () => {
+    deleteBtnHandler();
+    chkedUseStatusOnBtnHandler();
+    chkedUseStatusOffBtnHandler();
+
+    checkBtnHandler();
+    dropMenuBtnHandler();
+
+    getBtnMenu().addEventListener('click', (e) => {
+      if (e.stopPropagation) e.stopPropagation();
+      else e.cancelBubble = true; // IE 대응
+      toggleBtnMenu();
+    });
   };
 
   const init = () => {

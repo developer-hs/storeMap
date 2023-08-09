@@ -1,5 +1,6 @@
 import path from 'path';
 import { SECURE } from '../app/config/index.js';
+
 export const __dirname = path.resolve();
 
 export const removeDuplicates = (arr1, arr2) => {

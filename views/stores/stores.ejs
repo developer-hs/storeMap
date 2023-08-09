@@ -31,7 +31,7 @@
                 <option value="address" <% if (params.align === 'address') { %>selected<% } %>>주소</option>
                 <option value="created" <% if (params.align === 'created') { %>selected<% } %>>생성일</option>
                 <option value="exposed" <% if (params.align === 'exposed') { %>selected<% } %>>노출여부</option>
-                <option value="distance" <% if (params.align === 'distance') { %>selected<% } %>>좌표설정</option>
+                <option value="distance" <% if (params.align === 'distance') { %>selected<% } %>>좌표설정여부</option>
               </select>
             </div>
           </div>
@@ -70,6 +70,27 @@
               일괄 좌표 설정
             </a>
           </div>
+          <style>
+
+          </style>
+          <% if (stores.length > 0) { %>
+          <div class="drop_box" id="dropBox">
+            <div class="drop_menu_btn" id="dropMenuBtn">
+              <img src="/icons/arrow_up.svg" />
+            </div>
+            <ul class="drop_menus">
+              <li class="drop_menu export_excel_btn" id="exportExcelBtn">
+                  엑셀로 내보내기
+              </li>
+              <li class="drop_menu activate_all_btn" id="activateAllBtn">
+                  모든 스토어 활성화
+              </li>
+              <li class="drop_menu delete_all_btn" id="deleteAllBtn">
+                  모든 스토어 삭제
+              </li>
+            </ul>
+          </div>
+          <% } %>
         </div>
       </div>
     </div>
@@ -87,7 +108,7 @@
   <div class="store_table">
     <div class="table-head">
       <div class="check_btn_area">
-        <input id="allCheckBtn" type="checkbox" />
+        <input class="check_btn" id="allCheckBtn" type="checkbox" />
       </div>
       <div class="name">
         <span><i class="xi-shop mr-2"></i>매장명</span>
@@ -125,7 +146,7 @@
         <% } %>
         <div class="btn_area_ct card">
           <div id="btnMenu"><i class="xi xi-apps"></i></div>
-          <div class="btn-area">
+          <div class="btn-area" id="actionMenuBox">
             <div id="checkedDeleteBtn" class="card">삭제</div>
             <div id="checkedUseStatusOnBtn" class="card">노출</div>
             <div id="checkedUseStatusOffBtn" class="card">비노출</div>
@@ -168,4 +189,6 @@
   </div>
 </div>
 
-<script src="/js/stores/stores.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" ></script>
+<script src="/js/stores/stores.js" defer></script>

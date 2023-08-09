@@ -103,6 +103,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axios.post(`/stores/many`, formData);
       if (res.status === 200) {
+        if (res.data.message) {
+          alert(res.data.message);
+        }
         window.location.href = '/stores';
       }
     } catch (error) {
@@ -154,6 +157,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     const coord = await getCoord(address);
+    console.log(coord);
     if (!coord) {
       alert('입력하신 주소를 다시 한번 확인해 주세요');
       return;

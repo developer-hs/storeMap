@@ -201,6 +201,8 @@ input[type='radio'].full:checked + label {
 }
 
 div[class*='btn'] > a {
+  font-size: 1rem;
+  font-weight: 500;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -277,8 +279,8 @@ div[class*='btn'] > a {
 
 #content {
   overflow: scroll;
-  padding-left: 48px;
-  padding-right: 48px;
+  padding-left: 80px;
+  padding-right: 80px;
   background-color: var(--color-main-bg);
 }
 
@@ -291,7 +293,8 @@ div[class*='btn'] > a {
 
 .table-head span,
 .table-head i {
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   color: #858585;
   display: flex;
   align-items: center;
@@ -326,15 +329,17 @@ div[class*='btn'] > a {
   flex-direction: column;
 }
 .page_title .title {
+  font-family: 'SBAggro';
   margin-bottom: 0.5rem;
   font-size: 2.375rem;
   letter-spacing: 1px;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--color-black);
 }
 .page_title .sub_title {
+  font-family: 'SBAggro';
   font-size: 1.125rem;
-  font-weight: 400;
+  font-weight: 300;
   color: #858585;
 }
 
@@ -374,6 +379,7 @@ div[class*='btn'] > a {
 }
 
 .active-btn {
+  font-family: 'SBAggro';
   position: relative;
   display: flex;
   justify-content: center;
@@ -424,12 +430,14 @@ div[class*='btn'] > a {
 
 .active-btn a,
 .active-btn span {
+  font-family: 'SBAggro';
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
   font-size: 1rem;
+  margin-left: 14px;
   color: var(--color-black);
   cursor: pointer;
 }
@@ -460,7 +468,7 @@ div[class*='btn'] > a {
   position: relative;
   cursor: pointer;
   display: block;
-  border-radius: 30px;
+  border-radius: 5px;
   width: 80px;
   height: 30px;
   transition: all 0.25s ease-in;
@@ -469,8 +477,8 @@ div[class*='btn'] > a {
 
 .switch_input {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: -1000px;
+  top: -1000px;
   width: 0px;
   height: 0px;
   opacity: 0;
@@ -481,7 +489,7 @@ div[class*='btn'] > a {
 }
 
 .switch_input:checked + .switch_label {
-  background-color: var(--color-primary);
+  background-color: var(--color-success);
 }
 
 .switch_label::before {
@@ -496,7 +504,7 @@ div[class*='btn'] > a {
   top: 5px;
   width: 20px;
   height: 20px;
-  border-radius: 100%;
+  border-radius: 5px;
   background-color: #fff;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
   -webkit-box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.15);
@@ -507,6 +515,7 @@ div[class*='btn'] > a {
 }
 
 .right .description_ct .title {
+  font-family: 'SBAggro';
   font-size: 1.5rem;
   font-weight: 500;
   margin-bottom: 24px;
@@ -574,6 +583,7 @@ div[class*='btn'] > a {
 
 .text-field label,
 .card-field > span:first-child {
+  font-family: 'SBAggro';
   display: block;
   position: absolute;
   left: 15px;
@@ -883,4 +893,66 @@ img.icon-20 {
   font-family: 'SCoreaDream';
   font-weight: 900;
   src: url(../../fonts/SCoreaDream/SCoreaDream9.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'SBAggro';
+  font-weight: 300;
+  font-style: normal;
+  src: url(../../fonts/SBAggro/SBAggroL.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'SBAggro';
+  font-weight: 500;
+  font-style: normal;
+  src: url(../../fonts/SBAggro/SBAggroM.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'SBAggro';
+  font-weight: 700;
+  font-style: normal;
+  src: url(../../fonts/SBAggro/SBAggroB.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  font-weight: 100;
+  font-style: normal;
+  src: url(../../fonts/NotoSans/NotoSansThin.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  font-weight: 300;
+  font-style: normal;
+  src: url(../../fonts/NotoSans/NotoSansLight.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  font-weight: 400;
+  font-style: normal;
+  src: url(../../fonts/NotoSans/NotoSansRegular.otf) format('opentype');
+}
+@font-face {
+  font-family: 'NotoSans';
+  font-weight: 500;
+  font-style: normal;
+  src: url(../../fonts/NotoSans/NotoSansMedium.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  font-weight: 700;
+  font-style: normal;
+  src: url(../../fonts/NotoSans/NotoSansBold.otf) format('opentype');
+}
+
+@font-face {
+  font-family: 'NotoSans';
+  font-weight: 900;
+  font-style: normal;
+  src: url(../../fonts/NotoSans/NotoSansBlack.otf) format('opentype');
 }

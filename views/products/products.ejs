@@ -13,10 +13,7 @@
         </div>
       </div>
       <div class="use_status_btn_area displaynone">
-        <div
-          class="imp-btn shadow-success bg-success lg-radius"
-          id="useStatusBatchPrcsUBtn"
-        >
+        <div class="imp-btn shadow-success bg-success lg-radius" id="useStatusBatchPrcsUBtn">
           <span>일괄 활성화</span>
         </div>
       </div>
@@ -59,13 +56,19 @@
       <div class="api_limit_ct">
         <div class="activation_limit limit">
           <div class="title mr-2">활성화 호출 제한</div>
-          <span class="current_limit" id="activationLimit">0</span>
-          <span class="max_limit">40</span>
+          <div class="limit_box">
+            <span class="current_limit" id="activationLimit">0</span>
+            <span>/</span>
+            <span class="max_limit">40</span>
+          </div>
         </div>
         <div class="deactivation_limit limit">
           <div class="title mr-2">비활성화 호출 제한</div>
-          <span class="current_limit" id="deactivationLimit">0</span>
-          <span class="max_limit">40</span>
+          <div class="limit_box">
+            <span class="current_limit" id="deactivationLimit">0</span>
+            <span>/</span>
+            <span class="max_limit">40</span>
+          </div>
         </div>
       </div>
       <div class="card">
@@ -79,18 +82,14 @@
           </div>
           <div class="description">
             <span class="circle">⦁</span>
-            <span>
-              카페24 API 호출 제한으로 인해 상품 활성화 후 활성화시킨 상품에
-              대한 다음 동작까지 약 2초의 딜레이가 발생합니다.
-            </span>
+            <span>카페24 API 호출 제한으로 인해 상품 활성화 후 활성화시킨 상품에 대한 다음 동작까지 약 2초의 딜레이가 발생합니다.</span>
           </div>
           <div class="description">
             <span class="circle">⦁</span>
             <div class="flex-column">
               <p>
-                카페24 API 호출 제한으로 인해 과도한 호출이 발생할 경우 몇 분간
-                상품 설정이 제한될 수 있습니다. 이 경우 잠시 기다린 후 설정해
-                주세요
+                카페24 API 호출 제한으로 인해 과도한 호출이 발생할 경우 몇 분간 상품 설정이 제한될 수 있습니다. 이 경우 잠시 기다린 후
+                설정해 주세요
               </p>
             </div>
           </div>

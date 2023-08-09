@@ -189,6 +189,7 @@ body .filter_ct .search_prd_num {
 
 .api_limit_ct .limit span,
 .api_limit_ct .limit .title {
+  font-family: 'SBAggro';
   font-weight: 500;
   font-size: 1rem;
   color: var(--color-l-black);
@@ -200,8 +201,14 @@ body .filter_ct .search_prd_num {
 .api_limit_ct .limit .current_limit {
   color: var(--color-danger);
 }
-.api_limit_ct .limit .current_limit::after {
-  content: '/';
-  margin: 0 8px;
-  color: var(--color-l-black);
+
+.limit_box {
+  border-radius: 10px;
+  background-color: #eee;
+  padding: 2px 12px;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.limit_box span:nth-child(2) {
+  margin: 0 4px;
 }

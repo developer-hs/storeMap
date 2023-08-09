@@ -23,7 +23,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     return getRequiredDomainElm().value;
   };
   const submitBtnElm = () => {
-    console.log(getRequiredSetModalCt());
     return getRequiredSetModalCt().querySelector('#requiredSettingSubmit');
   };
   const reactPWValid = () => {
@@ -107,8 +106,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         }
         if (getRequiredPW() && key === 'password' && !utils.passwordIsValid(form.password)) {
           // 값에 빈값은 없지만 그 값이 유효한지 검사
-          errors['origin'].ok = false;
-          errors['origin'].message = '도메인 형식이 잘못 되었습니다.';
+          errors['password'].ok = false;
+          errors['password'].message = '비밀번호 형식이 잘못 되었습니다.';
         }
         if (getRequiredDomain() && key === 'origin' && !utils.originIsValid(form.origin)) {
           // 값에 빈값은 없지만 그 값이 유효한지 검사
@@ -133,18 +132,47 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @returns {Void}
    */
   const createErrMessage = (elm, message) => {
+    const errInputElm = elm.querySelector('input');
+    errInputElm.classList.remove('clear');
+    errInputElm.classList.add('err');
+
     const errDivElm = document.createElement('div');
     errDivElm.innerText = message;
     errDivElm.classList.add('err_message');
 
     elm.appendChild(errDivElm);
+
+    return errDivElm;
   };
 
-  const removeErrMessage = (elm) => {
+  const createImpErrMessage = (elm, message) => {
+    const errInputElm = elm.querySelector('input');
+    errInputElm.classList.remove('clear');
+    errInputElm.classList.add('err');
+
+    const errDivElm = document.createElement('div');
+    errDivElm.innerText = message;
+    errDivElm.classList.add('imp_err_message');
+
+    elm.appendChild(errDivElm);
+
+    return errDivElm;
+  };
+
+  const removeErrMessage = (elm, imp = false) => {
     const errMessageElm = elm.querySelector('.err_message');
+    if (!imp && errMessageElm.classList.contains('imp')) {
+      return;
+    }
     if (errMessageElm) {
       elm.removeChild(errMessageElm);
     }
+  };
+  const removeAllImpMessage = () => {
+    const impMessageElms = document.querySelectorAll('.imp_err_message');
+    impMessageElms.forEach((impMessageElm) => {
+      impMessageElm.remove();
+    });
   };
 
   const errMessageChk = (elm) => {
@@ -153,42 +181,89 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
     return false;
   };
+  const impErrMessageChk = (elm) => {
+    if (elm.querySelector('.imp_err_message')) {
+      return true;
+    }
+    return false;
+  };
+
   const onSubmit = async () => {
     const validData = formIsValid();
     if (!validData.ok) {
       for (let key in validData) {
         const textFieldElm = validData[key].element.parentNode;
         if (!validData[key].ok) {
-          validData[key].element.style.borderColor = 'var(--color-danger)';
           if (!errMessageChk(textFieldElm)) {
             createErrMessage(textFieldElm, validData[key].message);
           }
         } else {
           if (errMessageChk(textFieldElm)) {
-            removeErrMessage(textFieldElm);
+            removeErrMessage(textFieldElm, false);
           }
-          validData[key].element.style.borderColor = 'var(--color-success)';
+          validData[key].element.classList.add('clear');
+          validData[key].element.classList.remove('err');
         }
       }
       return;
     }
 
     const form = getForm();
-    const res = await axios.put('/api/v1/users/user/required', form);
-    if (res.status === 200) {
-      utils.onAlertModal('성공적으로 등록 되었습니다.');
-    } else if (res.status === 500) {
-      utils.onAlertModal(res.data.message);
-    } else {
-      alert('알수없는 오류가 발생 하였습니다.');
+
+    try {
+      const res = await axios.put('/api/v1/users/user/required', form);
+      if (res.status === 200) {
+        alert('성공적으로 등록 되었습니다.');
+        utils.reload();
+      }
+    } catch (error) {
+      if (error.response.status === 500) {
+        removeAllImpMessage();
+        const { errDatas } = error.response.data;
+        errDatas.forEach((errData) => {
+          const type = errData.type;
+
+          let id;
+          if (type === 'E') {
+            id = 'emailTextFeild';
+          }
+          if (type === 'P') {
+            id = 'pwTextFeild';
+          }
+          if (type === 'O') {
+            id = 'domainTextFeild';
+          }
+
+          const errElm = document.getElementById(id);
+          if (!impErrMessageChk(errElm)) {
+            createImpErrMessage(errElm, errData.message);
+          } else {
+            const errMessage = errElm.querySelector('.err_message');
+            errMessage.innerText = errData.message;
+          }
+        });
+      } else {
+        alert('알수없는 오류가 발생 하였습니다.');
+      }
     }
   };
   const submitHandler = () => {
     submitBtnElm().addEventListener('click', onSubmit);
+    const requiredInputElms = document.querySelectorAll('.required_ct input');
+    requiredInputElms.forEach((requiredInputElm) => {
+      requiredInputElm.addEventListener('keydown', (e) => {
+        const keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+          onSubmit();
+        }
+      });
+    });
   };
 
   (function init() {
-    submitHandler();
-    reactPWValidHandler();
+    if (getRequiredSetModalCt()) {
+      submitHandler();
+      reactPWValidHandler();
+    }
   })();
 });

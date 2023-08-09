@@ -14,22 +14,24 @@
   box-sizing: border-box;
 }
 #side_nav_ct .cate > a {
+  font-family: 'SBAggro';
   color: #aaa;
   padding: 16px 0;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1rem;
+  font-weight: 300;
 }
 
 #side_nav_ct .cate.on {
-  box-shadow: -15px 0px 25px 0 rgba(1, 1, 1, 0.1);
+  box-shadow: -15px 0px 25px 0 rgba(98, 136, 253, 0.2);
   border-radius: var(--lg-radius);
 }
 
 #side_nav_ct .cate.on > a {
   color: var(--color-success);
-  font-weight: 600;
+  font-weight: 500;
 }
 #side_nav_ct .cate.on::before {
   content: '';
