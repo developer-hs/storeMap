@@ -55,7 +55,8 @@ const appInit = async () => {
   app.set('layout', 'layouts/index'); // 레이아웃 파일은 "views/layouts/index.ejs"에 위치해야 합니다.
   app.set('layout extractScripts', true);
   app.set('layout extractStyles', true);
-
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
   app.use(expressSanitizer());
   // 정적 파일 경로 설정 (선택사항)
   app.use(express.static(__dirname + '/public')); // apply css , js
@@ -133,6 +134,7 @@ const appRouting = async () => {
     const { mallId } = req.params;
 
     const form = req.body;
+    console.log('awd', form);
     const headers = {
       Authorization: `Basic ${CAFE24_AUTH}`,
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -194,10 +196,11 @@ const appRouting = async () => {
 app.listen();
 
 const appStart = async () => {
+  await setAdminJs(app);
   await appInit();
   await connectDB();
+
   appRouting();
-  setAdminJs(app);
 };
 
 const init = () => {
