@@ -78,8 +78,6 @@ const setAdminJs = async (app) => {
   });
 
   app.use(adminJs.options.rootPath, router);
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
 
   return adminJs;
 };

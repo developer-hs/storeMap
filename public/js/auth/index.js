@@ -19,7 +19,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       code: code,
       redirect_uri: redirectURI,
     };
-
     try {
       const res = await axios.post(`/cafe24/oauth/${mallId}`, form);
       if (res.status === 200) {

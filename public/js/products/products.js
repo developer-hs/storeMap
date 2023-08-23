@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         const prdNo = L_PRODUCTS_LIST[key].product_no;
         const popupHeight = window.innerHeight * 0.9;
         const productHTML =
-          `<a href="javascript:window.open('https://${mallId}.cafe24.com/disp/admin/product/ProductRegister?product_no=${prdNo}', 'popup', 'top=50%, left=50%, width=1200, height=${popupHeight}, status=no, menubar=no, toolbar=no, resizable=no');">` +
+          `<a data-product-id =${L_PRODUCTS_LIST[key].product_no} href="javascript:window.open('https://${mallId}.cafe24.com/disp/admin/product/ProductRegister?product_no=${prdNo}', 'popup', 'top=50%, left=50%, width=1200, height=${popupHeight}, status=no, menubar=no, toolbar=no, resizable=no');">` +
           ` <div class="product">` +
           `   <i class="xi-spinner-2 xi-spin"></i>` +
           `   <div class="prd_no">${prdNo}</div>` +
@@ -92,13 +92,13 @@ window.addEventListener('DOMContentLoaded', async () => {
    */
   const setUsingPrd = (products) => {
     products.forEach(async (product) => {
-      const getSwitchElm = document.querySelector(`.use_status input[id=useStatus_${product.productId}]`);
+      const getSwitchElm = document.querySelector(`.use_status input[id=useStatus_${product.product_id}]`);
       if (getSwitchElm) {
         getSwitchElm.parentNode.parentNode.classList.add('use');
         getSwitchElm.checked = true;
       } else {
         try {
-          const res = await axios.delete(`/products/product/${product.productId}`);
+          const res = await axios.delete(`/products/product/${product.product_id}`);
         } catch (error) {
           console.error(error);
         }
@@ -142,10 +142,11 @@ window.addEventListener('DOMContentLoaded', async () => {
       // utils.paintLoadingGuard(loadingGuard);
       const productId = useStatusElm.dataset.productId;
       const useStatus = useStatusElm.checked;
-
+      const thumbnail = document.querySelector(`a[data-product-id='${productId}'] .prd_img img`).src;
       const form = [
         {
-          productId: productId,
+          product_id: productId,
+          thumbnail: thumbnail,
           useStatus: useStatus,
         },
       ];

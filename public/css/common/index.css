@@ -477,8 +477,8 @@ div[class*='btn'] > a {
 
 .switch_input {
   position: absolute;
-  left: -1000px;
-  top: -1000px;
+  left: 0;
+  top: 0;
   width: 0px;
   height: 0px;
   opacity: 0;

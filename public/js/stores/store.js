@@ -1,4 +1,5 @@
 window.addEventListener('DOMContentLoaded', async () => {
+  const utils = await import('../utils/utils.js');
   const param = new URLSearchParams(window.location.search);
   const type = param.get('type');
 
@@ -130,11 +131,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   const storeCreate = async (form) => {
     try {
       const res = await axios.post('/stores/store', form);
+
       if (res.status === 200) {
         window.location.href = '/stores';
       }
     } catch (err) {
-      console.log(`store create request err : ${err}`);
+      utils.onAlertModal(err.response.data.message);
     }
   };
   /**
