@@ -22,9 +22,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     let result;
     const name = document.getElementById('storeName').value;
     const address = document.getElementById('storeAddr').value;
-    let useStatus = document.getElementById('storeUseStatus').checked;
 
-    result = { name, address, useStatus: useStatus };
+    result = { name, address };
 
     return result;
   };
@@ -33,9 +32,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     let result;
     const name = document.getElementById('storeName').value;
     const address = document.getElementById('storeAddr').value;
-    let useStatus = document.getElementById('storeUseStatus').checked;
 
-    result = { name, address, useStatus: useStatus };
+    result = { name, address };
 
     return result;
   };
@@ -91,10 +89,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (!file) {
       return;
     }
-    const excelUseStatus = getExcelUseStatus();
+
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('use_status', excelUseStatus);
 
     try {
       const res = await axios.post(`/stores/many`, formData);
