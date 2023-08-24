@@ -57,7 +57,7 @@ class StoreMapAPI {
         if (L_STORE_LIST.length >= 1) {
           storePickupInit();
         } else {
-          this.UISettingpostMsgStoresEmpty();
+          this.postMsgStoresEmpty();
         }
       }
     } catch (error) {

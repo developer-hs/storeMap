@@ -234,3 +234,12 @@ input#excelUploadBtn {
 .switch_ct > div > span {
   margin-left: 0;
 }
+
+.quantity_area {
+  display: flex;
+  align-items: center;
+}
+
+.submit {
+  cursor: pointer;
+}

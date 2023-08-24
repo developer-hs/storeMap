@@ -19,7 +19,6 @@ class StoreMapInitAPI {
   }
 
   setWidget = async () => {
-    console.log('AWD');
     try {
       const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { params: { origin: window.location.origin } });
       if (res.status === 200) {

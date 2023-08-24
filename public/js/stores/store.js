@@ -64,12 +64,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   /**
    * @returns {HTMLElement}
    */
-  const getCoordBtnElm = () => {
-    return document.getElementById('coordBtn');
-  };
-  /**
-   * @returns {HTMLElement}
-   */
   const getdeleteBtnElm = () => {
     return document.getElementById('deleteBtn');
   };
@@ -80,15 +74,16 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getExcelUseStatus = () => {
     return document.getElementById('excelUseStatus').checked;
   };
-
   const getStoreAddress = () => {
     return document.getElementById('storeAddr').value;
+  };
+  const getQunatitySubmitBtnElms = () => {
+    return document.querySelectorAll('[id*="quantitySubmitBtn"]');
   };
   /**
    * @description 엑셀을 이용한 여러개의 매장 생성
    * @return {void}
    */
-
   const storeCreateMany = async () => {
     const fileInput = getexcelUploadBtnElm();
     const file = fileInput.files[0];
@@ -99,7 +94,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const excelUseStatus = getExcelUseStatus();
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('useStatus', excelUseStatus);
+    formData.append('use_status', excelUseStatus);
 
     try {
       const res = await axios.post(`/stores/many`, formData);
@@ -159,7 +154,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
 
     const coord = await getCoord(address);
-    console.log(coord);
+
     if (!coord) {
       alert('입력하신 주소를 다시 한번 확인해 주세요');
       return;
@@ -228,12 +223,33 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const coordBtnHandler = () => {
-    getCoordBtnElm().addEventListener('click', getCoord);
-  };
-
   const deleteBtnHandler = () => {
     getdeleteBtnElm().addEventListener('click', onDelete);
+  };
+
+  const setQuantity = async (elm) => {
+    const quantityForm = { inventory: {} };
+    const elmId = elm.dataset.id;
+    const productId = elm.dataset.productId;
+    const quantity = document.getElementById(`quantity_${elmId}`).value;
+    quantityForm.inventory[productId] = quantity;
+
+    try {
+      const res = await axios.put(`/stores/store/${getStoreId()}`, quantityForm);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const quantityBtnHandler = () => {
+    const qunatitySubmitBtnElms = getQunatitySubmitBtnElms();
+    if (qunatitySubmitBtnElms.length < 1) return;
+
+    qunatitySubmitBtnElms.forEach((qunatitySubmitBtnElm) => {
+      qunatitySubmitBtnElm.addEventListener('click', (e) => {
+        setQuantity(e.target);
+      });
+    });
   };
 
   const toggleExcelModal = () => {
@@ -247,6 +263,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       toggleExcelModal();
     } else if (type === 'u') {
       deleteBtnHandler();
+      quantityBtnHandler();
     }
     submitHandler();
   };

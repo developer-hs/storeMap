@@ -147,7 +147,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         {
           product_id: productId,
           thumbnail: thumbnail,
-          useStatus: useStatus,
+          use_status: useStatus,
         },
       ];
 

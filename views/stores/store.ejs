@@ -128,7 +128,17 @@
           <span><%- inventory[i].productDetails._id.toString() %></span>
         </div>
         <div>
-          <span style="color: red"><%- inventory[i].quantity %></span>
+          <span class="quantity_area">
+            <input type="number" id="quantity_<%- i %>" value="<%- inventory[i].quantity %>" />
+            <div
+              class="submit"
+              id="quantitySubmitBtn_<%- i %>"
+              data-product-id="<%- inventory[i].productDetails.product_id %>"
+              data-id="<%- i %>"
+            >
+              등록
+            </div>
+          </span>
         </div>
       </div>
       <% } %>

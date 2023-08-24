@@ -126,7 +126,7 @@
     <% if (stores.length > 0) { %>
       <div id="stores">
         <% for(var i = 0; i < stores.length; i++){ %>
-          <div class="store <% if (stores[i].useStatus === true) { %> use <% } %>" id="<%- stores[i]._id %>">
+          <div class="store <% if (stores[i].use_status === true) { %> use <% } %>" id="<%- stores[i]._id %>">
             <div class="check_btn_area">
               <input class="check_btn" type="checkbox" />
             </div>
@@ -137,7 +137,7 @@
               <div class="store_addr"><%- stores[i].address %></div>
             </a>
             <div class="use_status switch_ct">
-              <div class="icon <% if (stores[i].useStatus === true) { %> on <% } else { %> off <% } %>"></div>
+              <div class="icon <% if (stores[i].use_status === true) { %> on <% } else { %> off <% } %>"></div>
             </div>
             <div class="coord">
               <div class="icon <% if (stores[i].latitude && stores[i].longitude){ %> on <% } else { %> off <% } %>"></div>

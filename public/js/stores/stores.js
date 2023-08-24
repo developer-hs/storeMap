@@ -282,7 +282,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       const storeAddr = useStatusElm.parentNode.parentNode.parentNode.parentNode.querySelector('.store_addr').innerText;
 
       const res = await axios.put(`/stores/store/${storeId}`, {
-        useStatus: useStatusElm.checked,
+        use_status: useStatusElm.checked,
         address: storeAddr,
       });
       if (res.status === 200) {
@@ -317,7 +317,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     let form = [];
 
     chkedStores.forEach((storeId) => {
-      form.push({ storeId, useStatus: useStatus });
+      form.push({ storeId, use_status: useStatus });
     });
 
     try {
