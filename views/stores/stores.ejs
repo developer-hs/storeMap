@@ -137,10 +137,10 @@
               <div class="store_addr"><%- stores[i].address %></div>
             </a>
             <div class="use_status switch_ct">
-              <div class="icon <% if (stores[i].use_status === true) { %> on <% } else { %> off <% } %>"></div>
+              <div class="icon <% if (stores[i].use_status === true) { %> on <% } else { %> off <% } %>" data-store-id="<%- stores[i]._id %>"></div>
             </div>
             <div class="coord">
-              <div class="icon <% if (stores[i].latitude && stores[i].longitude){ %> on <% } else { %> off <% } %>"></div>
+              <div class="icon <% if (stores[i].latitude && stores[i].longitude){ %> on <% } else { %> off <% } %>" data-store-id="<%- stores[i]._id %>"></div>
             </div>
           </div>
         <% } %>

@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @return {Array<Element>} 체크버튼 Element 들을 반환하는 함수
    */
   const getChkBtnElms = () => {
-    return document.querySelectorAll('input.check_btn');
+    return document.querySelectorAll('input.check_btn:not(#allCheckBtn)');
   };
   const getFilterBtnElm = () => {
     return document.getElementById('filterBtn');
@@ -57,7 +57,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       .map((data) => {
         return data.parentNode.parentNode.querySelector('.use_status .icon');
       });
-
     return result;
   };
   /**
@@ -323,14 +322,18 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axios.put('/api/stores/use_status/many', form);
       if (res.status === 200) {
-        console.log(res);
         utils.onAlertModal('성공적으로 설정 되었습니다.');
         const useStatusElms = getCheckedUseStatusElms();
         useStatusElms.forEach((useStatusElm) => {
+          const storeId = useStatusElm.dataset.storeId;
+          const storeElm = document.querySelector(`.store[id='${storeId}']`);
           if (useStatus) {
             useStatusElm.classList.remove('off');
+            storeElm.classList.remove('use');
             useStatusElm.classList.add('on');
+            storeElm.classList.add('use');
           } else {
+            storeElm.classList.remove('use');
             useStatusElm.classList.remove('on');
             useStatusElm.classList.add('off');
           }
