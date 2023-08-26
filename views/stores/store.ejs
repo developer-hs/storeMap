@@ -120,12 +120,12 @@
     <% if (type === "u") { %>
     <div class="right card">
       <% for(var i = 0; i < inventory.length; i++){ %>
-      <div style="display: flex; width: 100%">
-        <div style="width: 30%">
-          <img style="width: 100%" src="<%- inventory[i].productDetails.thumbnail %>" />
+      <div class="product_area">
+        <div class="prd_img">
+          <img src="<%- inventory[i].productDetails.thumbnail %>" />
         </div>
         <div>
-          <span><%- inventory[i].productDetails._id.toString() %></span>
+          <span><%- inventory[i].productDetails.name %></span>
         </div>
         <div>
           <span class="quantity_area">

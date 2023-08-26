@@ -65,7 +65,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           `   <div class="name">${L_PRODUCTS_LIST[key].product_name}</div>` +
           `   <div class="prd_price">₩${parseInt(L_PRODUCTS_LIST[key].price).toLocaleString(navigator.language)}</div>` +
           `   <div class="use_status switch_ct">` +
-          `         <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} type="checkbox" />` +
+          `         <input class="switch_input" id="useStatus_${L_PRODUCTS_LIST[key].product_no}" data-product-id=${L_PRODUCTS_LIST[key].product_no} data-key=${key} type="checkbox" />` +
           `         <label class="switch_label" for="useStatus_${L_PRODUCTS_LIST[key].product_no}"></label>` +
           `   </div>` +
           ` </div>` +
@@ -121,10 +121,23 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const usingProductInit = async () => {
+  const activeProductInit = async () => {
     const products = await getUsingProducts();
     if (products.length > 0) {
       setUsingPrd(products);
+      products.forEach(async (product) => {
+        const productName = document.querySelector(`a[data-product-id='${product.product_id}'] .name`).innerText;
+        if (product.name !== productName) {
+          try {
+            const res = await axios.put(`/products/product/${product._id}`, { name: productName });
+            if (res.status === 201) {
+              return;
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      });
     }
   };
 
@@ -138,14 +151,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const onUseStatus = async (useStatusElm) => {
     try {
-      // const loadingGuard = utils.createLoadingGaurd();
-      // utils.paintLoadingGuard(loadingGuard);
+      const productName = L_PRODUCTS_LIST[useStatusElm.dataset.key].product_name;
       const productId = useStatusElm.dataset.productId;
       const useStatus = useStatusElm.checked;
       const thumbnail = document.querySelector(`a[data-product-id='${productId}'] .prd_img img`).src;
       const form = [
         {
           product_id: productId,
+          name: productName,
           thumbnail: thumbnail,
           use_status: useStatus,
         },
@@ -237,7 +250,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const processInit = async () => {
     await getProducts();
     paintProducts();
-    usingProductInit();
+    activeProductInit();
     searchPrdNumInit();
   };
 

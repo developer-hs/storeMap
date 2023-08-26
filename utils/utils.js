@@ -12,16 +12,15 @@ export const removeDuplicates = (arr1, arr2) => {
   return unique;
 };
 
-export const setToken = (res, accessToken, refreshToken) => {
+export const setToken = async (res, user, accessToken, refreshToken) => {
   res.cookie('access_token', accessToken, {
     httpOnly: true,
     secure: SECURE,
     // 예: secure: true (HTTPS 연결에서만 전송)
   });
-  res.cookie('refresh_token', refreshToken, {
-    httpOnly: true,
-    secure: SECURE,
-  });
+
+  user.refresh_token = refreshToken;
+  await user.save();
 };
 
 export const setCafe24AccessToken = async (res, accessToken) => {

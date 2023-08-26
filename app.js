@@ -102,15 +102,18 @@ const appRouting = async () => {
 
   app.get('/token/refresh', async (req, res) => {
     const redirectURI = req.query.redirect_uri || '/stores';
-
     try {
       const tokenRes = await refresh(req, res);
+
       if (!tokenRes.ok) {
-        return res.status(500).send({ ok: false, message: tokenRes.message });
+        return res.render('auth/redirect_login.ejs', {
+          message: '다시 로그인 해 주세요.',
+          cateId: 'redirectLogin',
+        });
       }
       const newAccessToken = tokenRes.data.newAccessToken;
-      const refreshToken = tokenRes.data.refreshToken;
-      setToken(res, newAccessToken, refreshToken);
+      const refreshToken = tokenRes.data.newRefreshToken;
+      setToken(res, tokenRes.data.user, newAccessToken, refreshToken);
 
       return res.redirect(redirectURI);
     } catch (error) {
@@ -170,7 +173,7 @@ const appRouting = async () => {
       }
 
       user.generateToken((accessToken, refreshToken) => {
-        setToken(res, accessToken, refreshToken);
+        setToken(res, user, accessToken, refreshToken);
       });
       user.cafe24RefreshToken = tokenRes.data.refresh_token;
       setCafe24AccessToken(res, tokenRes.data.access_token);
