@@ -241,10 +241,32 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const stickyToRightElm = (elm, rectY) => {
+    const rightElm = document.querySelector('.right');
+    const scrollTop = elm.scrollTop;
+
+    if (scrollTop > rectY) {
+      rightElm.classList.add('sticky');
+    } else {
+      rightElm.classList.remove('sticky');
+    }
+  };
+
+  const sticyToRightElmHandler = () => {
+    const contentElm = document.getElementById('content');
+    const rightElm = document.querySelector('.right');
+    const rectY = rightElm.getBoundingClientRect().y;
+    contentElm.addEventListener('scroll', (e) => {
+      stickyToRightElm(e.target, rectY);
+    });
+  };
+
   const handlers = () => {
     useStatusBatchPrcsBtnHandler();
     useStatusHandler();
     searchPrdNumBtnHandler();
+
+    sticyToRightElmHandler();
   };
 
   const processInit = async () => {
