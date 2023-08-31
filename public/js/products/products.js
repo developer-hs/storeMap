@@ -255,7 +255,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   const sticyToRightElmHandler = () => {
     const contentElm = document.getElementById('content');
     const rightElm = document.querySelector('.right');
-    const rectY = rightElm.getBoundingClientRect().y;
+    const rectY = rightElm.getBoundingClientRect().y - 223;
+
     contentElm.addEventListener('scroll', (e) => {
       stickyToRightElm(e.target, rectY);
     });
