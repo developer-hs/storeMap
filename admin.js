@@ -10,6 +10,7 @@ import { Store } from './app/stores/models/store.js';
 import { Widget } from './app/widgets/models/widget.js';
 import { Product } from './app/products/models/product.js';
 import { Admin } from './app/admin/models/admin.js';
+import { Order } from './app/orders/routes/models/order.js';
 
 import passport from './passprot-setup.js';
 import { ADMINJS_COOKIE_PW, ADMINJS_SESSION_SECRET } from './app/config/index.js';
@@ -21,7 +22,7 @@ const setAdminJs = async (app) => {
   AdminJS.registerAdapter(AdminJSMongoose);
   const adminOptions = {
     // We pass Category to `resources`
-    resources: [{ resource: Admin, options: { properties: { password: { isVisible: false } } } }, User, Store, Widget, Product],
+    resources: [{ resource: Admin, options: { properties: { password: { isVisible: false } } } }, User, Store, Widget, Product, Order],
     rootPath: '/admin',
     loginPath: '/admin/login',
     dashboard: {},

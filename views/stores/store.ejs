@@ -117,18 +117,46 @@
         </div>
       </div>
     </div>
-    <% if (type === "u") { %>
-    <div class="right card">
+    <% if (type === "u" && inventory.length > 0) { %>
+    <div class="right product_ct card">
+      <div class="title">
+        <span>상품 재고 설정</span>
+        <div class="faq_area">
+          <div class="faq">
+            <p>재고 등록 시 해당 스토어에 대한</p>
+            <p>&lt;바로픽업&gt; 이 활성화 됩니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="product_table_head card">
+        <div class="prd_id"><span>상품번호</span></div>
+        <div class="prd_img_area"><span>상품이미지</span></div>
+        <div class="prd_name_area"><span>상품명</span></div>
+        <div class="prd_quantity_area">
+          <span>재고</span>
+          <div class="faq_area">
+            <div class="faq">
+              <p>취소/반품/환불의 경우 재고가</p>
+              <p>반환되지 않으니 유의하여 주세요.</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <% for(var i = 0; i < inventory.length; i++){ %>
-      <div class="product_area">
-        <div class="prd_img">
+      <div class="product_area card">
+        <div class="prd_id">
+          <span>
+            <%- inventory[i].productDetails.product_id %>
+          </span>
+        </div>
+        <div class="prd_img_area">
           <img src="<%- inventory[i].productDetails.thumbnail %>" />
         </div>
-        <div>
+        <div class="prd_name_area">
           <span><%- inventory[i].productDetails.name %></span>
         </div>
-        <div>
-          <span class="quantity_area">
+        <div class="prd_quantity_area">
+          <div class="quantity_area">
             <input type="number" id="quantity_<%- i %>" value="<%- inventory[i].quantity %>" />
             <div
               class="submit"
@@ -138,7 +166,7 @@
             >
               등록
             </div>
-          </span>
+          </div>
         </div>
       </div>
       <% } %>

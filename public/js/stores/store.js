@@ -112,7 +112,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         ...form,
       });
 
-      if (res.status === 200) {
+      if (res.status === 201) {
         window.location.href = '/stores';
       }
     } catch (err) {
@@ -233,6 +233,9 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const res = await axios.put(`/stores/store/${getStoreId()}`, quantityForm);
+      if (res.status === 201) {
+        utils.onAlertModal(res.data.message);
+      }
     } catch (error) {
       console.error(error);
     }

@@ -12,7 +12,7 @@ input#excelUploadBtn {
   width: 100%;
 }
 .store_ct {
-  padding: 12px 0;
+  padding: 12px 0 50px;
   display: flex;
   justify-content: space-between;
   height: 100%;
@@ -29,6 +29,30 @@ input#excelUploadBtn {
   width: 40%;
   height: 100%;
 }
+
+.store_ct > .right.product_ct {
+  width: 50%;
+}
+
+.store_ct > .right.product_ct .title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.store_ct > .right.product_ct .title > span {
+  font-family: 'SBAggro';
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.store_ct > .right.product_ct .title .faq_area::before {
+  width: 16px;
+  height: 16px;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
 .store_ct .btn_area {
   margin-top: 72px;
   position: relative;
@@ -247,18 +271,103 @@ input#excelUploadBtn {
 .product_area {
   display: flex;
   width: 100%;
-  padding: 8px 0;
+  margin: 16px 0;
+  padding: 10px 18px;
   border-bottom: 1px solid #eee;
 }
-
-.prd_img {
-  width: 100px;
-  border-radius: var(--default-radius);
-  overflow: hidden;
-  font-size: 0px;
-  padding: 8px 0;
+.product_area:nth-last-child(1) {
+  margin-bottom: 0;
 }
 
-.prd_img img {
+.product_area > div {
+  margin: 0 12px;
+}
+.product_area .prd_img_area {
+  font-size: 0px;
+}
+
+.product_area .prd_img_area img {
   width: 100%;
+  height: 100%;
+  border-radius: var(--default-radius);
+}
+
+.product_table_head {
+  display: flex;
+}
+.product_table_head.card {
+  padding: 12px 18px;
+  box-sizing: border-box;
+}
+
+.product_table_head .prd_id,
+.product_table_head .prd_img_area,
+.product_table_head .prd_name_area,
+.product_table_head .prd_quantity_area {
+  position: relative;
+  margin: 0 12px;
+  color: #858585;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.product_table_head .prd_img_area {
+  width: 100px;
+}
+
+.prd_img_area {
+  display: flex;
+  align-items: center;
+  justify-self: unset;
+  justify-content: center;
+}
+
+.product_area .prd_img_area {
+  width: 100px;
+  height: 100px;
+}
+.prd_name_area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+.prd_id {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10%;
+}
+.prd_quantity_area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 35%;
+}
+
+.prd_quantity_area .quantity_area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prd_quantity_area input {
+  width: 60%;
+  border: 1px solid #eee;
+  height: 35px;
+  padding: 0 12px;
+  border-radius: var(--default-radius);
+}
+
+.prd_quantity_area .submit {
+  width: 35%;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-color: var(--color-success);
+  border-radius: var(--default-radius);
+  color: #fff;
+  box-sizing: border-box;
 }

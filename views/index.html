@@ -5,30 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="/css/index.css" />
   </head>
-  <body></body>
+
+  <body>
+    <svg id="logo_u" width="71" height="59" viewBox="0 0 72 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g clip-path="url(#clip0_14_16)">
+        <path
+          data-start="0"
+          data-duration="10"
+          d="M13.85 1V47.72H33.64V59.65H12.63L1 52.71V1H13.85ZM58.42 1V47.72H38.63V59.65H59.74L71.27 52.71V1H58.42Z"
+          stroke="black"
+          stroke-width="2"
+          stroke-miterlimit="10"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip0_14_16">
+          <rect width="72" height="60" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vivus/0.4.6/vivus.min.js"></script>
   <script>
-    // 처음 방문되는 페이지
-    const param = new URLSearchParams(window.location.search);
-    const mallId = param.get('mall_id');
-    const userName = param.get('user_name');
-    const redirectURI = 'https://storemap.store/cafe24/oauth';
+    new Vivus('logo_u', {
+      duration: 200,
+    });
 
-    if (!mallId) {
-      alert('잘못된 접근입니다.');
-      window.location.href = 'https://www.cafe24.com/';
-    }
+    const appInstall = () => {
+      const param = new URLSearchParams(window.location.search);
+      const mallId = param.get('mall_id');
+      const userName = param.get('user_name');
+      if (mallId && userName) {
+        const redirectURI = 'https://storemap.store/cafe24/oauth';
 
-    const getAuthCode = () => {
-      // auth_code 요청 후 응답이 제대로 됐다면 redirectURI 로 이동
-      window.location.href = `https://${mallId}.cafe24api.com/api/v2/oauth/authorize?response_type=code&client_id=eFYBhLMOCSGAFEuw4IIZOF&state=MTIzNDU2Nzg=&redirect_uri=${redirectURI}&scope=mall.read_application,mall.write_application,mall.read_product,mall.write_product`;
+        if (!mallId) {
+          alert('잘못된 접근입니다.');
+          window.location.href = 'https://www.cafe24.com/';
+        }
+
+        const getAuthCode = () => {
+          // auth_code 요청 후 응답이 제대로 됐다면 redirectURI 로 이동
+          window.location.href = `https://${mallId}.cafe24api.com/api/v2/oauth/authorize?response_type=code&client_id=eFYBhLMOCSGAFEuw4IIZOF&state=MTIzNDU2Nzg=&redirect_uri=${redirectURI}&scope=mall.read_application,mall.write_application,mall.read_product,mall.write_product`;
+        };
+
+        if (param.get('mall_id')) {
+          sessionStorage.setItem('mall_id', mallId);
+          sessionStorage.setItem('user_name', userName);
+
+          getAuthCode();
+        }
+      } else {
+        window.location.href = '/users/login';
+      }
     };
 
-    if (param.get('mall_id')) {
-      sessionStorage.setItem('mall_id', mallId);
-      sessionStorage.setItem('user_name', userName);
-
-      getAuthCode();
-    }
+    appInstall();
   </script>
 </html>

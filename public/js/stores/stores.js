@@ -284,7 +284,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         use_status: useStatusElm.checked,
         address: storeAddr,
       });
-      if (res.status === 200) {
+      if (res.status === 201) {
         if (useStatusElm.checked) {
           utils.onAlertModal('노출설정 되었습니다');
         } else {
