@@ -83,7 +83,7 @@ class StoreMapAPI {
   };
 
   postMsgTrigger = () => {
-    // iframe 이 성공적으로 initialize 되었다면 trigger 전송
+    // iframe 이 성공적으로 생성 되었다면 trigger 전송
     window.parent.postMessage({ trigger: true }, '*');
   };
 
@@ -99,6 +99,14 @@ class StoreMapAPI {
         }
       }.bind(this)
     );
+  };
+
+  receiveProductId = () => {
+    window.addEventListener('message', function (e) {
+      if (e.data.productId) {
+        this.productId = e.data.productId;
+      }
+    });
   };
 
   receiveWidget = () => {
@@ -122,9 +130,10 @@ class StoreMapAPI {
   };
 
   init = () => {
+    this.postMsgTrigger();
     this.receiveWidget();
     this.receiveTrigger();
-    this.postMsgTrigger();
+    this.receiveProductId();
   };
 }
 
@@ -256,14 +265,15 @@ const initSearchedAddr = () => {
 
 // 네이버 지도를 생성하는 함수
 const createKakaoMap = () => {
-  const MapElm = getMapElm(), // 지도를 표시할 div
-    mapOption = {
-      center: new kakao.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
-      level: 13, // 지도의 확대 레벨
-    };
+  const mapElm = getMapElm(); // 지도를 표시할 div
+  console.log(mapElm);
+  const mapOption = {
+    center: new kakao.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
+    level: 13, // 지도의 확대 레벨
+  };
 
   // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-  L_MAP = new kakao.maps.Map(MapElm, mapOption);
+  L_MAP = new kakao.maps.Map(mapElm, mapOption);
   // mapHandler();
   // 지도를 생성하고 기본적인 설정을 한다
 };
@@ -385,6 +395,7 @@ const PickupBtnHandler = (storePickupBtnElm, store) => {
  * @returns {Boolean?}
  */
 const pickup = (store, pick = true) => {
+  console.log(store);
   setSearchAddrValue(store); // 주소 입력창에 정보를 채워줌
   if (!searchStoreIsValid()) {
     return false;
@@ -709,7 +720,14 @@ const createKakaoMarker = (kakao_coord, marker_img_url) => {
 };
 
 const createStoreMarker = (store) => {
-  const markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg';
+  const quantity = store.inventory[this.productId];
+
+  let markerImgURI;
+  if (quantity > 0) {
+    markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/now_store_pick.svg';
+  } else {
+    markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg';
+  }
   const kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
   const marker = createKakaoMarker(kakaoCoord, markerImgURI);
 

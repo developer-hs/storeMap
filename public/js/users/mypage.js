@@ -1,9 +1,7 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const URL_PATTERN = /^https:\/\/([^/]+)(\/[^/.]+)*$/;
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const { getRootPropertyValue, onAlertModal, reload } = await import(
-    '../utils/utils.js'
-  );
+  const { getRootPropertyValue, onAlertModal, reload } = await import('../utils/utils.js');
 
   const getOrigin = () => {
     return getOriginElm().value;
@@ -20,12 +18,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const getEmail = () => {
     return getEmailElm().value;
   };
+  const getKakaoKey = () => {
+    return document.getElementById('kakaoKey').value;
+  };
   const getOriginElm = () => {
     return document.getElementById('domain');
   };
-  const getOriginSaveBtnElm = () => {
-    return document.getElementById('originSaveBtn');
-  };
+
   const getSubmitBtnElm = () => {
     return document.getElementById('submit');
   };
@@ -54,26 +53,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const onOriginSave = async () => {
-    const origin = getOrigin();
-
-    if (!URL_PATTERN.test(origin)) {
-      return onAlertModal('도메인 형식을 다시 확인해 주세요.', 250, 60, 2000);
-    }
-    try {
-      const originUpdateForm = {
-        origin: origin,
-      };
-      const res = await axios.put('/users/origin', originUpdateForm);
-      if (res.status === 200) {
-        onAlertModal('성공적으로 도메인이 등록되었습니다.', 300);
-      }
-    } catch (error) {
-      onAlertModal(error.response.data.message);
-      console.error(error);
-    }
-  };
-
   const emailCheck = () => {
     const email = getEmail();
 
@@ -96,16 +75,20 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const onSave = async () => {
     const validChk = formIsValid();
+
     if (!validChk.ok) {
       return onAlertModal(validChk.message);
     }
     const data = {
-      form: { origin: getOrigin(), email: getEmail() },
+      form: { origin: getOrigin(), email: getEmail(), name: getName(), kakao_key: getKakaoKey() },
       password: getPW(),
     };
+
     try {
       const res = await axios.put('/api/v1/users/user', data);
-      onAlertModal(res.data.message);
+      if (res.status === 201) {
+        onAlertModal(res.data.message);
+      }
     } catch (error) {
       console.error(error);
       onAlertModal(error.response.data.message);
@@ -128,14 +111,9 @@ window.addEventListener('DOMContentLoaded', async () => {
     originElm.addEventListener('input', originCheck);
   };
 
-  const originSaveBtnHandler = () => {
-    getOriginSaveBtnElm().addEventListener('click', onOriginSave);
-  };
-
   const mypageInit = () => {
     emailHandler();
     originHandler();
-    originSaveBtnHandler();
     onSaveHandler();
   };
 

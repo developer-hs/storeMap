@@ -20,7 +20,7 @@ class StoreMapInitAPI {
 
   setWidget = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/ui`, { params: { origin: window.location.origin } });
+      const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
       if (res.status === 200) {
         this.widget = res.data;
         if (this.widget.ui === 'distance') {
@@ -45,9 +45,7 @@ class StoreMapInitAPI {
    */
   async productShowCheck() {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`, {
-        params: { origin: window.location.origin },
-      });
+      const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`);
 
       if (res.status === 200) {
         if (res.data.ok) this.setStoreMapAdditionalOpt();
@@ -81,7 +79,7 @@ class StoreMapInitAPI {
     }
   };
 
-  onAlertModal = (message, width = 200, height = 60, duration = 1300, color = '#fff', bgColor = '#000') => {
+  onAlertModal = (message, height = 60, duration = 1300, color = '#fff', bgColor = '#000') => {
     const body = document.querySelector('body');
     const alertModal = document.createElement('div');
     const alertContent = document.createElement('div');
@@ -89,7 +87,7 @@ class StoreMapInitAPI {
     alertContent.classList.add('alert_content');
 
     alertContent.innerText = message;
-    alertModal.style.cssText = `width:${width}px; height:${height}px; color:${color}; background-color:${bgColor}`;
+    alertModal.style.cssText = ` height:${height}px; color:${color}; background-color:${bgColor}`;
     alertModal.appendChild(alertContent);
     body.prepend(alertModal);
 
@@ -119,7 +117,7 @@ class StoreMapInitAPI {
         if (storeMapOptValue) {
           this.L_STORE_MAP_ADDITIONAL_OPT.value = storeMapOptValue;
           this.postMsgCurrentScrY();
-          this.onAlertModal('매장이 선택 되었습니다!', 220);
+          this.onAlertModal('매장이 선택 되었습니다!');
         }
       }.bind(this)
     );
@@ -137,12 +135,19 @@ class StoreMapInitAPI {
     );
   };
 
-  createFrame = () => {
+  createFrame = async () => {
     this.addStyleSheet();
-
     this.iframe = document.createElement('iframe');
-    this.iframe.src = `${API_BASE_URL}/store_pickup.html`;
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
+
+    try {
+      const res = await axios.get(`${API_BASE_URL}/api/users/iframe`);
+      if (res.status === 200) {
+        this.iframe.srcdoc = res.data.body;
+      }
+    } catch (error) {
+      console.log(error);
+    }
     this.receiveStoresEmpty();
     this.receiveFrameHeight();
     this.receiveTrigger();
@@ -151,13 +156,20 @@ class StoreMapInitAPI {
   };
 
   receiveTrigger = () => {
-    // iframe 에서 성공적으로 initialize 되었다면 trigger 를 반환하여 postMsgTrigger 실행
-    window.addEventListener('message', (e) => {
+    // iframe 이 성공적으로 생성 되었다면 trigger 보내줌 다시 trigger 를 반환(origin 추출위함)
+    window.addEventListener('message', async (e) => {
       if (e.data.trigger) {
         this.postMsgTrigger();
         this.setWidget();
+        this.postMsgProductId();
       }
     });
+  };
+
+  postMsgProductId = () => {
+    if (this.iframe.contentWindow) {
+      this.iframe.contentWindow.postMessage({ productId: this.productId }, '*');
+    }
   };
 
   postMsgTrigger = () => {
@@ -183,7 +195,7 @@ class StoreMapInitAPI {
     const scriptElm = document.createElement('link');
     scriptElm.setAttribute('rel', 'stylesheet');
     scriptElm.setAttribute('type', 'text/css');
-    scriptElm.setAttribute('href', 'https://cdn.jsdelivr.net/gh/gygy2006/storeMap/public/css/stores/store_pickup.css');
+    scriptElm.setAttribute('href', 'css/stores/store_pickup.css');
     document.body.appendChild(scriptElm);
   };
 }

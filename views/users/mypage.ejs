@@ -31,18 +31,16 @@
           <label for="email">이메일</label>
         </div>
       </div>
-      <div class="oprigin_ct">
+      <div class="origin_ct">
         <div class="text-field required">
-          <input
-            type="text"
-            id="domain"
-            value="<%- user.origin %>"
-            placeholder="https://example.com"
-          />
+          <input type="text" id="domain" value="<%- user.origin %>" placeholder="https://example.com" />
           <label for="domain">홈페이지 도메인</label>
-          <div class="btn-area">
-            <div class="md-btn bg-primary" id="originSaveBtn">등록</div>
-          </div>
+        </div>
+      </div>
+      <div class="kakao_ct">
+        <div class="text-field required">
+          <input type="text" id="kakaoKey" value="<%- user.kakao_key %>" />
+          <label for="kakao_key">카카오 자바스크립트 키</label>
         </div>
       </div>
     </div>

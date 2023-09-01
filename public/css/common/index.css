@@ -246,7 +246,7 @@ div[class*='btn'] > a {
 .alert_modal {
   position: fixed;
   z-index: 2147483647;
-  width: 200px;
+  width: max-content;
   height: 60px;
   left: 50%;
   top: -100px;
@@ -258,7 +258,7 @@ div[class*='btn'] > a {
   background-color: #fff;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15);
   transition: all 0.5s ease;
-  padding: 0 12px;
+  padding: 0 16px;
 }
 
 .alert_modal.on {

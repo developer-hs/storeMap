@@ -1,15 +1,12 @@
-export const onAlertModal = (message, width = 0, height = 60, duration = 1300, bgColor = '#000', color = '#fff') => {
+export const onAlertModal = (message, height = 60, duration = 1300, bgColor = '#000', color = '#fff') => {
   const body = document.querySelector('body');
   const alertModal = document.createElement('div');
   const alertContent = document.createElement('div');
   alertModal.classList.add('alert_modal');
   alertContent.classList.add('alert_content');
 
-  if (width <= 0) {
-    width = message.length * 12;
-  }
   alertContent.innerText = message;
-  alertModal.style.cssText = `width:${width}px; height:${height}px; background-color:${bgColor};`;
+  alertModal.style.cssText = `height:${height}px; background-color:${bgColor};`;
   alertContent.style.color = color;
   alertModal.appendChild(alertContent);
   body.appendChild(alertModal);
