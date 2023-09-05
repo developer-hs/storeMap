@@ -639,10 +639,7 @@ const onCopyAddr = (addr) => {
  * @returns {void}
  */
 const copyAlert = () => {
-  getCodeCopyAlert().classList.add('on');
-  setTimeout(() => {
-    getCodeCopyAlert().classList.remove('on');
-  }, 1500);
+  window.parent.postMessage({ addrCopy: true }, '*');
 };
 
 const copyAddrHandler = () => {

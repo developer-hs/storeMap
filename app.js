@@ -22,6 +22,7 @@ import { refresh } from './app/users/jwt/refresh.js';
 process.env.NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production' ? 'production' : 'development';
 
 import setAdminJs from './admin.js';
+import { cafe24Auth } from './app/users/middleware/auth.js';
 
 export const app = express();
 
@@ -191,6 +192,19 @@ const appRouting = async () => {
 
   app.get('/test', (req, res) => {
     return res.sendFile(__dirname + '/public/test.html');
+  });
+
+  app.get('/storemap', cafe24Auth, async (req, res) => {
+    const renderURL = process.env.NODE_ENV === 'production' ? '/public/store_pickup.ejs' : '/public/test_store_pickup.ejs';
+    try {
+      const user = await User.findOne({ _id: req.userId });
+      const kakaoKey = user.kakao_key;
+
+      return res.render(__dirname + renderURL, { layout: false, kakao_key: kakaoKey });
+    } catch (error) {
+      console.error(error);
+      return res.status(404).json({ ok: false, message: '등록 후 사용해 주세요.', origin: JSON.stringify(req.headers.origin) });
+    }
   });
 
   app.get('/oauth', (req, res) => {

@@ -123,6 +123,18 @@ class StoreMapInitAPI {
     );
   };
 
+  receiveAddrCopyMsg = () => {
+    window.addEventListener(
+      'message',
+      function (e) {
+        const { addrCopy } = e.data;
+        if (addrCopy) {
+          this.onAlertModal('주소가 복사 되었습니다!');
+        }
+      }.bind(this)
+    );
+  };
+
   receiveFrameHeight = () => {
     window.addEventListener(
       'message',
@@ -141,9 +153,9 @@ class StoreMapInitAPI {
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
 
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/iframe`);
+      const res = await axios.get(`${API_BASE_URL}/api/users/kakao-key`);
       if (res.status === 200) {
-        this.iframe.srcdoc = res.data.body;
+        this.iframe.src = `${API_BASE_URL}/storemap`;
       }
     } catch (error) {
       console.log(error);
@@ -153,6 +165,8 @@ class StoreMapInitAPI {
     this.receiveTrigger();
 
     this.storeMapElm.appendChild(this.iframe);
+
+    this.receiveAddrCopyMsg();
   };
 
   receiveTrigger = () => {
@@ -195,7 +209,7 @@ class StoreMapInitAPI {
     const scriptElm = document.createElement('link');
     scriptElm.setAttribute('rel', 'stylesheet');
     scriptElm.setAttribute('type', 'text/css');
-    scriptElm.setAttribute('href', 'css/stores/store_pickup.css');
+    scriptElm.setAttribute('href', 'https://cdn.jsdelivr.net/gh/developer-hs/storeMap/public/css/stores/store_pickup.css');
     document.body.appendChild(scriptElm);
   };
 }

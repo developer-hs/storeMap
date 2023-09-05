@@ -17,6 +17,7 @@ testCreateStorePickup.js
 prevCreateStorePickup.js
 testStoreMapInit.js
 test_store_pickup.html
+test_store_pickup.ejs
 test.html
 app.yaml
 certificate
