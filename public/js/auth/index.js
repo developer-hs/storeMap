@@ -1,11 +1,11 @@
-const getCodeFromSession = () => {
+const getMallIdFromSession = () => {
   return sessionStorage.getItem('mall_id');
 };
 
 window.addEventListener('DOMContentLoaded', async () => {
   const param = new URLSearchParams(window.location.search);
   const code = param.get('code');
-  const mallId = getCodeFromSession();
+  const mallId = getMallIdFromSession();
   const redirectURI = 'https://storemap.store/cafe24/oauth';
 
   if (!code) {

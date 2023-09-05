@@ -47,7 +47,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     if (L_PRODUCTS_LIST.length > 0) {
       for (let key in L_PRODUCTS_LIST) {
-        const imgPath = new URL(L_PRODUCTS_LIST[key].detail_image).pathname;
+        const imgPath = new URL(L_PRODUCTS_LIST[key].detail_image)?.pathname || '';
         const imgUrl = `https://${mallId}.cafe24.com/${imgPath}`;
         const prdNo = L_PRODUCTS_LIST[key].product_no;
         const popupHeight = window.innerHeight * 0.9;

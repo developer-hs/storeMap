@@ -137,7 +137,7 @@ const appRouting = async () => {
     const { mallId } = req.params;
 
     const form = req.body;
-    console.log('awd', form);
+
     const headers = {
       Authorization: `Basic ${CAFE24_AUTH}`,
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -148,38 +148,40 @@ const appRouting = async () => {
       const tokenRes = await axios.post(`https://${mallId}.cafe24api.com/api/v2/oauth/token`, form, {
         headers: headers,
       });
+      try {
+        if (tokenRes.status === 200) {
+          user = await User.findOne({ mallId: mallId });
 
-      if (tokenRes.status === 200) {
-        user = await User.findOne({ mallId: mallId });
+          if (!user || user === null) {
+            const userForm = {
+              email: `${mallId}@cafe24.com`,
+              password: mallId,
+              mallId: mallId,
+              platform: 'cafe24',
+            };
+            // 유저가 존재하지 않을경우 -> 첫방문일 경우
+            user = new User(userForm);
+          }
 
-        if (!user || user === null) {
-          const userForm = {
-            email: `${mallId}@cafe24.com`,
-            password: mallId,
-            mallId: mallId,
-            platform: 'cafe24',
-          };
-          // 유저가 존재하지 않을경우 -> 첫방문일 경우
-          user = new User(userForm);
+          if (!user || user === null) {
+            // 유저 생성에 실패하였을 경우
+            return res.status(500).json({
+              ok: false,
+              message: '유저 생성실패 !',
+            });
+          }
         }
 
-        if (!user || user === null) {
-          // 유저 생성에 실패하였을 경우
-          return res.status(500).json({
-            ok: false,
-            message: '유저 생성실패 !',
-          });
-        }
+        user.cafe24RefreshToken = tokenRes.data.refresh_token;
+        setCafe24AccessToken(res, tokenRes.data.access_token);
+        user.generateToken((accessToken, refreshToken) => {
+          setToken(res, user, accessToken, refreshToken);
+        });
+
+        return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
+      } catch (error) {
+        return res.status(404).json({ ok: false, message: '유저를 찾을수 없습니다.', error: error, user });
       }
-
-      user.generateToken((accessToken, refreshToken) => {
-        setToken(res, user, accessToken, refreshToken);
-      });
-      user.cafe24RefreshToken = tokenRes.data.refresh_token;
-      setCafe24AccessToken(res, tokenRes.data.access_token);
-
-      await user.save();
-      return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
     } catch (error) {
       //cafe24 access token 요청 에 실패하였을 경우
       console.error(error);
