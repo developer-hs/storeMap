@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://127.0.0.1:8080';
+const API_BASE_URL = 'https://storemap.store';
 
 class StoreMapInitAPI {
   constructor() {
@@ -87,16 +87,18 @@ class StoreMapInitAPI {
     alertContent.classList.add('alert_content');
 
     alertContent.innerText = message;
-    alertModal.style.cssText = ` height:${height}px; color:${color}; background-color:${bgColor}`;
+    alertModal.style.cssText = `position: fixed; z-index: 2147483647; left: 50%; top: -100px; transform: translate3d(-50%, 0, 0); display: flex; justify-content: center; align-items: center; border-radius: 10px; box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15); transition: all 0.5s ease; padding: 0 30px; height:${height}px; color:${color}; background-color:${bgColor};`;
     alertModal.appendChild(alertContent);
     body.prepend(alertModal);
 
     setTimeout(() => {
       alertModal.classList.add('on');
+      alertModal.style.top = '50px';
     }, 100);
 
     setTimeout(() => {
       alertModal.classList.remove('on');
+      alertModal.style.top = '-100px';
     }, duration);
 
     setTimeout(() => {
@@ -127,8 +129,9 @@ class StoreMapInitAPI {
     window.addEventListener(
       'message',
       function (e) {
-        const { addrCopy } = e.data;
+        const { addrCopy, address } = e.data;
         if (addrCopy) {
+          window.navigator.clipboard.writeText(address);
           this.onAlertModal('주소가 복사 되었습니다!');
         }
       }.bind(this)
@@ -148,7 +151,6 @@ class StoreMapInitAPI {
   };
 
   createFrame = async () => {
-    this.addStyleSheet();
     this.iframe = document.createElement('iframe');
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
 
@@ -203,14 +205,6 @@ class StoreMapInitAPI {
         }
       }.bind(this)
     );
-  };
-
-  addStyleSheet = () => {
-    const scriptElm = document.createElement('link');
-    scriptElm.setAttribute('rel', 'stylesheet');
-    scriptElm.setAttribute('type', 'text/css');
-    scriptElm.setAttribute('href', 'https://cdn.jsdelivr.net/gh/developer-hs/storeMap/public/css/stores/store_pickup.css');
-    document.body.appendChild(scriptElm);
   };
 }
 

@@ -623,23 +623,8 @@ const getPickupStoreElm = () => {
   return document.getElementById('pickupStore');
 };
 
-/**
- * @description 인자로 받은 `addr` 값을 클립보드에 복사하고, `copyAlert` 함수를 호출하여 복사 완료 알림을 띄우는 함수
- * @param {addr:string}  복사할 주소
- * @returns {void}
- */
-const onCopyAddr = (addr) => {
-  window.navigator.clipboard.writeText(addr).then(() => {
-    copyAlert();
-  });
-};
-
-/**
- * @description 코드 복사 알림 요소를 화면에 띄우고, 1.5초 후에 숨기는 함수
- * @returns {void}
- */
-const copyAlert = () => {
-  window.parent.postMessage({ addrCopy: true }, '*');
+const onCopyAddr = (address) => {
+  window.parent.postMessage({ addrCopy: true, address: address }, '*');
 };
 
 const copyAddrHandler = () => {

@@ -16,6 +16,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     try {
       const res = await axios.post('/order/payment', form);
+      if (res.status === 201) {
+        window.location.href = res.data.order.confirmation_url;
+      }
     } catch (err) {
       console.error(err);
     }
