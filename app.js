@@ -33,7 +33,6 @@ const allowlist = [
   'https://localhost:8000',
   'http://127.0.0.1:8080',
   'https://127.0.0.1:8000',
-  'https://rlagudtjq2016.cafe24.com',
 ];
 
 const corsOptionsDelegate = (req, callback) => {
@@ -194,16 +193,79 @@ const appRouting = async () => {
     return res.sendFile(__dirname + '/public/test.html');
   });
 
-  app.get('/storemap', cafe24Auth, async (req, res) => {
-    const renderURL = process.env.NODE_ENV === 'production' ? '/public/store_pickup.ejs' : '/public/test_store_pickup.ejs';
+  app.get('/storemap', (req, res) => {
+    const kakaoKey = req.query.key;
+    if (!kakaoKey) {
+      return res.status(500).json({ ok: false });
+    }
+
+    return res.send(
+      `<!DOCTYPE html>` +
+        `<html lang="ko" style="overflow: hidden">` +
+        `<head>` +
+        `<meta charset="UTF-8" />` +
+        `<meta http-equiv="X-UA-Compatible" content="IE=edge" />` +
+        `<meta name="viewport" content="width=device-width, initial-scale=1.0" />` +
+        `<link rel="stylesheet" type="text/css" href="/css/stores/store_pickup.css" />` +
+        `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />` +
+        `<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>` +
+        `<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>` +
+        `</head>` +
+        `<body>` +
+        `<div class="loading" id="pickUpStoreBtn">` +
+        `<div class="guard"></div>` +
+        `</div>` +
+        `<div id="pickupStore">` +
+        `<div class="search_store_pkup_ct">` +
+        `<div class="head">` +
+        `<div class="search_type on" data-type="store">매장 검색</div>` +
+        `<div class="search_type" data-type="dong">동단위 검색</div>` +
+        `</div>` +
+        `<div class="search_box">` +
+        `<input id="address" type="text" placeholder="검색할 주소" value="" />` +
+        `<i id="submit" class="xi-search"></i>` +
+        `<div id="searchListCt"></div>` +
+        `</div>` +
+        `</div>` +
+        `<div class="store_list_ct on">` +
+        `<div class="swiper-container">` +
+        `<div class="store-info-container swiper-wrapper"></div>` +
+        `<div class="cont">` +
+        `<div class="swiper-button-prev"></div>` +
+        `<div class="swiper-pagination"></div>` +
+        `<div class="swiper-button-next"></div>` +
+        `</div>` +
+        `</div>` +
+        `</div>` +
+        `<div id="mapTitle">` +
+        `<div class="title">` +
+        `<div class="selected_store_name">` +
+        `<span class="pickup_store">픽업 매장</span>` +
+        `<span id="storeName"></span>` +
+        `</div>` +
+        `<div>` +
+        `<span id="storeAddress"></span>` +
+        `</div>` +
+        `</div>` +
+        `</div>` +
+        `<div id="map" style="display: none; width: 100%; height: 300px; position: relative; overflow: hidden; visibility: hidden; opacity: 0" ></div>` +
+        `</div>` +
+        `</body>` +
+        `<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=${kakaoKey}"></script>` +
+        `<script type="text/javascript" src="js/testCreateStorePickup.js"></script>` +
+        `</html>`
+    );
+  });
+
+  app.get('/storemap/iframe', cafe24Auth, async (req, res) => {
+    const origin = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080' : 'https://storemap.store';
     try {
       const user = await User.findOne({ _id: req.userId });
       const kakaoKey = user.kakao_key;
-
-      return res.render(__dirname + renderURL, { layout: false, kakao_key: kakaoKey });
+      return res.send(`"${origin}/storemap?key=${kakaoKey}"`);
     } catch (error) {
       console.error(error);
-      return res.status(404).json({ ok: false, message: '등록 후 사용해 주세요.', origin: JSON.stringify(req.headers.origin) });
+      return res.send({ ok: false, error: error });
     }
   });
 

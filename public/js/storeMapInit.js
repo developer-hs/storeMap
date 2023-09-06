@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://storemap.store';
+const API_BASE_URL = 'http://127.0.0.1:8080';
 
 class StoreMapInitAPI {
   constructor() {
@@ -153,9 +153,9 @@ class StoreMapInitAPI {
     this.iframe.style.cssText = 'width:100%; height:50px; border:none;';
 
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/kakao-key`);
+      const res = await axios.get(`${API_BASE_URL}/storemap/iframe`);
       if (res.status === 200) {
-        this.iframe.src = `${API_BASE_URL}/storemap`;
+        this.iframe.src = res.data;
       }
     } catch (error) {
       console.log(error);
