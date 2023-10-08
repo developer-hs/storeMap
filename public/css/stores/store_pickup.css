@@ -317,6 +317,10 @@ body #pickupStore .store_list_ct .swiper-pagination {
   justify-content: center;
   align-items: center;
 }
+#pickupStore #map img {
+  width: inherit !important;
+  height: inherit !important;
+}
 #pickupStore .store_list_ct .swiper-pagination-bullet-active {
   color: var(--ui-active-text-color);
   background: var(--ui-color);
@@ -401,7 +405,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
 #map .iw_inner {
   position: relative;
   display: flex;
-  transform: translate3d(5%, 60%, 0);
+  /* transform: translate3d(5%, 60%, 0); */
   border: 1px solid var(--ui-color);
   border-radius: 10px;
   overflow: hidden;

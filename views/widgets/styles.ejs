@@ -17,6 +17,9 @@
   </div>
   <div class="widget_ct">
     <div class="left">
+      <input type="file" name="image" id="markerUpload" />
+      <button id="markerSubmit">업로드</button>
+
       <div class="renew_btn" id="renewBtn">
         <i class="xi-renew"></i>
       </div>
@@ -26,7 +29,8 @@
             <input class="full" name="uiType" type="radio" id="defaultUI" value="default"
             <% if (widget.ui === "default") { %>
             checked
-            <% } %>
+            <% }
+            %>
             />
             <label for="defaultUI">기본 UI</label>
           </div>
@@ -34,7 +38,8 @@
             <input class="full" name="uiType" type="radio" id="distanceUI" value="distance"
             <% if (widget.ui === "distance") { %>
             checked
-            <% } %>
+            <%
+            } %>
             />
             <label for="distanceUI">거리형 UI</label>
           </div>

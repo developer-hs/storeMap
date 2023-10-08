@@ -1,9 +1,9 @@
 const L_HEIGHT = 80;
-const API_BASE_URL = 'https://storemap.store';
+const API_BASE_URL = 'http://127.0.0.1:8080';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],
-  L_SHOWING_OVERLAY,
+  L_SHOWING_INFOWINDOW,
   L_USER_KAKAO_COORD,
   L_SCROLL_Y;
 
@@ -266,14 +266,13 @@ const initSearchedAddr = () => {
 // 네이버 지도를 생성하는 함수
 const createKakaoMap = () => {
   const mapElm = getMapElm(); // 지도를 표시할 div
-  console.log(mapElm);
   const mapOption = {
-    center: new kakao.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
-    level: 13, // 지도의 확대 레벨
+    center: new naver.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
+    zoom: 3, // 지도의 확대 레벨
   };
 
   // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-  L_MAP = new kakao.maps.Map(mapElm, mapOption);
+  L_MAP = new naver.maps.Map(mapElm, mapOption);
   // mapHandler();
   // 지도를 생성하고 기본적인 설정을 한다
 };
@@ -395,13 +394,12 @@ const PickupBtnHandler = (storePickupBtnElm, store) => {
  * @returns {Boolean?}
  */
 const pickup = (store, pick = true) => {
-  console.log(store);
   setSearchAddrValue(store); // 주소 입력창에 정보를 채워줌
   if (!searchStoreIsValid()) {
     return false;
   }
 
-  searchAddrToCoord();
+  searchAddrToCoord(store);
   HideQuickSearchElm(); // 서치리스트 숨김
   postMsgOptValue(store); // 실제 옵션에 값을 담아줌
   getStoreName().innerText = store.name;
@@ -415,34 +413,34 @@ const quickSearchHandler = (store) => {
   });
 };
 
-const onOverlay = (store) => {
+const onInfoWindow = (store) => {
   setSearchAddrValue(store); // 서치 인풋에 타입별 값을 채워넣음
-  const overlay = createOverlay(store);
-  if (L_SHOWING_OVERLAY) {
-    closeOpenedOverlay();
+  const overlay = createInfoWindow(store);
+  if (L_SHOWING_INFOWINDOW) {
+    closeOpenedInfoWindow();
   }
-  L_SHOWING_OVERLAY = overlay; // 닫기버튼 클릭시 없애기 위함
-  L_MAP.setLevel(3, { anchor: store.kakaoCoord });
+  L_SHOWING_INFOWINDOW = overlay; // 닫기버튼 클릭시 없애기 위함
+  L_MAP.setZoom(13);
   L_MAP.setCenter(store.marker.getPosition());
-  overlay.setMap(L_MAP);
+  overlay.open(L_MAP, store.marker);
 };
 
 const markerHandler = (store) => {
-  kakao.maps.event.addListener(store.marker, 'click', function () {
+  naver.maps.Event.addListener(store.marker, 'click', function (e) {
     if (L_GEOLOCATION_WIDGET) {
       // 선택한 마커 기준으로 스토어리스트를 다시 그려줌
       setDistance(store.kakaoCoord);
       paintStoreList();
     }
 
-    closeOpenedOverlay();
-    onOverlay(store);
+    closeOpenedInfoWindow();
+    onInfoWindow(store);
   });
 };
 
 const mapHandler = () => {
-  kakao.maps.event.addListener(L_MAP, 'click', function () {
-    closeOpenedOverlay();
+  naver.maps.Event.addListener(L_MAP, 'click', function () {
+    closeOpenedInfoWindow();
   });
 };
 
@@ -685,17 +683,17 @@ const findStoreBySearched = () => {
 
 const createKakaoMarker = (kakao_coord, marker_img_url) => {
   const imageSrc = marker_img_url, // 마커이미지의 주소입니다
-    imageSize = new kakao.maps.Size(35, 35), // 마커이미지의 크기입니다
-    imageOption = { offset: new kakao.maps.Point(11, 35) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+    imageSize = new naver.maps.Size(26, 28); // 마커이미지의 크기입니다
 
-  // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-    markerPosition = kakao_coord; // 마커가 표시될 위치입니다
-
-  // 마커를 생성합니다
-  const marker = new kakao.maps.Marker({
-    position: markerPosition,
-    image: markerImage, // 마커이미지 설정
+  const marker = new naver.maps.Marker({
+    map: L_MAP,
+    position: kakao_coord,
+    icon: {
+      url: imageSrc,
+      size: imageSize,
+      origin: new naver.maps.Point(0, 0),
+      anchor: new naver.maps.Point(25, 26),
+    },
   });
 
   return marker;
@@ -729,31 +727,20 @@ const createUserMarker = () => {
 
   // 마커가 지도 위에 표시되도록 설정합니다
   userMarker.setMap(L_MAP);
-  L_MAP.setLevel(3, { anchor: L_USER_KAKAO_COORD });
+  L_MAP.setZoom(13);
   L_MAP.setCenter(userMarker.getPosition());
   userMarkers.push(userMarker);
 };
 
 // 입력된 주소로 좌표를 검색하고, 해당 좌표를 지도에 표시하는 함수
-const searchAddrToCoord = () => {
-  const store = findStoreBySearched(); // 입력된 주소에 해당하는 매장 상세 정보를 받아옴
-  if (!store) {
-    alert('입력하신 매장명이 존재하지 않습니다.');
-    return;
-  }
+const searchAddrToCoord = (store) => {
   if (L_GEOLOCATION_WIDGET) {
     setDistance(store.kakaoCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
     paintStoreList();
     L_MAP.setCenter(store.kakaoCoord);
-  } else {
-    const marker = createStoreMarker(store);
-    if (PREV_MARKER) {
-      PREV_MARKER.setMap(null);
-    }
-    PREV_MARKER = marker;
   }
 
-  onOverlay(store);
+  onInfoWindow(store);
 };
 
 // 검색 결과를 숨기는 함수
@@ -819,11 +806,13 @@ const sortQuickSearch = () => {
  * @param {HTMLInputElement} addr - 검색어가 입력된 input 엘리먼트
  */
 const quickSearch = () => {
+  const QUICK_SEARCH_LIMIT = 7;
   let searchedValue = getSearchedAddr();
   const searchListCt = getSearchListCtElm();
   const storesLen = searchListCt.querySelectorAll('.store').length;
 
   initQuickSearchListCt(); // 서치리스트 초기화
+
   if (storesLen === 0) {
     HideQuickSearchElm();
   }
@@ -833,10 +822,10 @@ const quickSearch = () => {
   }
 
   let quickSearchArray = [];
-  const QUICK_SEARCH_LIMIT = 7;
 
   for (let key in L_STORE_LIST) {
     const store = L_STORE_LIST[key];
+
     const getStoreName = () => {
       return store.name;
     };
@@ -882,13 +871,14 @@ const storeSearchingHandler = () => {
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------------------------------------------------------
-const closeOpenedOverlay = () => {
-  if (L_SHOWING_OVERLAY) {
-    L_SHOWING_OVERLAY.setMap(null);
+const closeOpenedInfoWindow = () => {
+  if (L_SHOWING_INFOWINDOW) {
+    L_SHOWING_INFOWINDOW.close();
+    L_SHOWING_INFOWINDOW = '';
   }
 };
 
-const createOverlay = (store) => {
+const createInfoWindow = (store) => {
   const content = [
     '<div class="iw_inner">',
     '  <div class="content">',
@@ -896,16 +886,21 @@ const createOverlay = (store) => {
     `      	 <p style="margin-top:5px; margin-bottom:0; font-size:0.875rem;">${store.address}</p>`,
     '  </div>',
     '   <div class="btn-box">',
-    `   	<div class="close-btn" onclick=\"closeOpenedOverlay()\">닫기</div>`,
+    `   	<div class="close-btn" onclick=\"closeOpenedInfoWindow()\">닫기</div>`,
     `   	<div class="pickup-btn" onclick=\"pickup(findStoreBySearched())\">여기서픽업</div>`,
     '   </div>',
     '</div>',
   ].join('');
 
-  const overlay = new kakao.maps.CustomOverlay({
+  const overlay = new naver.maps.InfoWindow({
     content: content,
-    map: L_MAP,
-    position: store.marker.getPosition(),
+    maxWidth: 200,
+    borderRadius: 10,
+    borderWidth: 0,
+    anchorSize: new naver.maps.Size(0, 0),
+    anchorSkew: true,
+    anchorColor: '#fff',
+    pixelOffset: new naver.maps.Point(0, -20),
   });
 
   return overlay;
@@ -922,7 +917,7 @@ const sortCondition = (a, b) => {
 };
 
 const createKakaoCoord = (latitude, longitude) => {
-  return new kakao.maps.LatLng(latitude, longitude);
+  return new naver.maps.LatLng(latitude, longitude);
 };
 
 /**
@@ -932,23 +927,13 @@ const createKakaoCoord = (latitude, longitude) => {
 const setDistance = (targetKakaoCoord) => {
   const storeInfoCtElm = document.querySelector('.store-info-container');
   storeInfoCtElm.innerHTML = '';
-
-  for (let key in L_STORE_LIST) {
-    const store = L_STORE_LIST[key];
-    const storeKakaoCoord = createKakaoCoord(store.latitude, store.longitude);
-    const polyline = new kakao.maps.Polyline({
-      /* map:map, */
-      path: [targetKakaoCoord, storeKakaoCoord],
-      strokeWeight: 2,
-      strokeColor: '#FF00FF',
-      strokeOpacity: 0.8,
-      strokeStyle: 'dashed',
-    });
-
-    //return getTimeHTML(polyline.getLength());//미터단위로 길이 반환;
-    const distance = polyline.getLength();
-    store.distance = distance / 1000;
+  var proj = L_MAP.getProjection();
+  for (let i = 0; i < L_STORE_LIST.length; i++) {
+    const naverCoord = createKakaoCoord(L_STORE_LIST[i].latitude, L_STORE_LIST[i].longitude);
+    const distance = proj.getDistance(targetKakaoCoord, naverCoord);
+    L_STORE_LIST[i].distance = distance / 1000;
   }
+
   L_STORE_LIST.sort(sortCondition);
 };
 

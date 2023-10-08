@@ -1,5 +1,5 @@
 window.addEventListener('DOMContentLoaded', async () => {
-  const URL_PATTERN = /^https:\/\/([^/]+)(\/[^/.]+)*$/;
+  const URL_PATTERN = /^https:\/\/(([A-Za-z0-9-가-힣]{1,63}\.)+([A-Za-z0-9-가-힣]+))[^\/]$/;
   const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const { getRootPropertyValue, onAlertModal, reload } = await import('../utils/utils.js');
 
@@ -17,9 +17,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
   const getEmail = () => {
     return getEmailElm().value;
-  };
-  const getKakaoKey = () => {
-    return document.getElementById('kakaoKey').value;
   };
   const getOriginElm = () => {
     return document.getElementById('domain');
@@ -39,8 +36,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const setValidStyle = (elm) => {
-    const blackColor = getRootPropertyValue('--color-success');
-    elm.style.borderColor = blackColor;
+    const greyColor = getRootPropertyValue('--color-grey');
+    const blackColor = getRootPropertyValue('--color-black');
+    elm.style.borderColor = greyColor;
     elm.nextElementSibling.style.color = blackColor;
   };
 
@@ -80,7 +78,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       return onAlertModal(validChk.message);
     }
     const data = {
-      form: { origin: getOrigin(), email: getEmail(), name: getName(), kakao_key: getKakaoKey() },
+      form: { origin: getOrigin(), email: getEmail(), name: getName() },
       password: getPW(),
     };
 

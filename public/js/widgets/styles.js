@@ -142,6 +142,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getOverlayAddressElm = () => {
     return document.getElementById('overlayAddress');
   };
+  const getUploadInputElm = () => {
+    return document.getElementById('markerUpload');
+  };
+  const getUploadSubmitBtnElm = () => {
+    return document.getElementById('markerSubmit');
+  };
+
   const getUIType = () => {
     const uiElms = getUIInputElms();
     for (let i = 0; i < uiElms.length; i++) {
@@ -524,14 +531,46 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
+  const upload = async () => {
+    const fileInput = getUploadInputElm();
+    const file = fileInput.files[0];
+
+    if (!file) {
+      return utils.onAlertModal('파일이 등록되지 않앗습니다.');
+    }
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const res = await axios.post('/api/v1/widgets/marker/upload', formData);
+      if (res.status === 201) {
+        utils.onAlertModal('성공적으로 마커가 등록 되었습니다.');
+      }
+    } catch (err) {
+      if (err.response.status === 500) {
+        return utils.onAlertModal('알수없는 오류로 업로드에 실패하였습니다.');
+      }
+      return utils.onAlertModal('파일형식 : PNG , JPG 사이즈 : 52 * 50 으로 등록 해주세요.');
+    }
+  };
+
   const submitBtnHandler = () => {
     getSubmitBtn().addEventListener('click', onSubmit);
+  };
+
+  const uploadBtnHandler = () => {
+    getUploadSubmitBtnElm().addEventListener('click', (e) => {
+      e.preventDefault();
+      upload();
+    });
   };
 
   const widgetStyleInit = () => {
     initGlobalVariableColor();
     createPickr();
     submitBtnHandler();
+    uploadBtnHandler();
   };
 
   const reactiveStyles = () => {

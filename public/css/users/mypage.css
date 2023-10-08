@@ -34,7 +34,7 @@
 .card > .btn-area {
   margin-top: 18px;
   padding-top: 18px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--color-grey);
 }
 
 .content-head .area {

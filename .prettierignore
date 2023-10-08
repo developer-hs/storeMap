@@ -1,0 +1,4 @@
+**/head.ejs
+views/index.ejs
+**/redirect_login.ejs
+**/refresh.ejs
