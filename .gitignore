@@ -10,7 +10,10 @@ node_modules/
 # ignore app folders
 app/
 cert/
-public/icons/
+public/icons
+public/imgs
+public/fonts
+public/files
 
 config.js
 testCreateStorePickup.js

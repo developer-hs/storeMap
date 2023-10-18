@@ -1,11 +1,12 @@
 const L_HEIGHT = 80;
-const API_BASE_URL = 'http://127.0.0.1:8080';
+const API_BASE_URL = 'https://storemap.store';
 
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],
   L_SHOWING_INFOWINDOW,
-  L_USER_KAKAO_COORD,
-  L_SCROLL_Y;
+  L_USER_NAVER_COORD,
+  L_SCROLL_Y,
+  L_MARKER;
 
 let PREV_MARKER, L_MAP;
 
@@ -21,27 +22,31 @@ class StoreMapAPI {
    * @returns {void}
    */
   async UISetting() {
-    if (this.widget.ui === 'default') {
+    if (this.widgets.widget.ui === 'default') {
       L_GEOLOCATION_WIDGET = false;
     } else {
       L_GEOLOCATION_WIDGET = true;
     }
-    document.documentElement.style.setProperty('--ui-color', this.widget.uiColor);
-    document.documentElement.style.setProperty('--ui-title-text-color', this.widget.titleTextColor);
-    document.documentElement.style.setProperty('--ui-distance-text-color', this.widget.distanceTextColor);
-    document.documentElement.style.setProperty('--ui-active-text-color', this.widget.activeTextColor);
-    document.documentElement.style.setProperty('--ui-text-color', this.widget.textColor);
-    document.documentElement.style.setProperty('--ui-address-text-color', this.widget.addressTextColor);
-    document.documentElement.style.setProperty('--ui-map-title-text-color', this.widget.mapTitleTextColor);
-    document.documentElement.style.setProperty('--ui-map-address-text-color', this.widget.mapAddressTextColor);
-    document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', this.widget.quickSearchTitleTextColor);
-    document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', this.widget.quickSearchAddressTextColor);
-    document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', this.widget.quickSearchTitleTextHoverColor);
-    document.documentElement.style.setProperty('--ui-quicksearch-address-hover-color', this.widget.quickSearchAddressTextHoverColor);
-    document.documentElement.style.setProperty('--ui-overlay-title-text-color', this.widget.overlayTitleTextColor);
-    document.documentElement.style.setProperty('--ui-overlay-address-text-color', this.widget.overlayAddressTextColor);
-    document.documentElement.style.setProperty('--ui-overlay-close-btn-text-color', this.widget.overlayCloseBtnTextColor);
-    document.documentElement.style.setProperty('--ui-overlay-pickup-btn-text-color', this.widget.overlayPickupBtnTextColor);
+    L_MARKER = this.widgets.marker;
+    document.documentElement.style.setProperty('--ui-color', this.widgets.widget.uiColor);
+    document.documentElement.style.setProperty('--ui-title-text-color', this.widgets.widget.titleTextColor);
+    document.documentElement.style.setProperty('--ui-distance-text-color', this.widgets.widget.distanceTextColor);
+    document.documentElement.style.setProperty('--ui-active-text-color', this.widgets.widget.activeTextColor);
+    document.documentElement.style.setProperty('--ui-text-color', this.widgets.widget.textColor);
+    document.documentElement.style.setProperty('--ui-address-text-color', this.widgets.widget.addressTextColor);
+    document.documentElement.style.setProperty('--ui-map-title-text-color', this.widgets.widget.mapTitleTextColor);
+    document.documentElement.style.setProperty('--ui-map-address-text-color', this.widgets.widget.mapAddressTextColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', this.widgets.widget.quickSearchTitleTextColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', this.widgets.widget.quickSearchAddressTextColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', this.widgets.widget.quickSearchTitleTextHoverColor);
+    document.documentElement.style.setProperty(
+      '--ui-quicksearch-address-hover-color',
+      this.widgets.widget.quickSearchAddressTextHoverColor
+    );
+    document.documentElement.style.setProperty('--ui-overlay-title-text-color', this.widgets.widget.overlayTitleTextColor);
+    document.documentElement.style.setProperty('--ui-overlay-address-text-color', this.widgets.widget.overlayAddressTextColor);
+    document.documentElement.style.setProperty('--ui-overlay-close-btn-text-color', this.widgets.widget.overlayCloseBtnTextColor);
+    document.documentElement.style.setProperty('--ui-overlay-pickup-btn-text-color', this.widgets.widget.overlayPickupBtnTextColor);
   }
 
   /**
@@ -113,14 +118,14 @@ class StoreMapAPI {
     window.addEventListener(
       'message',
       function (e) {
-        if (e.data.widget) {
-          this.widget = JSON.parse(e.data.widget);
+        if (e.data.widgets) {
+          this.widgets = JSON.parse(e.data.widgets);
           this.UISetting();
 
-          if (this.widget.coords) {
-            const latitude = this.widget.coords.latitude; // 위도
-            const longitude = this.widget.coords.longitude; // 경도
-            L_USER_KAKAO_COORD = createKakaoCoord(latitude, longitude);
+          if (this.widgets.widget.coords) {
+            const latitude = this.widgets.widget.coords.latitude; // 위도
+            const longitude = this.widgets.widget.coords.longitude; // 경도
+            L_USER_NAVER_COORD = createNaverCoord(latitude, longitude);
           }
           getPickupStoreBtnElm().classList.remove('loading');
           getPickupStoreBtnElm().innerHTML = '';
@@ -264,7 +269,7 @@ const initSearchedAddr = () => {
 };
 
 // 네이버 지도를 생성하는 함수
-const createKakaoMap = () => {
+const createNaverMap = () => {
   const mapElm = getMapElm(); // 지도를 표시할 div
   const mapOption = {
     center: new naver.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
@@ -338,7 +343,7 @@ const mapOpenChk = () => {
  */
 const firstOpenMap = () => {
   showMap();
-  createKakaoMap();
+  createNaverMap();
   searchHandler(); // 검색어를 받아 좌표를 검색하는 함수를 실행한다
 };
 
@@ -429,7 +434,7 @@ const markerHandler = (store) => {
   naver.maps.Event.addListener(store.marker, 'click', function (e) {
     if (L_GEOLOCATION_WIDGET) {
       // 선택한 마커 기준으로 스토어리스트를 다시 그려줌
-      setDistance(store.kakaoCoord);
+      setDistance(store.naverCoord);
       paintStoreList();
     }
 
@@ -480,7 +485,7 @@ const paintStoreList = () => {
 
   if (L_GEOLOCATION_WIDGET) {
     storeList.forEach((store) => {
-      store.kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
+      store.naverCoord = createNaverCoord(store.latitude, store.longitude);
       createStoreMarker(store);
       markerHandler(store);
     });
@@ -490,7 +495,7 @@ const paintStoreList = () => {
     });
   } else {
     L_STORE_LIST.forEach((store) => {
-      store.kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
+      store.naverCoord = createNaverCoord(store.latitude, store.longitude);
       createStoreMarker(store);
       markerHandler(store);
     });
@@ -681,13 +686,13 @@ const findStoreBySearched = () => {
   return false; // 일치하는 매장이 없으면 false 반환
 };
 
-const createKakaoMarker = (kakao_coord, marker_img_url) => {
+const createNaverMarker = (naver_coord, marker_img_url) => {
   const imageSrc = marker_img_url, // 마커이미지의 주소입니다
     imageSize = new naver.maps.Size(26, 28); // 마커이미지의 크기입니다
 
   const marker = new naver.maps.Marker({
     map: L_MAP,
-    position: kakao_coord,
+    position: naver_coord,
     icon: {
       url: imageSrc,
       size: imageSize,
@@ -706,10 +711,11 @@ const createStoreMarker = (store) => {
   if (quantity > 0) {
     markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/now_store_pick.svg';
   } else {
-    markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg';
+    console.log(L_MARKER);
+    markerImgURI = L_MARKER;
   }
-  const kakaoCoord = createKakaoCoord(store.latitude, store.longitude);
-  const marker = createKakaoMarker(kakaoCoord, markerImgURI);
+  const naverCoord = createNaverCoord(store.latitude, store.longitude);
+  const marker = createNaverMarker(naverCoord, markerImgURI);
 
   // 마커가 지도 위에 표시되도록 설정합니다
   marker.setMap(L_MAP);
@@ -723,7 +729,7 @@ const createUserMarker = () => {
     userMarker.setMap(null);
   });
   const markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/current_location.gif';
-  const userMarker = createKakaoMarker(L_USER_KAKAO_COORD, markerImgURI);
+  const userMarker = createNaverMarker(L_USER_NAVER_COORD, markerImgURI);
 
   // 마커가 지도 위에 표시되도록 설정합니다
   userMarker.setMap(L_MAP);
@@ -735,9 +741,9 @@ const createUserMarker = () => {
 // 입력된 주소로 좌표를 검색하고, 해당 좌표를 지도에 표시하는 함수
 const searchAddrToCoord = (store) => {
   if (L_GEOLOCATION_WIDGET) {
-    setDistance(store.kakaoCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
+    setDistance(store.naverCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
     paintStoreList();
-    L_MAP.setCenter(store.kakaoCoord);
+    L_MAP.setCenter(store.naverCoord);
   }
 
   onInfoWindow(store);
@@ -916,21 +922,21 @@ const sortCondition = (a, b) => {
   }
 };
 
-const createKakaoCoord = (latitude, longitude) => {
+const createNaverCoord = (latitude, longitude) => {
   return new naver.maps.LatLng(latitude, longitude);
 };
 
 /**
  * @description UI 가 distance 일때 사용되는 함수 기준이되는 거리를 받아서 스토어 리스트에 거리를 생성 후 거리순으로 정렬
- * @param {kakaoCoord} targetKakaoCoord
+ * @param {naverCoord} targetNaverCoord
  */
-const setDistance = (targetKakaoCoord) => {
+const setDistance = (targetNaverCoord) => {
   const storeInfoCtElm = document.querySelector('.store-info-container');
   storeInfoCtElm.innerHTML = '';
   var proj = L_MAP.getProjection();
   for (let i = 0; i < L_STORE_LIST.length; i++) {
-    const naverCoord = createKakaoCoord(L_STORE_LIST[i].latitude, L_STORE_LIST[i].longitude);
-    const distance = proj.getDistance(targetKakaoCoord, naverCoord);
+    const naverCoord = createNaverCoord(L_STORE_LIST[i].latitude, L_STORE_LIST[i].longitude);
+    const distance = proj.getDistance(targetNaverCoord, naverCoord);
     L_STORE_LIST[i].distance = distance / 1000;
   }
 
@@ -942,8 +948,8 @@ const setDistance = (targetKakaoCoord) => {
 // ----------------------------------------------------------------------------------------------------------------------------------
 const geoLocationPickupInit = () => {
   firstOpenMap();
-  createUserMarker(L_USER_KAKAO_COORD);
-  setDistance(L_USER_KAKAO_COORD);
+  createUserMarker(L_USER_NAVER_COORD);
+  setDistance(L_USER_NAVER_COORD);
   storeListUp();
 };
 

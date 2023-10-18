@@ -145,6 +145,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getUploadInputElm = () => {
     return document.getElementById('markerUpload');
   };
+  const getNowMarkerUploadInputElm = () => {
+    return document.getElementById('nowMarkerUpload');
+  };
   const getUploadSubmitBtnElm = () => {
     return document.getElementById('markerSubmit');
   };
@@ -533,25 +536,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const upload = async () => {
     const fileInput = getUploadInputElm();
-    const file = fileInput.files[0];
+    const nowMarkerFileInput = getNowMarkerUploadInputElm();
+    const normalMarkerFile = fileInput.files[0];
+    const nowMarkerFile = nowMarkerFileInput.files[0];
 
-    if (!file) {
+    if (!normalMarkerFile && !nowMarkerFile) {
       return utils.onAlertModal('파일이 등록되지 않앗습니다.');
     }
 
     const formData = new FormData();
-    formData.append('image', file);
+
+    const getImageType = (file) => {
+      return file.type.split('/')[1];
+    };
+
+    if (normalMarkerFile)
+      formData.append(
+        'image',
+        normalMarkerFile,
+        `normal_${utils.encodeUnicode(normalMarkerFile.name) + '.' + getImageType(normalMarkerFile)}`
+      );
+    if (nowMarkerFile)
+      formData.append('image', nowMarkerFile, `now_${utils.encodeUnicode(nowMarkerFile.name) + '.' + getImageType(nowMarkerFile)}`);
 
     try {
       const res = await axios.post('/api/v1/widgets/marker/upload', formData);
+
       if (res.status === 201) {
         utils.onAlertModal('성공적으로 마커가 등록 되었습니다.');
       }
     } catch (err) {
+      console.log(err);
       if (err.response.status === 500) {
         return utils.onAlertModal('알수없는 오류로 업로드에 실패하였습니다.');
       }
-      return utils.onAlertModal('파일형식 : PNG , JPG 사이즈 : 52 * 50 으로 등록 해주세요.');
+      return utils.onAlertModal('파일형식 : PNG , JPG\n파일 사이즈 : 52 * 50 으로 등록 해주세요.');
     }
   };
 

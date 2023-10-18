@@ -1,4 +1,4 @@
-export const onAlertModal = (message, height = 60, duration = 1300, bgColor = '#000', color = '#fff') => {
+export const onAlertModal = (message, width = 'max-content', height = 60, duration = 1300, bgColor = '#000', color = '#fff') => {
   const body = document.querySelector('body');
   const alertModal = document.createElement('div');
   const alertContent = document.createElement('div');
@@ -6,7 +6,10 @@ export const onAlertModal = (message, height = 60, duration = 1300, bgColor = '#
   alertContent.classList.add('alert_content');
 
   alertContent.innerText = message;
-  alertModal.style.cssText = `height:${height}px; background-color:${bgColor};`;
+  if (parseInt(width)) {
+    width = String(width) + 'px';
+  }
+  alertModal.style.cssText = `width:${width}; height:${height}px; background-color:${bgColor};`;
   alertContent.style.color = color;
   alertModal.appendChild(alertContent);
   body.appendChild(alertModal);
@@ -34,6 +37,14 @@ export const confirmCheck = (message) => {
   } else {
     return false;
   }
+};
+
+export const encodeUnicode = (str) => {
+  return btoa(
+    encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function toSolidBytes(match, p1) {
+      return String.fromCharCode('0x' + p1);
+    })
+  );
 };
 
 export const getRootPropertyValue = (propertyName) => {

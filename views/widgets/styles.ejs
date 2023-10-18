@@ -17,7 +17,8 @@
   </div>
   <div class="widget_ct">
     <div class="left">
-      <input type="file" name="image" id="markerUpload" />
+      <input type="file" name="image" id="markerUpload" data-cur-active-url="<%- marker.marker %>" />
+      <input type="file" name="image" id="nowMarkerUpload" data-cur-active-url="<%- marker.marker %>" />
       <button id="markerSubmit">업로드</button>
 
       <div class="renew_btn" id="renewBtn">

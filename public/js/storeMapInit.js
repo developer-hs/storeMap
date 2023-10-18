@@ -2,7 +2,7 @@ const API_BASE_URL = 'https://storemap.store';
 
 class StoreMapInitAPI {
   constructor() {
-    this.widget;
+    this.widgets;
     this.iframe;
     this.productId = iProductNo;
     this.storeMapElm = document.getElementById('storeMap');
@@ -11,7 +11,7 @@ class StoreMapInitAPI {
   }
 
   geoSuccessCb({ coords, timestamp }) {
-    this.widget.coords = { latitude: coords.latitude, longitude: coords.longitude }; // geolocation 값이 iframe에 안넘어가서 따로 받아줌
+    this.widgets.widget.coords = { latitude: coords.latitude, longitude: coords.longitude }; // geolocation 값이 iframe에 안넘어가서 따로 받아줌
     this.postMsgWidget();
   }
   geoErrCb(error) {
@@ -20,10 +20,10 @@ class StoreMapInitAPI {
 
   setWidget = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/users/ui`);
+      const res = await axios.get(`${API_BASE_URL}/api/v1/users/ui`);
       if (res.status === 200) {
-        this.widget = res.data;
-        if (this.widget.ui === 'distance') {
+        this.widgets = res.data;
+        if (this.widgets.widget.ui === 'distance') {
           navigator.geolocation.getCurrentPosition(this.geoSuccessCb.bind(this), this.geoErrCb.bind(this)); // 위치주소를 받기까지 기다려야 하기때문에 콜백함수 내에서 postMessage 처리
         } else {
           this.postMsgWidget();
@@ -35,8 +35,8 @@ class StoreMapInitAPI {
   };
 
   postMsgWidget = async () => {
-    const widget = JSON.stringify(this.widget);
-    return this.iframe.contentWindow.postMessage({ widget }, '*');
+    const widgets = JSON.stringify(this.widgets);
+    return this.iframe.contentWindow.postMessage({ widgets }, '*');
   };
 
   /**
