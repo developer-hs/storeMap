@@ -259,6 +259,7 @@ div[class*='btn'] > a {
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.15);
   transition: all 0.5s ease;
   padding: 0 16px;
+  line-height: 20px;
 }
 
 .alert_modal.on {

@@ -142,14 +142,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getOverlayAddressElm = () => {
     return document.getElementById('overlayAddress');
   };
-  const getUploadInputElm = () => {
+  const getNormalMkUploadInputElm = () => {
     return document.getElementById('markerUpload');
   };
-  const getNowMarkerUploadInputElm = () => {
+  const getNowMkUploadInputElm = () => {
     return document.getElementById('nowMarkerUpload');
   };
   const getUploadSubmitBtnElm = () => {
     return document.getElementById('markerSubmit');
+  };
+  const getMarkerUploadInputElms = () => {
+    return [getNormalMkUploadInputElm(), getNowMkUploadInputElm()];
   };
 
   const getUIType = () => {
@@ -535,10 +538,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const upload = async () => {
-    const fileInput = getUploadInputElm();
-    const nowMarkerFileInput = getNowMarkerUploadInputElm();
+    const fileInput = getNormalMkUploadInputElm();
+    const nowMarkerFileInput = getNowMkUploadInputElm();
     const normalMarkerFile = fileInput.files[0];
     const nowMarkerFile = nowMarkerFileInput.files[0];
+    const markerFiles = [normalMarkerFile, nowMarkerFile];
 
     if (!normalMarkerFile && !nowMarkerFile) {
       return utils.onAlertModal('파일이 등록되지 않앗습니다.');
@@ -550,14 +554,16 @@ document.addEventListener('DOMContentLoaded', async () => {
       return file.type.split('/')[1];
     };
 
-    if (normalMarkerFile)
-      formData.append(
-        'image',
-        normalMarkerFile,
-        `normal_${utils.encodeUnicode(normalMarkerFile.name) + '.' + getImageType(normalMarkerFile)}`
-      );
-    if (nowMarkerFile)
-      formData.append('image', nowMarkerFile, `now_${utils.encodeUnicode(nowMarkerFile.name) + '.' + getImageType(nowMarkerFile)}`);
+    markerFiles.forEach((markerFile) => {
+      let markerType = '';
+      if (markerFile === normalMarkerFile) {
+        markerType = 'normal';
+      } else if (markerFile === nowMarkerFile) {
+        markerType = 'now';
+      }
+
+      formData.append('image', markerFile, `${markerType}_${utils.encodeUnicode(markerFile.name) + '.' + getImageType(markerFile)}`);
+    });
 
     try {
       const res = await axios.post('/api/v1/widgets/marker/upload', formData);
@@ -570,7 +576,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (err.response.status === 500) {
         return utils.onAlertModal('알수없는 오류로 업로드에 실패하였습니다.');
       }
-      return utils.onAlertModal('파일형식 : PNG , JPG\n파일 사이즈 : 52 * 50 으로 등록 해주세요.');
+      return utils.onAlertModal(
+        '파일형식 : PNG , JPG\n파일 사이즈 : 156*150 으로 1MB 이하의\n이미지 파일을 등록 해주세요.',
+        'max-content',
+        80,
+        2500
+      );
     }
   };
 
@@ -578,6 +589,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     getSubmitBtn().addEventListener('click', onSubmit);
   };
 
+  const markerUploadValidHanlder = () => {
+    getMarkerUploadInputElms().forEach((markerUploadInputElm) => {
+      markerUploadInputElm.addEventListener('change', () => {
+        const img = new Image();
+
+        img.onload = function () {
+          if (this.width > 156 || this.height > 150) {
+            utils.onAlertModal(
+              '파일형식 : PNG , JPG\n파일 사이즈 : 156*150 으로 1MB 이하의\n이미지 파일을 등록 해주세요.',
+              'max-content',
+              80,
+              2500
+            );
+
+            markerUploadInputElm.value = '';
+            return;
+          }
+        };
+
+        img.src = URL.createObjectURL(markerUploadInputElm.files[0]);
+      });
+    });
+  };
   const uploadBtnHandler = () => {
     getUploadSubmitBtnElm().addEventListener('click', (e) => {
       e.preventDefault();
@@ -589,6 +623,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     initGlobalVariableColor();
     createPickr();
     submitBtnHandler();
+
+    // marker upload
+    markerUploadValidHanlder();
     uploadBtnHandler();
   };
 
