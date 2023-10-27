@@ -202,24 +202,14 @@ const appRouting = async () => {
 
   app.get('/storemap', (req, res) => {
     const renderUrl = process.env.NODE_ENV === 'development' ? 'test_store_pickup.ejs' : 'store_pickup.ejs';
-    const kakaoKey = req.query.key;
-    if (!kakaoKey) {
-      return res.status(500).json({ ok: false, req: JSON.stringify(req) });
-    }
 
-    return res.render(__dirname + '/public/' + renderUrl, { layout: false, kakao_key: kakaoKey });
+    return res.render(__dirname + '/public/' + renderUrl, { layout: false });
   });
 
   app.get('/storemap/iframe', cafe24Auth, async (req, res) => {
     const origin = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:8080' : 'https://storemap.store';
-    try {
-      const user = await User.findOne({ _id: req.userId });
-      const kakaoKey = user.kakao_key;
-      return res.send(`"${origin}/storemap?key=${kakaoKey}"`);
-    } catch (error) {
-      console.error(error);
-      return res.send({ ok: false, error: error });
-    }
+
+    return res.send(`"${origin}/storemap"`);
   });
 
   app.get('/oauth', (req, res) => {

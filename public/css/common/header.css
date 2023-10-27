@@ -4,12 +4,21 @@
   align-items: center;
   border-bottom: 1px solid #eee;
   background-color: var(--color-main-bg);
+  justify-content: space-between;
+  padding: 0 24px;
 }
 
 #header .logo_ct {
-  padding-left: 24px;
 }
 
 #header .logo_ct > a {
   font-size: 1.5rem;
+}
+
+#header .member_info_ct {
+  display: flex;
+}
+
+#header .member_info_ct > div {
+  margin: 0 12px;
 }
