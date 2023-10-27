@@ -104,6 +104,10 @@
   color: var(--color-accent-clear) !important;
 }
 
+.bold {
+  font-weight: bold !important;
+}
+
 body {
   background-color: var(--color-main-bg);
 }

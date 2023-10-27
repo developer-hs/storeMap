@@ -9,7 +9,7 @@
   </div>
   <div class="payment_area">
     <% for (var i = 0; i < products.length; i++){ %>
-    <div class="card <% if(products[i].name === '6개월') { %> recommend <% } %>">
+    <div class="card <% if(products[i].name === '30,000 POINT') { %> recommend <% } %>">
       <div class="product_name"><%- products[i].name %></div>
       <div class="section">
         <% if (products[i].origin_price) { %>
@@ -39,6 +39,16 @@
       </div>
     </div>
     <% } %>
+  </div>
+  <div class="notice card">
+    <p>
+      사용자가 지도를
+      <span class="c-accent-clear bold">1회 호출</span>
+      할 때마다
+      <span class="c-accent-clear bold">1 POINT 씩 차감</span>
+      됩니다.
+    </p>
+    <p>결제가 완료되었지만 포인트가 충전되지 않은 경우 utilityapp@naver.com로 문의주세요.</p>
   </div>
 </div>
 

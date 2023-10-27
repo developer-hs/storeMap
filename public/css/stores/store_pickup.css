@@ -443,6 +443,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
 }
 
 #map .iw_inner .btn-box .pickup-btn {
+  min-width: 70px;
   padding: 0 12px;
   height: auto;
   display: flex;

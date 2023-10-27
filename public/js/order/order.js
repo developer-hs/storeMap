@@ -5,10 +5,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const getOrderData = (elm) => {
     const id = elm.dataset.productId;
-    const sell_price = elm.dataset.productPrice;
+    const sellPrice = elm.dataset.productPrice;
     const name = elm.dataset.productName;
 
-    const result = { id, sell_price, name, return_url: '/order/payment/success', automatic_payment: 'F' };
+    const result = { id, sellPrice, name, return_url: '/order/payment/success', automaticPayment: 'F' };
     return result;
   };
   const onOrderBtn = async (elm) => {

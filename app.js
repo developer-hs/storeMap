@@ -22,7 +22,7 @@ import { refresh } from './app/users/jwt/refresh.js';
 process.env.NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production' ? 'production' : 'development';
 
 import setAdminJs from './admin.js';
-import { cafe24Auth } from './app/users/middleware/auth.js';
+import { authJWT, cafe24Auth } from './app/users/middleware/auth.js';
 
 export const app = express();
 
@@ -62,6 +62,13 @@ const appInit = async () => {
   app.use(express.static(__dirname + '/public')); // apply css , js
   app.use(cors(corsOptionsDelegate)); // cors setting
   app.use(cookieParser());
+
+  app.use(authJWT, async (req, res, next) => {
+    const user = await User.findOne({ _id: req.userId });
+    res.locals.mallId = user.mallId;
+    res.locals.point = user.point;
+    next();
+  });
 };
 
 const connectDB = async () => {

@@ -1,20 +1,42 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const utils = await import('../utils/utils.js');
-  let MAIN_COLOR,
-    ACTIVE_TEXT_COLOR,
-    TEXT_COLOR,
-    TITLE_TEXT_COLOR,
-    ADDRESS_TEXT_COLOR,
-    DISTANCE_TEXT_COLOR,
-    MAP_TITLE_TEXT_COLOR,
-    MAP_ADDRESS_TEXT_COLOR,
-    QUICKSEARCH_TITLE_TEXT_COLOR,
-    QUICKSEARCH_ADDR_TEXT_COLOR,
-    QUICKSEARCH_TITLE_TEXT_HOVER_COLOR,
-    QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
 
-  let theFirstUIType,
-    pickrModifiedChk = false;
+  let theFirstUIType;
+
+  let widgetStatus = {};
+
+  const handler = {
+    set(target, property, value) {
+      target[property] = value;
+
+      // 이전값과 다르다면 변경 Alert 창 띄어줌
+      if (target['prev'] !== target['cur']) {
+        showSaveAlert();
+      } else {
+        let clear = true;
+        for (const key in widgetStatus) {
+          // 모든값이 이전값과 같다면 Alert 창 제거
+          if (widgetStatus[key].prev !== widgetStatus[key].cur) {
+            clear = false;
+            break;
+          }
+        }
+
+        if (clear) hideSaveAlert();
+      }
+
+      return true;
+    },
+  };
+
+  const deepProxy = (obj, handler) => {
+    for (let prop in obj) {
+      if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+        obj[prop] = deepProxy(obj[prop], handler);
+      }
+    }
+    return new Proxy(obj, handler);
+  };
 
   const getMainColor = () => {
     return document.getElementById('mainColorPickrCt').dataset.color;
@@ -154,6 +176,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getMarkerUploadInputElms = () => {
     return [getNormalMkUploadInputElm(), getNowMkUploadInputElm()];
   };
+  const getMarkerInitBtnElm = () => {
+    return document.getElementById('markerInitBtn');
+  };
+  const getNormalMarkerImgElm = () => {
+    return document.querySelector("label[for='markerUpload'] img");
+  };
+  const getNowMarkerImgElm = () => {
+    return document.querySelector("label[for='nowMarkerUpload'] img");
+  };
 
   const getUIType = () => {
     const uiElms = getUIInputElms();
@@ -165,30 +196,40 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const initGlobalVariableColor = () => {
-    MAIN_COLOR = getMainColor();
-    ACTIVE_TEXT_COLOR = getActiveTextColor();
-    TEXT_COLOR = getTextColor();
-    ADDRESS_TEXT_COLOR = getAddressTextColor();
-    DISTANCE_TEXT_COLOR = getDistanceTextColor();
-    TITLE_TEXT_COLOR = getTitleTextColor();
-    MAP_TITLE_TEXT_COLOR = getMapTitleTextColor();
-    MAP_ADDRESS_TEXT_COLOR = getMapAddressTextColor();
-    QUICKSEARCH_TITLE_TEXT_COLOR = getQuickSearchTitleTextColor();
-    QUICKSEARCH_ADDR_TEXT_COLOR = getQuickSearchAddressTextColor();
-    QUICKSEARCH_TITLE_TEXT_HOVER_COLOR = getQuickSearchTitleTextHoverColor();
-    QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR = getQuickSearchAddressTextHoverColor();
-    OVERLAY_TITLE_TEXT_COLOR = getOverlayTitleTextColor();
-    OVERLAY_ADDRESS_TEXT_COLOR = getOverlayAddressTextColor();
-    OVERLAY_CLOSE_BTN_TEXT_COLOR = getOverlayCloseBtnTextColor();
-    OVERLAY_PICKUP_BTN_TEXT_COLOR = getOverlayPickupBtnTextColor();
+    const uiPrev = document.querySelector('#uiCt input:checked').value;
+
+    widgetStatus = {
+      ui: { prev: uiPrev, cur: uiPrev },
+      uiColor: { prev: getMainColor(), cur: getMainColor() },
+      activeTextColor: { prev: getActiveTextColor(), cur: getActiveTextColor() },
+      textColor: { prev: getTextColor(), cur: getTextColor() },
+      titleTextColor: { prev: getTitleTextColor(), cur: getTitleTextColor() },
+      addressTextColor: { prev: getAddressTextColor(), cur: getAddressTextColor() },
+      distanceTextColor: { prev: getDistanceTextColor(), cur: getDistanceTextColor() },
+      mapTitleTextColor: { prev: getMapTitleTextColor(), cur: getMapTitleTextColor() },
+      mapAddressTextColor: { prev: getMapAddressTextColor(), cur: getMapAddressTextColor() },
+      quickSearchTitleTextColor: { prev: getQuickSearchTitleTextColor(), cur: getQuickSearchTitleTextColor() },
+      quickSearchAddressTextColor: { prev: getQuickSearchAddressTextColor(), cur: getQuickSearchAddressTextColor() },
+      quickSearchTitleTextHoverColor: { prev: getQuickSearchTitleTextHoverColor(), cur: getQuickSearchTitleTextHoverColor() },
+      quickSearchAddressTextHoverColor: { prev: getQuickSearchAddressTextHoverColor(), cur: getQuickSearchAddressTextHoverColor() },
+      overlayTitleTextColor: { prev: getOverlayTitleTextColor(), cur: getOverlayTitleTextColor() },
+      overlayAddressTextColor: { prev: getOverlayAddressTextColor(), cur: getOverlayAddressTextColor() },
+      overlayCloseBtnTextColor: { prev: getOverlayCloseBtnTextColor(), cur: getOverlayCloseBtnTextColor() },
+      overlayPickupBtnTextColor: { prev: getOverlayPickupBtnTextColor(), cur: getOverlayPickupBtnTextColor() },
+      normalMarker: { prev: getNormalMarkerImgElm().src, cur: getNormalMarkerImgElm().src },
+      nowMarker: { prev: getNowMarkerImgElm().src, cur: getNowMarkerImgElm().src },
+    };
+
+    // proxy 설정
+    deepProxy(widgetStatus, handler);
 
     getQuickSearchStoreElm().addEventListener('mouseover', () => {
-      getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_HOVER_COLOR;
-      getQuickSearchAddrElm().style.color = QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
+      getQuickSearchTitleElm().style.color = widgetStatus.quickSearchTitleTextHoverColor.cur;
+      getQuickSearchAddrElm().style.color = widgetStatus.quickSearchAddressTextHoverColor.cur;
     });
     getQuickSearchStoreElm().addEventListener('mouseout', () => {
-      getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_COLOR;
-      getQuickSearchAddrElm().style.color = QUICKSEARCH_ADDR_TEXT_COLOR;
+      getQuickSearchTitleElm().style.color = widgetStatus.quickSearchTitleTextColor.cur;
+      getQuickSearchAddrElm().style.color = widgetStatus.quickSearchAddressTextColor.cur;
     });
   };
 
@@ -201,8 +242,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const pickrSave = (callback) => {
-    pickrModifiedChk = true;
-    showSaveAlert();
     callback();
   };
 
@@ -282,7 +321,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     mainUIColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        MAIN_COLOR = selectedColor;
+        widgetStatus.uiColor.cur = selectedColor;
         getTypeSearchStoreElm().style.backgroundColor = selectedColor;
         getMapTitleElm().style.backgroundColor = selectedColor;
         getSubmitBtnElm().style.color = selectedColor;
@@ -299,7 +338,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ActiveTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        ACTIVE_TEXT_COLOR = selectedColor;
+        widgetStatus.activeTextColor.cur = selectedColor;
         getTypeSearchStoreElm().style.color = selectedColor;
       });
     });
@@ -307,7 +346,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     TextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        TEXT_COLOR = selectedColor;
+        widgetStatus.textColor.cur = selectedColor;
         getTypeSearchDong().style.color = selectedColor;
       });
     });
@@ -315,7 +354,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     TitleTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        TITLE_TEXT_COLOR = selectedColor;
+        widgetStatus.titleTextColor.cur = selectedColor;
         getTitleElms().forEach((getTitleElm) => {
           getTitleElm.style.color = selectedColor;
         });
@@ -325,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     distanceTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        DISTANCE_TEXT_COLOR = selectedColor;
+        widgetStatus.distanceTextColor.cur = selectedColor;
         getDistanceTextElms().forEach((distanceElm) => {
           distanceElm.style.color = selectedColor;
         });
@@ -335,7 +374,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     addressTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        ADDRESS_TEXT_COLOR = selectedColor;
+        widgetStatus.addressTextColor.cur = selectedColor;
         getAddressTextElms().forEach((getAddressTextElm) => {
           getAddressTextElm.style.color = selectedColor;
         });
@@ -345,7 +384,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     mapTitleTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        MAP_TITLE_TEXT_COLOR = selectedColor;
+        widgetStatus.mapTitleTextColor.cur = selectedColor;
         getSelectedStoreNameElm().style.color = selectedColor;
       });
     });
@@ -353,7 +392,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     mapAddressTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        MAP_ADDRESS_TEXT_COLOR = selectedColor;
+        widgetStatus.mapAddressTextColor.cur = selectedColor;
         getMapAddressElm().style.color = selectedColor;
       });
     });
@@ -361,7 +400,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     mapQuickSearchTitleTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        QUICKSEARCH_TITLE_TEXT_COLOR = selectedColor;
+        widgetStatus.quickSearchTitleTextColor.cur = selectedColor;
         getQuickSearchTitleElm().style.color = selectedColor;
       });
     });
@@ -369,7 +408,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     quickSearchAddressTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        QUICKSEARCH_ADDR_TEXT_COLOR = selectedColor;
+        widgetStatus.quickSearchAddressTextColor.cur = selectedColor;
         getQuickSearchAddrElm().style.color = selectedColor;
       });
     });
@@ -377,10 +416,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     quickSearchTitleTextHoverColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        QUICKSEARCH_TITLE_TEXT_HOVER_COLOR = selectedColor;
+        widgetStatus.quickSearchTitleTextHoverColor.cur = selectedColor;
         getQuickSearchStoreElm().addEventListener('mouseover', () => {
           getQuickSearchTitleElm().style.color = selectedColor;
-          getQuickSearchAddrElm().style.color = QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR;
+          getQuickSearchAddrElm().style.color = widgetStatus.quickSearchAddressTextHoverColor.cur;
         });
       });
     });
@@ -388,9 +427,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     quickSearchAddressTextHoverColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR = selectedColor;
+        widgetStatus.quickSearchAddressTextHoverColor.cur = selectedColor;
         getQuickSearchStoreElm().addEventListener('mouseover', () => {
-          getQuickSearchTitleElm().style.color = QUICKSEARCH_TITLE_TEXT_HOVER_COLOR;
+          getQuickSearchTitleElm().style.color = widgetStatus.quickSearchTitleTextHoverColor.cur;
           getQuickSearchAddrElm().style.color = selectedColor;
         });
       });
@@ -398,28 +437,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     overlayTitleTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        OVERLAY_TITLE_TEXT_COLOR = selectedColor;
+        widgetStatus.overlayTitleTextColor.cur = selectedColor;
         getOverlayTitleElm().style.color = selectedColor;
       });
     });
     overlayAddressTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        OVERLAY_ADDRESS_TEXT_COLOR = selectedColor;
+        widgetStatus.overlayAddressTextColor.cur = selectedColor;
         getOverlayAddressElm().style.color = selectedColor;
       });
     });
     overlayCloseBtnTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        OVERLAY_CLOSE_BTN_TEXT_COLOR = selectedColor;
+        widgetStatus.overlayCloseBtnTextColor.cur = selectedColor;
         getOverlayCloseBtnElm().style.color = selectedColor;
       });
     });
     overlayPickupBtnTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
-        OVERLAY_PICKUP_BTN_TEXT_COLOR = selectedColor;
+        widgetStatus.overlayPickupBtnTextColor.cur = selectedColor;
         getOverlayPickupBtnElm().style.color = selectedColor;
       });
     });
@@ -438,15 +477,18 @@ document.addEventListener('DOMContentLoaded', async () => {
       quickSearchAddressTextColorPickr.setColor('#979797');
       quickSearchTitleTextHoverColorPickr.setColor('#000000');
       quickSearchAddressTextHoverColorPickr.setColor('#9987cd');
+      overlayTitleTextColorPickr.setColor('#000000');
+      overlayAddressTextColorPickr.setColor('#000000');
       overlayCloseBtnTextColorPickr.setColor('#000000');
       overlayPickupBtnTextColorPickr.setColor('#ffffff');
     });
   };
+
   const colorToString = (color) => {
     return color.toHEXA().toString();
   };
 
-  const onUIInput = () => {
+  const onUI = () => {
     const UIType = getUIType();
     const distanceElms = document.querySelectorAll('#pickupStore .distance');
 
@@ -467,46 +509,58 @@ document.addEventListener('DOMContentLoaded', async () => {
       getStoreListSection().click();
     }
 
-    if (UIType === theFirstUIType && !pickrModifiedChk) {
-      hideSaveAlert();
-    } else {
-      showSaveAlert();
-    }
+    widgetStatus.ui.cur = UIType;
   };
 
   const UITypeHandler = () => {
     const UITInputElms = getUIInputElms();
     UITInputElms.forEach((UITInputElm) => {
-      UITInputElm.addEventListener('click', onUIInput);
+      UITInputElm.addEventListener('click', onUI);
     });
   };
 
   const onSubmit = async () => {
     const form = {
       ui: getUIType(),
-      uiColor: MAIN_COLOR,
-      activeTextColor: ACTIVE_TEXT_COLOR,
-      textColor: TEXT_COLOR,
-      titleTextColor: TITLE_TEXT_COLOR,
-      addressTextColor: ADDRESS_TEXT_COLOR,
-      distanceTextColor: DISTANCE_TEXT_COLOR,
-      mapTitleTextColor: MAP_TITLE_TEXT_COLOR,
-      mapAddressTextColor: MAP_ADDRESS_TEXT_COLOR,
-      quickSearchTitleTextColor: QUICKSEARCH_TITLE_TEXT_COLOR,
-      quickSearchAddressTextColor: QUICKSEARCH_ADDR_TEXT_COLOR,
-      quickSearchTitleTextHoverColor: QUICKSEARCH_TITLE_TEXT_HOVER_COLOR,
-      quickSearchAddressTextHoverColor: QUICKSEARCH_ADDRESS_TEXT_HOVER_COLOR,
-      overlayTitleTextColor: OVERLAY_TITLE_TEXT_COLOR,
-      overlayAddressTextColor: OVERLAY_ADDRESS_TEXT_COLOR,
-      overlayCloseBtnTextColor: OVERLAY_CLOSE_BTN_TEXT_COLOR,
-      overlayPickupBtnTextColor: OVERLAY_PICKUP_BTN_TEXT_COLOR,
+      uiColor: widgetStatus.uiColor.cur,
+      activeTextColor: widgetStatus.activeTextColor.cur,
+      textColor: widgetStatus.textColor.cur,
+      titleTextColor: widgetStatus.titleTextColor.cur,
+      addressTextColor: widgetStatus.addressTextColor.cur,
+      distanceTextColor: widgetStatus.distanceTextColor.cur,
+      mapTitleTextColor: widgetStatus.mapTitleTextColor.cur,
+      mapAddressTextColor: widgetStatus.mapAddressTextColor.cur,
+      quickSearchTitleTextColor: widgetStatus.quickSearchTitleTextColor.cur,
+      quickSearchAddressTextColor: widgetStatus.quickSearchAddressTextColor.cur,
+      quickSearchTitleTextHoverColor: widgetStatus.quickSearchTitleTextHoverColor.cur,
+      quickSearchAddressTextHoverColor: widgetStatus.quickSearchAddressTextHoverColor.cur,
+      overlayTitleTextColor: widgetStatus.overlayTitleTextColor.cur,
+      overlayAddressTextColor: widgetStatus.overlayAddressTextColor.cur,
+      overlayCloseBtnTextColor: widgetStatus.overlayCloseBtnTextColor.cur,
+      overlayPickupBtnTextColor: widgetStatus.overlayPickupBtnTextColor.cur,
     };
 
     try {
       const res = await axios.put('/api/widgets/styles', form);
       if (res.status === 200) {
-        getSaveAlert().classList.remove('on');
         utils.onAlertModal('성공적으로 저장 되었습니다.');
+        widgetStatus.ui.prev = widgetStatus.ui.cur;
+        widgetStatus.uiColor.prev = widgetStatus.uiColor.cur;
+        widgetStatus.activeTextColor.prev = widgetStatus.activeTextColor.cur;
+        widgetStatus.textColor.prev = widgetStatus.textColor.cur;
+        widgetStatus.titleTextColor.prev = widgetStatus.titleTextColor.cur;
+        widgetStatus.addressTextColor.prev = widgetStatus.addressTextColor.cur;
+        widgetStatus.distanceTextColor.prev = widgetStatus.distanceTextColor.cur;
+        widgetStatus.mapTitleTextColor.prev = widgetStatus.mapTitleTextColor.cur;
+        widgetStatus.mapAddressTextColor.prev = widgetStatus.mapAddressTextColor.cur;
+        widgetStatus.quickSearchTitleTextColor.prev = widgetStatus.quickSearchTitleTextColor.cur;
+        widgetStatus.quickSearchAddressTextColor.prev = widgetStatus.quickSearchAddressTextColor.cur;
+        widgetStatus.quickSearchTitleTextHoverColor.prev = widgetStatus.quickSearchTitleTextHoverColor.cur;
+        widgetStatus.quickSearchAddressTextHoverColor.prev = widgetStatus.quickSearchAddressTextHoverColor.cur;
+        widgetStatus.overlayTitleTextColor.prev = widgetStatus.overlayTitleTextColor.cur;
+        widgetStatus.overlayAddressTextColor.prev = widgetStatus.overlayAddressTextColor.cur;
+        widgetStatus.overlayCloseBtnTextColor.prev = widgetStatus.overlayCloseBtnTextColor.cur;
+        widgetStatus.overlayPickupBtnTextColor.prev = widgetStatus.overlayPickupBtnTextColor.cur;
       }
     } catch (error) {
       console.error(error);
@@ -537,12 +591,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
+  const submitBtnHandler = () => {
+    getSubmitBtn().addEventListener('click', onSubmit);
+  };
+
   const upload = async () => {
-    const fileInput = getNormalMkUploadInputElm();
+    const normalMarkerFileInput = getNormalMkUploadInputElm();
     const nowMarkerFileInput = getNowMkUploadInputElm();
-    const normalMarkerFile = fileInput.files[0];
+    const normalMarkerFile = normalMarkerFileInput.files[0];
     const nowMarkerFile = nowMarkerFileInput.files[0];
-    const markerFiles = [normalMarkerFile, nowMarkerFile];
+    const markerFiles = [normalMarkerFile, nowMarkerFile].filter((file) => (file ? true : false));
 
     if (!normalMarkerFile && !nowMarkerFile) {
       return utils.onAlertModal('파일이 등록되지 않앗습니다.');
@@ -555,6 +613,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     markerFiles.forEach((markerFile) => {
+      if (!markerFile) return;
       let markerType = '';
       if (markerFile === normalMarkerFile) {
         markerType = 'normal';
@@ -570,6 +629,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (res.status === 201) {
         utils.onAlertModal('성공적으로 마커가 등록 되었습니다.');
+        if (normalMarkerFile) {
+          widgetStatus.normalMarker.prev = widgetStatus.normalMarker.cur;
+          normalMarkerFileInput.value = '';
+        }
+        if (nowMarkerFile) {
+          widgetStatus.nowMarker.prev = widgetStatus.nowMarker.cur;
+          nowMarkerFileInput.value = '';
+        }
       }
     } catch (err) {
       console.log(err);
@@ -585,15 +652,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const submitBtnHandler = () => {
-    getSubmitBtn().addEventListener('click', onSubmit);
-  };
-
-  const markerUploadValidHanlder = () => {
+  const markerUploadValidHandler = () => {
     getMarkerUploadInputElms().forEach((markerUploadInputElm) => {
+      // 마커파일의 변경이 있을 경우
       markerUploadInputElm.addEventListener('change', () => {
-        const img = new Image();
+        const file = markerUploadInputElm.files[0];
 
+        // 변화가 있는 인풋태그에 해당하는 프리뷰 이미지 Element를 받아옴
+        const previewElm = markerUploadInputElm.nextElementSibling.querySelector('img');
+        // widgetSatus key 값과 동일한 값을 dataset 으로 지정 (normalMarker , nowMarker)
+        const markerType = markerUploadInputElm.dataset.markerType;
+
+        const img = new Image();
+        const reader = new FileReader();
+
+        // 이미지가 할당 되었을 때 제한사항을 통과 한다면 reader 를 통해 파일을 읽음
         img.onload = function () {
           if (this.width > 156 || this.height > 150) {
             utils.onAlertModal(
@@ -606,17 +679,56 @@ document.addEventListener('DOMContentLoaded', async () => {
             markerUploadInputElm.value = '';
             return;
           }
+
+          reader.readAsDataURL(file);
+          showSaveAlert();
         };
 
-        img.src = URL.createObjectURL(markerUploadInputElm.files[0]);
+        // 제한사항이 모두 통과되고 파일이 성공적으로 읽혔다면 프리뷰 이미지 Element에 이미지를 넣어줌
+        reader.onload = function (e) {
+          previewElm.src = e.target.result;
+          widgetStatus[markerType].cur = e.target.result;
+        };
+
+        img.src = URL.createObjectURL(file);
       });
     });
   };
+
   const uploadBtnHandler = () => {
     getUploadSubmitBtnElm().addEventListener('click', (e) => {
       e.preventDefault();
       upload();
     });
+  };
+
+  const onMarkerInit = async () => {
+    if (confirm('마커를 초기화 하시겠습니까?')) {
+      try {
+        const res = await axios.delete('/api/v1/widgets/marker/init');
+        if (res.status === 200) {
+          const initNormalMarkerURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg';
+          const initNowMarkerURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/now_store_pick.svg';
+          getNormalMarkerImgElm().src = initNormalMarkerURI;
+          getNowMarkerImgElm().src = initNowMarkerURI;
+          getNormalMkUploadInputElm().value = '';
+          getNowMkUploadInputElm().value = '';
+
+          widgetStatus.normalMarker.cur = initNormalMarkerURI;
+          widgetStatus.nowMarker.cur = initNowMarkerURI;
+          widgetStatus.normalMarker.prev = initNormalMarkerURI;
+          widgetStatus.nowMarker.prev = initNowMarkerURI;
+          utils.onAlertModal('마커가 초기화 되었습니다.');
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+    }
+  };
+
+  const markerInitBtnHandler = () => {
+    getMarkerInitBtnElm().addEventListener('click', onMarkerInit);
   };
 
   const widgetStyleInit = () => {
@@ -625,8 +737,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     submitBtnHandler();
 
     // marker upload
-    markerUploadValidHanlder();
+    markerUploadValidHandler();
     uploadBtnHandler();
+
+    // marker initial
+    markerInitBtnHandler();
   };
 
   const reactiveStyles = () => {

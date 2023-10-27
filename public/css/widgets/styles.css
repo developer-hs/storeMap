@@ -11,23 +11,26 @@ body #content {
   justify-content: space-between;
 }
 
-.widget_ct > .left,
+.widget_ct > .left > .card,
 .widget_ct > .right {
   box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);
+  border-radius: var(--default-radius);
+  position: relative;
+}
+
+.widget_ct > .left > .card {
+  padding: 24px 18px;
 }
 
 .widget_ct > .left {
   width: 30%;
-  padding: 24px 18px;
-  border-radius: var(--default-radius);
-  position: relative;
+
   height: 100%;
 }
 
 .widget_ct > .right {
   width: 50%;
   padding: 18px;
-  border-radius: var(--default-radius);
 }
 
 .widget_ct > div:nth-child(3n) {
@@ -254,6 +257,7 @@ body #content {
 .save_alert.on {
   top: var(--btn-default-ht);
 }
+
 #uiMainColorPreview #map {
   font-size: 0px;
   position: relative;
@@ -270,4 +274,66 @@ body #content {
 }
 #uiMainColorPreview #map .iw_inner .btn-box .pickup-btn {
   border-radius: 0px;
+}
+
+.marker_img_area {
+  margin-top: 30px;
+  -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+  -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
+  border-radius: var(--default-radius);
+  padding: 16px 8px;
+}
+.marker_img_upload_area {
+  display: flex;
+  justify-content: space-around;
+}
+
+.marker_img_upload_box {
+  margin-bottom: 30px;
+  flex: 1;
+  width: 50%;
+  position: relative;
+}
+.marker_img_upload_box:nth-child(1)::before {
+  position: absolute;
+  content: '';
+  right: 0;
+  border-right: 1px solid #eee;
+  height: 100%;
+}
+
+.marker_img_upload_box input {
+  position: absolute;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+
+.marker_submit_box {
+  display: flex;
+  justify-content: space-between;
+}
+.marker_submit_box #markerSubmit {
+  width: 100%;
+}
+
+.marker_img_upload_box label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+.marker_img_upload_box label img {
+  max-width: 30px;
+  max-height: 30px;
+  margin: 0 auto;
+}
+
+.marker_img_upload_box .title {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
