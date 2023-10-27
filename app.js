@@ -62,13 +62,6 @@ const appInit = async () => {
   app.use(express.static(__dirname + '/public')); // apply css , js
   app.use(cors(corsOptionsDelegate)); // cors setting
   app.use(cookieParser());
-
-  app.use(authJWT, async (req, res, next) => {
-    const user = await User.findOne({ _id: req.userId });
-    res.locals.mallId = user.mallId;
-    res.locals.point = user.point;
-    next();
-  });
 };
 
 const connectDB = async () => {

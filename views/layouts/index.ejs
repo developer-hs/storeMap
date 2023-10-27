@@ -9,21 +9,20 @@
     <link rel="stylesheet" type="text/css" href="/css/common/reset.css" />
     <link rel="stylesheet" type="text/css" href="/css/common/index.css" />
     <link rel="stylesheet" type="text/css" href="/css/common/side_nav.css" />
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css" />
     <%- style %>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
   </head>
   <body>
-      <%- include("./alert.ejs") %>
-      <%- include("./top_nav.ejs") %>
-      <div id="content-ct">
-        <%- include("./side_nav.ejs") %>
-        <div id="content-area">
-          <%- defineContent('body') %>
-        </div>
+    <%- include("./alert.ejs") %>
+    <%- include("./top_nav.ejs") %>
+    <div id="content-ct">
+      <%- include("./side_nav.ejs") %>
+      <div id="content-area">
+        <%- defineContent('body') %>
       </div>
-      <!-- 이 부분에 실제 컨텐츠가 들어갑니다 -->
-    </body>
-    <%- script %>
+    </div>
+    <!-- 이 부분에 실제 컨텐츠가 들어갑니다 -->
+  </body>
+  <%- script %>
 </html>
