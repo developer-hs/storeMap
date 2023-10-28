@@ -9,8 +9,10 @@
   --ui-map-title-text-color: #fff;
   --ui-map-address-text-color: #e1e1e1;
   --ui-quicksearch-title-text-color: #666666;
+  --ui-quicksearch-distance-text-color: #979797;
   --ui-quicksearch-address-text-color: #979797;
   --ui-quicksearch-title-hover-color: #666666;
+  --ui-quicksearch-distance-hover-color: #979797;
   --ui-quicksearch-address-hover-color: #979797;
   --ui-alert-color: #000000;
   --ui-overlay-title-text-color: #000000;
@@ -378,9 +380,7 @@ body #pickupStore .store_list_ct .swiper-pagination {
 #pickupStore #searchListCt .store:hover > .store_name h1 {
   color: var(--ui-quicksearch-title-hover-color);
 }
-#pickupStore #searchListCt .store:hover > .store_addr span {
-  color: var(--ui-quicksearch-address-hover-color);
-}
+
 #pickupStore #searchListCt .store:nth-last-child(1) {
   border-bottom: 1px solid #ededed;
 }
@@ -394,10 +394,18 @@ body #pickupStore .store_list_ct .swiper-pagination {
   padding-bottom: 6px;
   box-sizing: border-box;
 }
-#pickupStore #searchListCt .store_addr span {
+#pickupStore #searchListCt .store_addr span.distance {
+  color: var(--ui-quicksearch-distance-text-color);
+}
+#pickupStore #searchListCt .store_addr span.addr {
   color: var(--ui-quicksearch-address-text-color);
 }
-
+#pickupStore #searchListCt .store:hover > .store_addr span.distance {
+  color: var(--ui-quicksearch-distance-hover-color);
+}
+#pickupStore #searchListCt .store:hover > .store_addr span.addr {
+  color: var(--ui-quicksearch-address-hover-color);
+}
 #map,
 #map:focus {
   outline: none;

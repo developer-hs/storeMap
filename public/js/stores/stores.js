@@ -481,8 +481,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const checkBtnHandler = () => {
-    getChkBtnElms().forEach((chkBtnElm) => {
-      chkBtnElm.addEventListener('click', onCheckBtn);
+    document.querySelectorAll('input.check_btn').forEach((chkBtnElm) => {
+      chkBtnElm.addEventListener('change', onCheckBtn);
     });
   };
 

@@ -65,11 +65,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getQuickSearchTitleTextColor = () => {
     return document.getElementById('uiQuickSearchTitleTextColorCt').dataset.color;
   };
+  const getQuickSearchDistanceTextColor = () => {
+    return document.getElementById('uiQuickSearchDistanceTextColorCt').dataset.color;
+  };
   const getQuickSearchAddressTextColor = () => {
     return document.getElementById('uiQuickSearchAddressTextColorCt').dataset.color;
   };
   const getQuickSearchTitleTextHoverColor = () => {
     return document.getElementById('uiQuickSearchTitleTextHoverColorCt').dataset.color;
+  };
+  const getQuickSearchDistanceTextHoverColor = () => {
+    return document.getElementById('uiQuickSearchDistanceTextHoverColorCt').dataset.color;
   };
   const getQuickSearchAddressTextHoverColor = () => {
     return document.getElementById('uiQuickSearchAddressTextHoverColorCt').dataset.color;
@@ -131,8 +137,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getQuickSearchTitleElm = () => {
     return document.querySelector('#searchListCt .store_name h1');
   };
+  const getQuickSearchDistanceElm = () => {
+    return document.querySelector('#searchListCt .store_addr .distance');
+  };
   const getQuickSearchAddrElm = () => {
-    return document.querySelector('#searchListCt .store_addr span');
+    return document.querySelector('#searchListCt .store_addr .addr');
   };
   const getQuickSearchStoreElm = () => {
     return document.querySelector('#searchListCt .store');
@@ -209,8 +218,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       mapTitleTextColor: { prev: getMapTitleTextColor(), cur: getMapTitleTextColor() },
       mapAddressTextColor: { prev: getMapAddressTextColor(), cur: getMapAddressTextColor() },
       quickSearchTitleTextColor: { prev: getQuickSearchTitleTextColor(), cur: getQuickSearchTitleTextColor() },
+      quickSearchDistanceTextColor: { prev: getQuickSearchDistanceTextColor(), cur: getQuickSearchDistanceTextColor() },
       quickSearchAddressTextColor: { prev: getQuickSearchAddressTextColor(), cur: getQuickSearchAddressTextColor() },
       quickSearchTitleTextHoverColor: { prev: getQuickSearchTitleTextHoverColor(), cur: getQuickSearchTitleTextHoverColor() },
+      quickSearchDistanceTextHoverColor: { prev: getQuickSearchDistanceTextHoverColor(), cur: getQuickSearchDistanceTextHoverColor() },
       quickSearchAddressTextHoverColor: { prev: getQuickSearchAddressTextHoverColor(), cur: getQuickSearchAddressTextHoverColor() },
       overlayTitleTextColor: { prev: getOverlayTitleTextColor(), cur: getOverlayTitleTextColor() },
       overlayAddressTextColor: { prev: getOverlayAddressTextColor(), cur: getOverlayAddressTextColor() },
@@ -225,10 +236,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     getQuickSearchStoreElm().addEventListener('mouseover', () => {
       getQuickSearchTitleElm().style.color = widgetStatus.quickSearchTitleTextHoverColor.cur;
+      getQuickSearchDistanceElm().style.color = widgetStatus.quickSearchDistanceTextHoverColor.cur;
       getQuickSearchAddrElm().style.color = widgetStatus.quickSearchAddressTextHoverColor.cur;
     });
     getQuickSearchStoreElm().addEventListener('mouseout', () => {
       getQuickSearchTitleElm().style.color = widgetStatus.quickSearchTitleTextColor.cur;
+      getQuickSearchDistanceElm().style.color = widgetStatus.quickSearchDistanceTextColor.cur;
       getQuickSearchAddrElm().style.color = widgetStatus.quickSearchAddressTextColor.cur;
     });
   };
@@ -304,14 +317,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mapQuickSearchTitleTextColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchTitleTextColor', getQuickSearchTitleTextColor())
     );
+    const quickSearchDistanceTextColorPickr = Pickr.create(
+      createPickrConfig('#uiQuickSearchDistanceTextColor', getQuickSearchDistanceTextColor())
+    );
     const quickSearchAddressTextColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchAddressTextColor', getQuickSearchAddressTextColor())
     );
     const quickSearchTitleTextHoverColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchTitleTextHoverColor', getQuickSearchTitleTextHoverColor())
     );
+    const quickSearchDistanceTextHoverColorPickr = Pickr.create(
+      createPickrConfig('#uiQuickSearchDistanceTextHoverColor', getQuickSearchDistanceTextHoverColor())
+    );
     const quickSearchAddressTextHoverColorPickr = Pickr.create(
-      createPickrConfig('#uiQuickSearchTitleAddressTextHoverColor', getQuickSearchAddressTextHoverColor())
+      createPickrConfig('#uiQuickSearchAddressTextHoverColor', getQuickSearchAddressTextHoverColor())
     );
     const overlayTitleTextColorPickr = Pickr.create(createPickrConfig('#uiOverlayTitleTextColor', getOverlayTitleTextColor()));
     const overlayAddressTextColorPickr = Pickr.create(createPickrConfig('#uiOverlayAddressTextColor', getOverlayAddressTextColor()));
@@ -405,6 +424,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
 
+    quickSearchDistanceTextColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        widgetStatus.quickSearchDistanceTextColor.cur = selectedColor;
+        getQuickSearchDistanceElm().style.color = selectedColor;
+      });
+    });
+
     quickSearchAddressTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
@@ -417,10 +444,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
         widgetStatus.quickSearchTitleTextHoverColor.cur = selectedColor;
-        getQuickSearchStoreElm().addEventListener('mouseover', () => {
-          getQuickSearchTitleElm().style.color = selectedColor;
-          getQuickSearchAddrElm().style.color = widgetStatus.quickSearchAddressTextHoverColor.cur;
-        });
+      });
+    });
+
+    quickSearchDistanceTextHoverColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        widgetStatus.quickSearchDistanceTextHoverColor.cur = selectedColor;
       });
     });
 
@@ -428,10 +458,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
         widgetStatus.quickSearchAddressTextHoverColor.cur = selectedColor;
-        getQuickSearchStoreElm().addEventListener('mouseover', () => {
-          getQuickSearchTitleElm().style.color = widgetStatus.quickSearchTitleTextHoverColor.cur;
-          getQuickSearchAddrElm().style.color = selectedColor;
-        });
       });
     });
     overlayTitleTextColorPickr.on('save', (color, instance) => {
@@ -474,8 +500,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       mapTitleTextColorPickr.setColor('#ffffff');
       mapAddressTextColorPickr.setColor('#e1e1e1');
       mapQuickSearchTitleTextColorPickr.setColor('#666666');
-      quickSearchAddressTextColorPickr.setColor('#979797');
       quickSearchTitleTextHoverColorPickr.setColor('#000000');
+      quickSearchDistanceTextColorPickr.setColor('#979797');
+      quickSearchAddressTextColorPickr.setColor('#979797');
+      quickSearchDistanceTextHoverColorPickr.setColor('#9987cd');
       quickSearchAddressTextHoverColorPickr.setColor('#9987cd');
       overlayTitleTextColorPickr.setColor('#000000');
       overlayAddressTextColorPickr.setColor('#000000');
@@ -531,8 +559,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       mapTitleTextColor: widgetStatus.mapTitleTextColor.cur,
       mapAddressTextColor: widgetStatus.mapAddressTextColor.cur,
       quickSearchTitleTextColor: widgetStatus.quickSearchTitleTextColor.cur,
+      quickSearchDistanceTextColor: widgetStatus.quickSearchDistanceTextColor.cur,
       quickSearchAddressTextColor: widgetStatus.quickSearchAddressTextColor.cur,
       quickSearchTitleTextHoverColor: widgetStatus.quickSearchTitleTextHoverColor.cur,
+      quickSearchDistanceTextHoverColor: widgetStatus.quickSearchDistanceTextHoverColor.cur,
       quickSearchAddressTextHoverColor: widgetStatus.quickSearchAddressTextHoverColor.cur,
       overlayTitleTextColor: widgetStatus.overlayTitleTextColor.cur,
       overlayAddressTextColor: widgetStatus.overlayAddressTextColor.cur,
@@ -554,8 +584,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         widgetStatus.mapTitleTextColor.prev = widgetStatus.mapTitleTextColor.cur;
         widgetStatus.mapAddressTextColor.prev = widgetStatus.mapAddressTextColor.cur;
         widgetStatus.quickSearchTitleTextColor.prev = widgetStatus.quickSearchTitleTextColor.cur;
+        widgetStatus.quickSearchDistanceTextColor.prev = widgetStatus.quickSearchDistanceTextColor.cur;
         widgetStatus.quickSearchAddressTextColor.prev = widgetStatus.quickSearchAddressTextColor.cur;
         widgetStatus.quickSearchTitleTextHoverColor.prev = widgetStatus.quickSearchTitleTextHoverColor.cur;
+        widgetStatus.quickSearchDistanceTextHoverColor.prev = widgetStatus.quickSearchDistanceTextHoverColor.cur;
         widgetStatus.quickSearchAddressTextHoverColor.prev = widgetStatus.quickSearchAddressTextHoverColor.cur;
         widgetStatus.overlayTitleTextColor.prev = widgetStatus.overlayTitleTextColor.cur;
         widgetStatus.overlayAddressTextColor.prev = widgetStatus.overlayAddressTextColor.cur;

@@ -104,6 +104,12 @@
               </div>
             </div>
             <div class="section">
+              <div class="pickr_ct" id="uiQuickSearchDistanceTextColorCt" data-color="<%- widget.quickSearchDistanceTextColor %>">
+                <span>자동완성 글자(거리) 색상</span>
+                <div class="" id="uiQuickSearchDistanceTextColor"></div>
+              </div>
+            </div>
+            <div class="section">
               <div class="pickr_ct" id="uiQuickSearchAddressTextColorCt" data-color="<%- widget.quickSearchAddressTextColor %>">
                 <span>자동완성 글자(주소) 색상</span>
                 <div class="" id="uiQuickSearchAddressTextColor"></div>
@@ -116,9 +122,15 @@
               </div>
             </div>
             <div class="section">
+              <div class="pickr_ct" id="uiQuickSearchDistanceTextHoverColorCt" data-color="<%- widget.quickSearchDistanceTextHoverColor %>">
+                <span>자동완성 마우스오버(거리) 색상</span>
+                <div class="" id="uiQuickSearchDistanceTextHoverColor"></div>
+              </div>
+            </div>
+            <div class="section">
               <div class="pickr_ct" id="uiQuickSearchAddressTextHoverColorCt" data-color="<%- widget.quickSearchAddressTextHoverColor %>">
                 <span>자동완성 마우스오버(주소) 색상</span>
-                <div class="" id="uiQuickSearchTitleAddressTextHoverColor"></div>
+                <div class="" id="uiQuickSearchAddressTextHoverColor"></div>
               </div>
             </div>
           </div>
@@ -223,7 +235,8 @@
                   <h1 style="color: <%- widget.quickSearchTitleTextColor %>">카페24</h1>
                 </div>
                 <div class="store_addr">
-                  <span style="color: <%- widget.quickSearchAddressTextColor %>">서울특별시 동작구 보라매로5길 15</span>
+                  <span class="distance" style="color: <%- widget.quickSearchDistanceTextColor %>">1km</span>
+                  <span class="addr" style="color: <%- widget.quickSearchAddressTextColor %>">서울특별시 동작구 보라매로5길 15</span>
                 </div>
               </div>
             </div>
