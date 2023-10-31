@@ -6,7 +6,7 @@ import expressLayouts from 'express-ejs-layouts';
 import path from 'path';
 import axios from 'axios';
 
-import { __dirname, setCafe24AccessToken, setToken } from './utils/utils.js';
+import { __dirname, setCafe24Token, setToken } from './utils/utils.js';
 
 import db from './app/mongodb/models/index.js';
 import userRoutes from './app/users/routes/index.js';
@@ -22,7 +22,7 @@ import { refresh } from './app/users/jwt/refresh.js';
 process.env.NODE_ENV = process.env.NODE_ENV && process.env.NODE_ENV.trim().toLowerCase() == 'production' ? 'production' : 'development';
 
 import setAdminJs from './admin.js';
-import { authJWT, cafe24Auth } from './app/users/middleware/auth.js';
+import { cafe24Auth } from './app/users/middleware/auth.js';
 
 export const app = express();
 
@@ -95,8 +95,8 @@ const appRouting = async () => {
 
   app.get('/users/login/redirect', (req, res) => {
     return res.render('auth/redirect_login.ejs', {
+      layout: false,
       message: '세션이 만료되었습니다. 다시 로그인 해 주세요.',
-      cateId: 'redirectLogin',
     });
   });
 
@@ -107,10 +107,11 @@ const appRouting = async () => {
 
       if (!tokenRes.ok) {
         return res.render('auth/redirect_login.ejs', {
+          layout: false,
           message: '다시 로그인 해 주세요.',
-          cateId: 'redirectLogin',
         });
       }
+
       const newAccessToken = tokenRes.data.newAccessToken;
       const refreshToken = tokenRes.data.newRefreshToken;
       setToken(res, tokenRes.data.user, newAccessToken, refreshToken);
@@ -119,8 +120,8 @@ const appRouting = async () => {
     } catch (error) {
       console.log(error);
       return res.render('auth/redirect_login.ejs', {
+        layout: false,
         message: '다시 로그인 해 주세요.',
-        cateId: 'redirectLogin',
       });
     }
   });
@@ -159,7 +160,7 @@ const appRouting = async () => {
               mallId: mallId,
               platform: 'cafe24',
             };
-            // 유저가 존재하지 않을경우 -> 첫방문일 경우
+            // 유저가 존재하지 않을경우 -> 첫방문일 경우 생성
             user = new User(userForm);
           }
 
@@ -172,8 +173,7 @@ const appRouting = async () => {
           }
         }
 
-        user.cafe24RefreshToken = tokenRes.data.refresh_token;
-        setCafe24AccessToken(res, tokenRes.data.access_token);
+        setCafe24Token(res, user, tokenRes.data.access_token, tokenRes.data.refresh_token);
         user.generateToken((accessToken, refreshToken) => {
           setToken(res, user, accessToken, refreshToken);
         });
