@@ -27,12 +27,11 @@ export const setToken = async (res, user, accessToken, refreshToken) => {
   });
 
   user.refresh_token = refreshToken;
-  await user.save();
 };
 
 export const setCafe24Token = async (res, user, accessToken, refreshToken) => {
   user.cafe24RefreshToken = refreshToken;
-  user.save();
+
   res.cookie('cafe24_access_token', accessToken, {
     httpOnly: true,
     secure: true,

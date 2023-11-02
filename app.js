@@ -115,6 +115,7 @@ const appRouting = async () => {
       const newAccessToken = tokenRes.data.newAccessToken;
       const refreshToken = tokenRes.data.newRefreshToken;
       setToken(res, tokenRes.data.user, newAccessToken, refreshToken);
+      await tokenRes.data.save();
 
       return res.redirect(redirectURI);
     } catch (error) {
@@ -177,6 +178,8 @@ const appRouting = async () => {
         user.generateToken((accessToken, refreshToken) => {
           setToken(res, user, accessToken, refreshToken);
         });
+
+        await user.save();
 
         return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
       } catch (error) {
