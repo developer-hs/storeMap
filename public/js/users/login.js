@@ -17,11 +17,13 @@ window.addEventListener('DOMContentLoaded', async () => {
     const mallId = getMallId();
     const password = getPW();
     const form = { mallId, password };
+    const params = new URLSearchParams(window.location.search);
+    const redirectURI = params.get('redirect_uri') || 'stores';
 
     try {
       const res = await axios.post('/api/v1/users/user/login', form);
       if (res.status === 200) {
-        window.location.href = '/stores';
+        window.location.href = `/${redirectURI}`;
       }
     } catch (error) {
       if (error.response.status === 401) {
