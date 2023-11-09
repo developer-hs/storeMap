@@ -6,7 +6,8 @@ let L_GEOLOCATION_WIDGET = Boolean,
   L_SHOWING_INFOWINDOW,
   L_USER_NAVER_COORD,
   L_SCROLL_Y,
-  L_MARKER;
+  L_NORMAL_MARKER_IMG,
+  L_NOW_MARKER_IMG;
 
 let PREV_MARKER, L_MAP;
 
@@ -27,7 +28,9 @@ class StoreMapAPI {
     } else {
       L_GEOLOCATION_WIDGET = true;
     }
-    L_MARKER = this.widgets.marker;
+    L_NORMAL_MARKER_IMG = this.widgets.marker.normalMarker;
+    L_NOW_MARKER_IMG = this.widgets.marker.nowMarker;
+
     document.documentElement.style.setProperty('--ui-color', this.widgets.widget.uiColor);
     document.documentElement.style.setProperty('--ui-title-text-color', this.widgets.widget.titleTextColor);
     document.documentElement.style.setProperty('--ui-distance-text-color', this.widgets.widget.distanceTextColor);
@@ -37,8 +40,13 @@ class StoreMapAPI {
     document.documentElement.style.setProperty('--ui-map-title-text-color', this.widgets.widget.mapTitleTextColor);
     document.documentElement.style.setProperty('--ui-map-address-text-color', this.widgets.widget.mapAddressTextColor);
     document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', this.widgets.widget.quickSearchTitleTextColor);
-    document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', this.widgets.widget.quickSearchAddressTextColor);
     document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', this.widgets.widget.quickSearchTitleTextHoverColor);
+    document.documentElement.style.setProperty('--ui-quicksearch-distance-text-color', this.widgets.widget.quickSearchDistanceTextColor);
+    document.documentElement.style.setProperty(
+      '--ui-quicksearch-distance-hover-color',
+      this.widgets.widget.quickSearchDistanceTextHoverColor
+    );
+    document.documentElement.style.setProperty('--ui-quicksearch-address-text-color', this.widgets.widget.quickSearchAddressTextColor);
     document.documentElement.style.setProperty(
       '--ui-quicksearch-address-hover-color',
       this.widgets.widget.quickSearchAddressTextHoverColor
@@ -100,7 +108,6 @@ class StoreMapAPI {
         if (e.data.trigger) {
           this.postMsgFrameHeight();
           this.origin = e.origin;
-          await this.getStoreList();
         }
       }.bind(this)
     );
@@ -386,7 +393,7 @@ const searchStoreIsValid = () => {
 /**
  * @param {storePickupBtnElm:HTMLElement, store:Object} 매장 정보를 받아옴
  */
-const PickupBtnHandler = (storePickupBtnElm, store) => {
+const pickupBtnHandler = (storePickupBtnElm, store) => {
   storePickupBtnElm.addEventListener('click', () => {
     pickup(store);
   });
@@ -411,9 +418,8 @@ const pickup = (store, pick = true) => {
   getStoreAddress().innerText = store.address;
 };
 
-const quickSearchHandler = (store) => {
-  const storeElm = paintSearchStore(store);
-  storeElm.addEventListener('click', () => {
+const quickSearchHandler = (quickSearchStoreElm, store) => {
+  quickSearchStoreElm.addEventListener('click', () => {
     pickup(store);
   });
 };
@@ -474,6 +480,18 @@ const createStoreChildElmAsString = (store) => {
 
   return result;
 };
+
+const distanceUnitConversion = (distance) => {
+  if (!L_GEOLOCATION_WIDGET) return '';
+
+  if (distance >= 1) {
+    distance = distance.toFixed(1);
+  } else {
+    distance = distance.toFixed(2);
+  }
+
+  return distance < 1 ? `${distance * 1000}m` : `${distance}km`;
+};
 /**
  * @description 매장 리스트를 화면에 출력하는 함수
  * @returns {void}
@@ -522,21 +540,17 @@ const paintStoreList = () => {
         // 스토어 한개를 생략하고 넘어가기 때문에 storeLen 값 감소
         storeLen--;
         continue;
-      } else if (distance >= 1) {
-        distance = Math.floor(distance);
-      } else {
-        distance = distance.toFixed(2);
       }
 
       const distanceElm = document.createElement('span');
       distanceElm.classList.add('distance');
-      const distanceStr = distance < 1 ? `${distance * 1000}m  ` : `${distance}km  `;
+      const distanceStr = `${distanceUnitConversion(distance)}  `;
       distanceElm.innerText = distanceStr;
       storeElm.querySelector('.addr_ct').prepend(distanceElm);
     }
 
     const storePickBtn = storeElm.querySelector('.store_pick_btn');
-    PickupBtnHandler(storePickBtn, store);
+    pickupBtnHandler(storePickBtn, store);
 
     swiperSlide.appendChild(storeElm);
 
@@ -709,10 +723,11 @@ const createStoreMarker = (store) => {
 
   let markerImgURI;
   if (quantity > 0) {
-    markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/now_store_pick.svg';
+    // 바로픽업 가능한 상품
+    markerImgURI = L_NOW_MARKER_IMG;
   } else {
-    console.log(L_MARKER);
-    markerImgURI = L_MARKER;
+    // 바로픽업이 불가능한 상품
+    markerImgURI = L_NORMAL_MARKER_IMG;
   }
   const naverCoord = createNaverCoord(store.latitude, store.longitude);
   const marker = createNaverMarker(naverCoord, markerImgURI);
@@ -741,7 +756,7 @@ const createUserMarker = () => {
 // 입력된 주소로 좌표를 검색하고, 해당 좌표를 지도에 표시하는 함수
 const searchAddrToCoord = (store) => {
   if (L_GEOLOCATION_WIDGET) {
-    setDistance(store.naverCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
+    setDistance(L_USER_NAVER_COORD || store.naverCoord); // 지정 거리값 기준으로 근처 매장들의 거리를 스토어 리스트에 거리를 생성 후 거리순 정렬
     paintStoreList();
     L_MAP.setCenter(store.naverCoord);
   }
@@ -765,14 +780,17 @@ const showQuickSearchJustOne = () => {
 };
 
 // 검색 결과를 표시하는 함수
-const paintSearchStore = (store) => {
+const paintQuickSearch = (store) => {
   const searchListCt = getSearchListCtElm(); // 서치리스트 컨테이너 요소를 가져옴
   const storeElm = document.createElement('div'); // 검색 결과를 담을 div 요소를 생성
   storeElm.classList.add('store'); // div 요소에 store 클래스를 추가
   storeElm.dataset.storeId = store._id;
   storeElm.innerHTML =
     `<div class="store_name"><h1>${store.name}</h1></div>` + // 매장 이름을 표시하는 div 요소를 생성
-    `<div class="store_addr"><span>${store.address}</span></div>`; // 매장 주소를 표시하는 div 요소를 생성
+    `<div class="store_addr">` +
+    `<span class="distance">${distanceUnitConversion(store.distance)}  </span>` +
+    `<span class='addr'>${store.address}</span>` +
+    `</div>`; // 매장 주소를 표시하는 div 요소를 생성
   searchListCt.appendChild(storeElm); // 서치리스트 컨테이너에 검색 결과 div 요소를 추가
   return storeElm; // 검색 결과 div 요소를 반환
 };
@@ -783,26 +801,6 @@ const removeAllSpaces = (text) => {
 
 const initQuickSearchListCt = () => {
   getSearchListCtElm().innerHTML = '';
-};
-
-const sortQuickSearch = () => {
-  const result = Object.values(quickSearchArray).sort((a, b) => {
-    if (searchedValue === a.name[0]) {
-      return -1;
-    }
-    if (searchedValue === b.name[0]) {
-      return -1;
-    }
-
-    if (a.name[0] < b.name[0]) {
-      return -1;
-    }
-    if (a.name[0] > b.name[0]) {
-      return 1;
-    }
-  });
-
-  return result;
 };
 
 /**
@@ -829,9 +827,7 @@ const quickSearch = () => {
 
   let quickSearchArray = [];
 
-  for (let key in L_STORE_LIST) {
-    const store = L_STORE_LIST[key];
-
+  for (let store of L_STORE_LIST) {
     const getStoreName = () => {
       return store.name;
     };
@@ -849,14 +845,9 @@ const quickSearch = () => {
     }
   }
 
-  const type = getSearchType();
-  if (type === 'stroe') {
-    quickSearchArray = sortQuickSearch(quickSearchArray);
-  }
-
-  for (let key in quickSearchArray) {
-    const store = quickSearchArray[key];
-    quickSearchHandler(store);
+  for (let store of quickSearchArray) {
+    const quickSearchStoreElm = paintQuickSearch(store);
+    quickSearchHandler(quickSearchStoreElm, store);
   }
 
   searchListCt.style.height = quickSearchArray.length * L_HEIGHT + 10 + 'px';
@@ -901,6 +892,7 @@ const createInfoWindow = (store) => {
   const overlay = new naver.maps.InfoWindow({
     content: content,
     maxWidth: 200,
+    minWidth: 170,
     borderRadius: 10,
     borderWidth: 0,
     anchorSize: new naver.maps.Size(0, 0),
@@ -973,14 +965,15 @@ const onPickupStoreBtn = async () => {
     pickupInit();
   }
 };
-const pickupStoreBtnHandler = () => {
+const pickupStoreBtnHandler = (storeMapAPI) => {
   const pickupStoreBtn = getPickupStoreBtnElm();
   if (L_GEOLOCATION_WIDGET) {
     const pickupStoreBtnMutionObv = new MutationObserver((mutations) => {
       if (!pickupStoreBtn.classList.contains('loading')) {
         pickupStoreBtn.addEventListener(
           'click',
-          () => {
+          async () => {
+            await storeMapAPI.getStoreList();
             onPickupStoreBtn();
           },
           {
@@ -999,7 +992,8 @@ const pickupStoreBtnHandler = () => {
     pickupStoreBtn.innerHTML = '';
     pickupStoreBtn.addEventListener(
       'click',
-      () => {
+      async () => {
+        await storeMapAPI.getStoreList();
         onPickupStoreBtn();
       },
       {
@@ -1012,11 +1006,11 @@ const pickupStoreBtnHandler = () => {
 const storePickupInit = async () => {
   searchTypeHandler(); // 검색타입 변경 시 작동하는 함수
   storeSearchingHandler();
-  pickupStoreBtnHandler();
 };
 
 const sotreMapInit = async () => {
-  new StoreMapAPI();
+  const storeMapAPI = new StoreMapAPI();
+  pickupStoreBtnHandler(storeMapAPI);
 };
 
 window.addEventListener('DOMContentLoaded', () => {

@@ -21,6 +21,7 @@ class StoreMapInitAPI {
   setWidget = async () => {
     try {
       const res = await axios.get(`${API_BASE_URL}/api/v1/users/ui`);
+
       if (res.status === 200) {
         this.widgets = res.data;
         if (this.widgets.widget.ui === 'distance') {
@@ -48,6 +49,7 @@ class StoreMapInitAPI {
       const res = await axios.get(`${API_BASE_URL}/api/products/show/${this.productId}/check`);
 
       if (res.status === 200) {
+        console.log(res.data);
         if (res.data.ok) this.setStoreMapAdditionalOpt();
         else return;
       }
@@ -73,7 +75,7 @@ class StoreMapInitAPI {
     }
 
     if (!this.L_STORE_MAP_ADDITIONAL_OPT) {
-      console.error('카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n rlagudtjq2016@naver.com으로 문의하시길 바랍니다.');
+      console.error('카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n utilityapp@naver.com으로 문의하시길 바랍니다.');
     } else {
       this.createFrame();
     }
@@ -175,8 +177,8 @@ class StoreMapInitAPI {
     // iframe 이 성공적으로 생성 되었다면 trigger 보내줌 다시 trigger 를 반환(origin 추출위함)
     window.addEventListener('message', async (e) => {
       if (e.data.trigger) {
+        await this.setWidget();
         this.postMsgTrigger();
-        this.setWidget();
         this.postMsgProductId();
       }
     });

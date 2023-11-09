@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const param = new URLSearchParams(window.location.search);
     const sinceProductNo = param.get('since_product_no') || 0;
     try {
-      const res = await axios.get(`/api/products/${mallId}?since_product_no=${sinceProductNo}`);
+      const res = await axios.get(`/api/products/${mallId}?since_product_no=${sinceProductNo - 1}`);
       if (res.status === 200) {
         L_PRODUCTS_LIST = res.data.reverse();
         getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
