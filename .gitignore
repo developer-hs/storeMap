@@ -24,3 +24,6 @@ test_store_pickup.ejs
 test.html
 app.yaml
 certificate
+
+.gcloudignore
+.prettierignore

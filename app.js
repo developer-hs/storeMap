@@ -183,7 +183,7 @@ const appRouting = async () => {
 
         return res.status(200).json({ ok: true, message: '정상적으로 처리되었습니다.' });
       } catch (error) {
-        return res.status(404).json({ ok: false, message: '유저를 찾을수 없습니다.', error: error, user });
+        return res.status(404).json({ ok: false, message: '유저를 찾을수 없습니다.', error: error });
       }
     } catch (error) {
       //cafe24 access token 요청 에 실패하였을 경우

@@ -653,7 +653,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         markerType = 'now';
       }
 
-      formData.append('image', markerFile, `${markerType}_${utils.encodeUnicode(markerFile.name) + '.' + getImageType(markerFile)}`);
+      formData.append('image', markerFile, `${btoa(markerType)}_${utils.encodeUnicode(markerFile.name) + '.' + getImageType(markerFile)}`);
     });
 
     try {

@@ -27,17 +27,18 @@ window.addEventListener('DOMContentLoaded', async () => {
 
   const getProducts = async () => {
     const param = new URLSearchParams(window.location.search);
-    const sinceProductNo = param.get('since_product_no') || 0;
+    let sinceProductNo = param.get('since_product_no') || 0;
+
     try {
-      const res = await axios.get(`/api/products/${mallId}?since_product_no=${sinceProductNo - 1}`);
+      const res = await axios.get(`/api/products/${mallId}?since_product_no=${sinceProductNo}`);
       if (res.status === 200) {
-        L_PRODUCTS_LIST = res.data.reverse();
+        L_PRODUCTS_LIST = res.data;
         getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
       }
     } catch (error) {
       console.error(error);
       alert('세션이 만료되었습니다 다시 접속해 주세요.');
-      window.location.href = `https://${mallId}.cafe24.com/disp/admin/shop1/myapps/list`;
+      // window.location.href = `https://${mallId}.cafe24.com/disp/admin/shop1/myapps/list`;
     }
   };
 
