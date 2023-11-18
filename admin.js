@@ -1,11 +1,10 @@
-import express from 'express';
 import AdminJS from 'adminjs';
 import AdminJSExpress from '@adminjs/express';
 import * as AdminJSMongoose from '@adminjs/mongoose';
 import session from 'express-session';
 import bcrypt from 'bcrypt';
 
-import { User } from './app/users/models/user.js';
+import { User, StoreUser } from './app/users/models/user.js';
 import { Store } from './app/stores/models/store.js';
 import { Widget } from './app/widgets/models/widget.js';
 import { Product } from './app/products/models/product.js';
@@ -22,7 +21,15 @@ const setAdminJs = async (app) => {
   AdminJS.registerAdapter(AdminJSMongoose);
   const adminOptions = {
     // We pass Category to `resources`
-    resources: [{ resource: Admin, options: { properties: { password: { isVisible: false } } } }, User, Store, Widget, Product, Order],
+    resources: [
+      { resource: Admin, options: { properties: { password: { isVisible: false } } } },
+      User,
+      Store,
+      Widget,
+      Product,
+      Order,
+      StoreUser,
+    ],
     rootPath: '/admin',
     loginPath: '/admin/login',
     dashboard: {},

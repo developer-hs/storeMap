@@ -1,13 +1,13 @@
 window.addEventListener('DOMContentLoaded', async () => {
   const { onAlertModal } = await import('../utils/utils.js');
 
-  const loginBtn = document.getElementById('login_btn');
+  const loginBtn = document.getElementById('loginBtn');
 
   const getMallId = () => {
     return document.getElementById('storeMapMallId').value;
   };
   const getPW = () => {
-    return document.getElementById('store_map_pw').value;
+    return document.getElementById('storeMapPw').value;
   };
   const inputElms = () => {
     return document.querySelectorAll('input');
@@ -36,6 +36,36 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
+  const onTypeChange = (targetElment) => {
+    initInputElmsValue();
+    const storeUserElms = document.querySelectorAll('.store_disp');
+    if (targetElment.dataset.type === 'store') {
+      storeUserElms.forEach((storeUserElm) => {
+        storeUserElm.classList.remove('displaynone');
+      });
+    } else {
+      storeUserElms.forEach((storeUserElm) => {
+        storeUserElm.classList.add('displaynone');
+      });
+    }
+  };
+
+  const typeChangeHandler = () => {
+    const typeBtnElms = document.querySelectorAll('.login_type_btn input');
+    typeBtnElms.forEach((typeBtnElm) => {
+      typeBtnElm.addEventListener('change', () => {
+        onTypeChange(typeBtnElm);
+      });
+    });
+  };
+
+  const initInputElmsValue = () => {
+    const inputElms = document.querySelectorAll('.form input');
+    inputElms.forEach((inputElm) => {
+      inputElm.value = '';
+    });
+  };
+
   loginBtn.addEventListener('click', onLogin);
 
   inputElms().forEach((inputElm) => {
@@ -47,4 +77,10 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     });
   });
+
+  const loginFormInit = () => {
+    typeChangeHandler();
+  };
+
+  loginFormInit();
 });

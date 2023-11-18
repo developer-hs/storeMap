@@ -1,3 +1,6 @@
+:root {
+  --box-w: 380px;
+}
 .login_ct {
   width: 100%;
   height: 100%;
@@ -7,15 +10,18 @@
 }
 
 .login_area {
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
   box-sizing: border-box;
-  padding: 18px 14px;
+  padding: 0 24px 30px 24px;
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-direction: column;
-  width: 350px;
-  height: 200px;
+  width: var(--box-w);
+  height: max-content;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.1);
 }
 
@@ -24,7 +30,7 @@
 }
 
 .login_area .form_input {
-  margin: 16px 0;
+  margin: 22px 0;
   position: relative;
   width: 100%;
 }
@@ -36,18 +42,17 @@
 .login_area .form_input .placeholder {
   font-size: 1rem;
   position: absolute;
-  top: 50%;
+  top: 0;
   transform: translate3d(0, -50%, 0);
-  left: 10px;
+  left: 0;
 }
 
 .login_area .form_input input {
   font-size: 1rem;
-  padding-left: 40px;
   height: 40px;
   width: 100%;
-  border-radius: 8px;
-  border: 1px solid #000;
+  border: none;
+  border-bottom: 1px solid var(--color-black);
 }
 
 .md-btn {
@@ -61,4 +66,53 @@
   top: 0;
   width: 0px;
   height: 0px;
+}
+
+.login_ct {
+  display: flex;
+  flex-direction: column;
+}
+.login_type_area {
+  padding-bottom: 30px;
+  display: flex;
+  width: 100%;
+  background-color: #fff;
+  width: var(--box-w);
+}
+.login_type_area .login_type_btn {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  position: relative;
+}
+
+.login_type_area .login_type_btn input {
+  opacity: 0;
+  position: absolute;
+}
+
+.login_type_area .login_type_btn label {
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  font-size: 16px;
+}
+
+.login_type_area .login_type_btn input + label {
+  border-bottom: 1px solid #eee;
+}
+.login_type_area .login_type_btn input:checked + label {
+  border-bottom: 1px solid var(--color-black);
+  background-color: var(--color-black);
+  color: #fff;
+}
+
+#loginBtn {
+  margin-top: 22px;
+  border-radius: 4px;
 }

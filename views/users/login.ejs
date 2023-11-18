@@ -14,17 +14,31 @@
     <div class="alert_modal on" style="width: max-content; padding: 30px 28px; top: 20%">담당자님들 그대로 로그인 해주시면 됩니다.</div>
     <div class="login_ct">
       <div class="login_area">
-        <div class="form">
-          <div class="form_input">
-            <input id="storeMapMallId" type="email" value="rlagudtjq2016" />
-            <div class="placeholder">ID</div>
+        <div class="login_type_area">
+          <div class="login_type_btn">
+            <input id="user" type="radio" name="loginType" checked data-type="admin" />
+            <label for="user">운영자</label>
           </div>
-          <div class="form_input">
-            <input id="store_map_pw" type="password" value="qwerasdf" />
-            <div class="placeholder">PW</div>
+          <div class="login_type_btn">
+            <input id="storeUser" type="radio" name="loginType" data-type="store" />
+            <label for="storeUser">매장 관리자</label>
           </div>
         </div>
-        <div id="login_btn" class="md-btn bg-primary">로그인</div>
+        <div class="form">
+          <div class="form_input">
+            <label for="storeMapMallId">쇼핑몰 아이디</label>
+            <input id="storeMapMallId" type="text" value="rlagudtjq2016" />
+          </div>
+          <div class="form_input store_disp displaynone">
+            <label for="storeUserId">관리자 아이디</label>
+            <input id="storeUserId" type="text" />
+          </div>
+          <div class="form_input">
+            <label for="storeMapPw">비밀번호</label>
+            <input id="storeMapPw" type="password" value="qwerasdf" />
+          </div>
+        </div>
+        <div id="loginBtn" class="md-btn bg-primary">로그인</div>
       </div>
     </div>
   </body>
