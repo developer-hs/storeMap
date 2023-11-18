@@ -753,7 +753,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           utils.onAlertModal('마커가 초기화 되었습니다.');
         }
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     } else {
     }

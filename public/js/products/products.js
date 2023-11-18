@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
       console.error(error);
       alert('세션이 만료되었습니다 다시 접속해 주세요.');
-      // window.location.href = `https://${mallId}.cafe24.com/disp/admin/shop1/myapps/list`;
+      window.location.href = `https://${mallId}.cafe24.com/disp/admin/shop1/myapps/list`;
     }
   };
 

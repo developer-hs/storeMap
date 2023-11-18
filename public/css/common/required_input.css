@@ -27,17 +27,18 @@
   padding-bottom: 26px;
 }
 .required_setting_modal_ct .page_title .title {
+  text-transform: uppercase;
   font-size: 2rem;
-  margin-bottom: 0.275rem;
+  margin-bottom: var(--title-mb);
 }
 
 .required_setting_modal {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
-  padding: 30px;
-  width: 630px;
-  height: 560px;
+  padding: 50px 30px;
+  width: max-content;
+  height: max-content;
   border-radius: var(--default-radius);
   background-color: #fff;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.3);

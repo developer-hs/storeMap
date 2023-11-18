@@ -168,6 +168,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       elm.removeChild(errMessageElm);
     }
   };
+
   const removeAllImpMessage = () => {
     const impMessageElms = document.querySelectorAll('.imp_err_message');
     impMessageElms.forEach((impMessageElm) => {
@@ -176,15 +177,14 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const errMessageChk = (elm) => {
-    if (elm.querySelector('.err_message')) {
-      return true;
-    }
+    if (elm.querySelector('.err_message')) return true;
+
     return false;
   };
+
   const impErrMessageChk = (elm) => {
-    if (elm.querySelector('.imp_err_message')) {
-      return true;
-    }
+    if (elm.querySelector('.imp_err_message')) return true;
+
     return false;
   };
 
