@@ -7,40 +7,45 @@
     <link rel="stylesheet" type="text/css" href="/css/common/header.css" />
     <link rel="stylesheet" type="text/css" href="/css/common/reset.css" />
     <link rel="stylesheet" type="text/css" href="/css/common/index.css" />
+    <link rel="stylesheet" type="text/css" href="/css/manager/stores/store.css" />
+    <link rel="stylesheet" type="text/css" href="/css/stores/store.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
-  <body>
+  <body id="manager">
     <div id="storeId" data-store-id="<%- storeId -%>"></div>
-    <%- inventory.storeName -%>
-    <div>
-      <% for(var i = 0; i < inventory.length; i++){ %>
-      <div class="product_area card">
-        <div class="prd_id">
-          <span>
-            <%- inventory[i].productDetails.product_id %>
-          </span>
+    <%- inventory[0].storeName -%>
+    <div class="content_ct">
+      <div class="content">
+        <div class="page_title">
+          <span class="title"><%- inventory[0].storeName -%></span>
+          <div id="logoutBtn">LOGOUT</div>
         </div>
-        <div class="prd_img_area">
-          <img src="<%- inventory[i].productDetails.thumbnail %>" />
-        </div>
-        <div class="prd_name_area">
-          <span><%- inventory[i].productDetails.name %></span>
-        </div>
-        <div class="prd_quantity_area">
-          <div class="quantity_area">
-            <input type="number" id="quantity_<%- i %>" value="<%- inventory[i].quantity %>" />
-            <div
-              class="submit"
-              id="quantitySubmitBtn_<%- i %>"
-              data-product-id="<%- inventory[i].productDetails.product_id %>"
-              data-id="<%- i %>"
-            >
-              등록
+        <div class="product_content card">
+          <% for(var i = 0; i < inventory.length; i++){ %>
+          <div class="product_area card">
+            <div class="prd_img_area">
+              <img src="<%- inventory[i].productDetails.thumbnail %>" />
+            </div>
+            <div class="prd_name_area">
+              <span><%- inventory[i].productDetails.name %></span>
+            </div>
+            <div class="prd_quantity_area">
+              <div class="quantity_area">
+                <input type="number" id="quantity_<%- i %>" value="<%- inventory[i].quantity %>" />
+                <div
+                  class="submit"
+                  id="quantitySubmitBtn_<%- i %>"
+                  data-product-id="<%- inventory[i].productDetails.product_id %>"
+                  data-id="<%- i %>"
+                >
+                  등록
+                </div>
+              </div>
             </div>
           </div>
+          <% } %>
         </div>
       </div>
-      <% } %>
     </div>
     <script src="/js/manager/stores/store.js"></script>
   </body>

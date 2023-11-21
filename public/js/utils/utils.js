@@ -128,3 +128,27 @@ export const passwordIsValid = (password) => {
   // 정규식 패턴과 비밀번호를 비교하여 검증 결과 반환
   return pattern.test(password);
 };
+
+/**
+ *
+ * @param {HTMLElement} elm
+ * @returns {Void}
+ */
+export const logoutHandler = (elm) => {
+  const logoutBtn = elm || document.getElementById('logoutBtn');
+
+  if (!logoutBtn) return;
+
+  const logout = async () => {
+    try {
+      const res = await axios.post('/api/v1/users/user/logout');
+      if (res.status === 200 && res.data.ok) {
+        location.href = '/users/login';
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  logoutBtn.addEventListener('click', logout);
+};

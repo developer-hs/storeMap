@@ -1,0 +1,52 @@
+body#manager {
+  background-color: var(--color-black);
+}
+#manager .content_ct {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#manager .content {
+  width: 650px !important;
+  background-color: #fff;
+  padding: 0 24px 30px;
+}
+
+#manager .product_content {
+  padding: 30px 24px;
+  background-color: #fff;
+  border-radius: 6px;
+}
+
+#manager #storeId {
+  width: 0px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 0;
+}
+
+#manager .content_ct .content .page_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 38px 0;
+}
+
+#manager .content_ct .content .page_title .title {
+  margin: 0;
+  font-family: 'SCoreDream';
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 300;
+  line-height: normal;
+}
+
+#logoutBtn {
+  font-size: 16px;
+  font-weight: 300;
+  color: #a1a1a1;
+  cursor: pointer;
+}

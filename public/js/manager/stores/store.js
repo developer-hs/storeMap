@@ -38,4 +38,5 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   quantityBtnHandler();
+  utils.logoutHandler();
 });
