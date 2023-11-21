@@ -983,6 +983,7 @@ const pickupStoreBtnHandler = (storeMapAPI) => {
       }
       pickupStoreBtnMutionObv.disconnect();
     });
+
     pickupStoreBtnMutionObv.observe(pickupStoreBtn, {
       subtree: true,
       attributes: true,

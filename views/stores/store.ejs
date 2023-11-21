@@ -39,7 +39,22 @@
     <div class="area">
       <div class="page_title">
         <div class="title_ct">
-          <span class="title">STORE MANAGEMENT</span>
+          <div class="title_cd">
+            <span class="title">STORE MANAGEMENT</span>
+            <div class="" id="addStoreUserBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="19" viewBox="0 0 16 19" fill="none">
+                <path
+                  d="M7.19706 10.8058C10.0635 10.8058 12.3873 8.71829 12.3873 6.14318C12.3873 3.56807 10.0635 1.48053 7.19706 1.48053C4.33058 1.48053 2.00684 3.56807 2.00684 6.14318C2.00684 8.71829 4.33058 10.8058 7.19706 10.8058Z"
+                  stroke="black"
+                  stroke-miterlimit="10"
+                />
+                <path d="M7.19685 12.6709C3.40799 12.6709 0.501465 15.3659 0.501465 18.4805" stroke="black" stroke-miterlimit="10" />
+                <path d="M12.3875 12.8853V18.4805" stroke="black" stroke-miterlimit="10" />
+                <path d="M9.27319 15.683H15.5015" stroke="black" stroke-miterlimit="10" />
+              </svg>
+              <span>관리자 생성</span>
+            </div>
+          </div>
           <span class="sub_title">매장 생성 페이지</span>
         </div>
       </div>
@@ -105,7 +120,7 @@
 
         <div class="btn_area">
           <% if (store._id) { %>
-          <div class="md-btn bg-danger" id="deleteBtn">삭제</div>
+          <div class="md-btn" id="deleteBtn">스토어 삭제</div>
           <div class="md-btn bg-primary" id="submitBtn">
             <% if (type === "c") { %>
             <span>생성</span>
@@ -116,9 +131,6 @@
           <% } else { %>
           <div class="md-btn bg-primary" id="submitBtn">추가</div>
           <% } %>
-          <div class="md-btn bg-white" id="cancelBtn">
-            <a href="/stores">취소</a>
-          </div>
         </div>
       </div>
     </div>
@@ -134,7 +146,6 @@
         </div>
       </div>
       <div class="product_table_head card">
-        <div class="prd_id"><span>상품번호</span></div>
         <div class="prd_img_area"><span>상품이미지</span></div>
         <div class="prd_name_area"><span>상품명</span></div>
         <div class="prd_quantity_area">
@@ -148,7 +159,7 @@
         </div>
       </div>
       <% for(var i = 0; i < inventory.length; i++){ %>
-      <div class="product_area card">
+      <div class="product_area">
         <div class="prd_id">
           <span>
             <%- inventory[i].productDetails.product_id %>
