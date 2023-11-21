@@ -4,31 +4,57 @@ window.addEventListener('DOMContentLoaded', async () => {
   const loginBtn = document.getElementById('loginBtn');
 
   const getMallId = () => {
-    return document.getElementById('storeMapMallId').value;
+    return document.getElementById('storeMapMallID').value;
   };
   const getPW = () => {
-    return document.getElementById('storeMapPw').value;
+    return document.getElementById('storeMapPW').value;
+  };
+  const getStoreUserID = () => {
+    return document.getElementById('storeUserID').value;
   };
   const inputElms = () => {
     return document.querySelectorAll('input');
+  };
+  const getLoginType = () => {
+    return document.querySelector("input[name='loginType']:checked").dataset.type;
+  };
+
+  const adminLogin = async (form) => {
+    const params = new URLSearchParams(window.location.search);
+    const redirectURI = params.get('redirect_uri') || 'stores';
+    const res = await axios.post('/api/v1/users/user/admin/login', form);
+    if (res.status === 200) {
+      window.location.href = `/${redirectURI}`;
+    }
+  };
+
+  const storeUserLogin = async (form) => {
+    const res = await axios.post('/api/v1/users/user/manager/login', form);
+    if (res.status === 200) {
+      const { storeId } = res.data;
+      if (storeId === undefined) return onAlertModal('해당 매장의 계정을 다시 생성해 주세요.');
+      const params = new URLSearchParams(window.location.search);
+      const redirectURI = params.get('redirect_uri') || `stores/store/manager/${storeId}`;
+      window.location.href = `/${redirectURI}`;
+    }
   };
 
   const onLogin = async () => {
     const mallId = getMallId();
     const password = getPW();
     const form = { mallId, password };
-    const params = new URLSearchParams(window.location.search);
-    const redirectURI = params.get('redirect_uri') || 'stores';
-
     try {
-      const res = await axios.post('/api/v1/users/user/login', form);
-      if (res.status === 200) {
-        window.location.href = `/${redirectURI}`;
+      switch (getLoginType()) {
+        case 'admin':
+          await adminLogin(form);
+          break;
+        case 'store':
+          form['id'] = getStoreUserID();
+          await storeUserLogin(form);
+          break;
       }
     } catch (error) {
-      if (error.response.status === 401) {
-        onAlertModal(`${error.response.data.message}`);
-      } else {
+      if (error.response.data.message) {
         onAlertModal(`${error.response.data.message}`);
       }
 
@@ -37,7 +63,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const onTypeChange = (targetElment) => {
-    initInputElmsValue();
     const storeUserElms = document.querySelectorAll('.store_disp');
     if (targetElment.dataset.type === 'store') {
       storeUserElms.forEach((storeUserElm) => {
@@ -57,6 +82,10 @@ window.addEventListener('DOMContentLoaded', async () => {
         onTypeChange(typeBtnElm);
       });
     });
+    initInputElmsValue();
+    document.getElementById('storeMapMallID').value = 'rlagudtjq2016';
+    document.getElementById('storeMapPW').value = 'as7315850!';
+    document.getElementById('storeUserID').value = 'dev';
   };
 
   const initInputElmsValue = () => {

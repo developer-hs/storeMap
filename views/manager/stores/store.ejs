@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="/css/common/header.css" />
+    <link rel="stylesheet" type="text/css" href="/css/common/reset.css" />
+    <link rel="stylesheet" type="text/css" href="/css/common/index.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <div id="storeId" data-store-id="<%- storeId -%>"></div>
+    <%- inventory.storeName -%>
+    <div>
+      <% for(var i = 0; i < inventory.length; i++){ %>
+      <div class="product_area card">
+        <div class="prd_id">
+          <span>
+            <%- inventory[i].productDetails.product_id %>
+          </span>
+        </div>
+        <div class="prd_img_area">
+          <img src="<%- inventory[i].productDetails.thumbnail %>" />
+        </div>
+        <div class="prd_name_area">
+          <span><%- inventory[i].productDetails.name %></span>
+        </div>
+        <div class="prd_quantity_area">
+          <div class="quantity_area">
+            <input type="number" id="quantity_<%- i %>" value="<%- inventory[i].quantity %>" />
+            <div
+              class="submit"
+              id="quantitySubmitBtn_<%- i %>"
+              data-product-id="<%- inventory[i].productDetails.product_id %>"
+              data-id="<%- i %>"
+            >
+              등록
+            </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+    <script src="/js/manager/stores/store.js"></script>
+  </body>
+</html>

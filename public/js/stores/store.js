@@ -2,6 +2,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   const utils = await import('../utils/utils.js');
   const param = new URLSearchParams(window.location.search);
   const type = param.get('type');
+  const getStoreUserIdElm = () => document.getElementById('storeUserID');
+  const getStoreUserPwElm = () => document.getElementById('storeUserPW');
+  const createStoreUserBtnElm = () => document.getElementById('createStoreUserBtn');
 
   if (!type) {
     alert('잘못된 접근입니다.');
@@ -64,13 +67,6 @@ window.addEventListener('DOMContentLoaded', async () => {
    */
   const getdeleteBtnElm = () => {
     return document.getElementById('deleteBtn');
-  };
-  /**
-   *
-   * @returns {Boolean}
-   */
-  const getExcelUseStatus = () => {
-    return document.getElementById('excelUseStatus').checked;
   };
   const getStoreAddress = () => {
     return document.getElementById('storeAddr').value;
@@ -246,8 +242,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (qunatitySubmitBtnElms.length < 1) return;
 
     qunatitySubmitBtnElms.forEach((qunatitySubmitBtnElm) => {
-      qunatitySubmitBtnElm.addEventListener('click', (e) => {
-        setQuantity(e.target);
+      qunatitySubmitBtnElm.addEventListener('click', () => {
+        setQuantity(qunatitySubmitBtnElm);
       });
     });
   };
@@ -257,11 +253,39 @@ window.addEventListener('DOMContentLoaded', async () => {
     closeExcelModal();
   };
 
+  const onCreateStoreUser = async () => {
+    const storeUserIdElm = getStoreUserIdElm();
+    const storeUserPwElm = getStoreUserPwElm();
+    if (!storeUserIdElm.value) {
+      utils.onAlertModal('관리자 아이디를 입력해 주세요.');
+    }
+    if (!storeUserPwElm.value) {
+      utils.onAlertModal('관리자 비밀번호를 입력해 주세요.');
+    }
+
+    try {
+      const form = { id: storeUserIdElm.value, password: storeUserPwElm.value };
+      console.log(form);
+      const res = await axios.post(`/api/v1/users/store/${getStoreId()}`, form);
+      if (res.status === 201) {
+        utils.onAlertModal('해당 매장의 관리자 계정이 생성 되었습니다.');
+      }
+    } catch (error) {
+      utils.onAlertModal('관리자 계정 생성에 실패하였습니다.');
+      console.error(error);
+    }
+  };
+
+  const onCreateStoreUserHandler = () => {
+    createStoreUserBtnElm().addEventListener('click', onCreateStoreUser);
+  };
+
   const init = () => {
     if (type === 'c') {
       createManyHandler();
       toggleExcelModal();
     } else if (type === 'u') {
+      onCreateStoreUserHandler();
       deleteBtnHandler();
       quantityBtnHandler();
     }
