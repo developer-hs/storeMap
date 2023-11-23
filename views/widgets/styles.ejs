@@ -5,34 +5,15 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
 
 <div id="content">
+  <div class="page_title">
+    <div class="title_ct">
+      <span class="title">WIDGET STYLE SETTING</span>
+      <span class="sub_title">위젯 스타일 설정 페이지</span>
+    </div>
+  </div>
   <div class="save_alert" id="saveAlert">설정에 변경사항이 존재합니다.</div>
   <div class="widget_ct">
     <div class="left">
-      <div class="marker_img_area card">
-        <div class="renew_btn" id="markerInitBtn">
-          <i class="xi-renew"></i>
-        </div>
-        <div class="marker_img_upload_area">
-          <div class="marker_img_upload_box">
-            <div class="title">기본마커</div>
-            <input type="file" name="image" id="markerUpload" data-marker-type="normalMarker" />
-            <label for="markerUpload">
-              <img src="<%- marker.pickupMarker %>" alt="" />
-            </label>
-          </div>
-          <div class="marker_img_upload_box">
-            <div class="title">바로픽업 마커</div>
-            <input type="file" name="image" id="nowMarkerUpload" data-marker-type="nowMarker" />
-            <label for="nowMarkerUpload">
-              <img src="<%- marker.nowPickupMarker %>" alt="" />
-            </label>
-          </div>
-        </div>
-        <div class="marker_submit_box">
-          <div class="md-btn md-btn bg-primary" id="markerSubmit">마커 설정</div>
-        </div>
-      </div>
-
       <div class="card">
         <div class="renew_btn" id="renewBtn">
           <i class="xi-renew"></i>
@@ -200,6 +181,30 @@
         </div>
         <div class="btn_area">
           <div class="md-btn md-btn bg-success" id="submitBtn">저장</div>
+        </div>
+      </div>
+      <div class="marker_img_area card">
+        <div class="renew_btn" id="markerInitBtn">
+          <i class="xi-renew"></i>
+        </div>
+        <div class="marker_img_upload_area">
+          <div class="marker_img_upload_box">
+            <div class="title">기본마커</div>
+            <input type="file" name="image" id="markerUpload" data-marker-type="normalMarker" />
+            <label for="markerUpload">
+              <img src="<%- marker.pickupMarker %>" alt="" />
+            </label>
+          </div>
+          <div class="marker_img_upload_box">
+            <div class="title">바로픽업 마커</div>
+            <input type="file" name="image" id="nowMarkerUpload" data-marker-type="nowMarker" />
+            <label for="nowMarkerUpload">
+              <img src="<%- marker.nowPickupMarker %>" alt="" />
+            </label>
+          </div>
+        </div>
+        <div class="marker_submit_box">
+          <div class="md-btn md-btn bg-success" id="markerSubmit">마커 설정</div>
         </div>
       </div>
     </div>

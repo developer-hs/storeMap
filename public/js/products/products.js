@@ -7,9 +7,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     return document.getElementById('prdCnt');
   };
 
-  const getUseStatusBatchPrcsBtn = () => {
-    return document.getElementById('useStatusBatchPrcsUBtn');
-  };
   const getSearchPrdNumBtn = () => {
     return document.getElementById('searchPrdNumBtn');
   };
@@ -197,14 +194,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const onUseStatusBatchPrcsBtn = () => {
-    try {
-      const useStatusElms = document.querySelectorAll("input[id*='useStatus']");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   const onSearchPrdNumBtn = () => {
     const searchPrdNum = document.getElementById('searchPrdNum').value;
     if (searchPrdNum) {
@@ -226,12 +215,14 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  const useStatusBatchPrcsBtnHandler = () => {
-    getUseStatusBatchPrcsBtn().addEventListener('click', onUseStatusBatchPrcsBtn);
-  };
-
   const searchPrdNumBtnHandler = () => {
     getSearchPrdNumBtn().addEventListener('click', onSearchPrdNumBtn);
+    getSearchPrdNumElm().addEventListener('keydown', (e) => {
+      const keyCode = e.keyCode || e.which;
+      if (keyCode === 13) {
+        onSearchPrdNumBtn();
+      }
+    });
   };
 
   const searchPrdNumInit = () => {
@@ -257,7 +248,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const sticyToRightElmHandler = () => {
     const contentElm = document.getElementById('content');
     const rightElm = document.querySelector('.right');
-    const rectY = rightElm.getBoundingClientRect().y - 223;
+    const rectY = rightElm.getBoundingClientRect().y - 100;
 
     contentElm.addEventListener('scroll', (e) => {
       stickyToRightElm(e.target, rectY);
@@ -265,7 +256,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const handlers = () => {
-    useStatusBatchPrcsBtnHandler();
     useStatusHandler();
     searchPrdNumBtnHandler();
 

@@ -1,6 +1,8 @@
-.page_title .title_ct {
-  justify-content: right;
-  flex-direction: initial;
+.content-head .area {
+  margin-bottom: 30px;
+}
+.page_title .title {
+  display: flex;
 }
 input#excelUploadBtn {
   opacity: 0;
@@ -128,7 +130,7 @@ input#excelUploadBtn {
 }
 
 #excelUploadModalBg {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -418,8 +420,10 @@ input#excelUploadBtn {
 
 .add_user_modal_btn {
   cursor: pointer;
+  min-width: var(--btn-sm-wd);
+  margin-left: 20px;
   max-width: 200px;
-  min-height: 50px;
+  min-height: 40px;
   flex: 1;
   display: flex;
   justify-content: center;
@@ -430,6 +434,7 @@ input#excelUploadBtn {
 
 .add_user_modal_btn span {
   font-size: 1rem;
+  font-weight: 400;
 }
 
 .add_user_modal_btn > svg {

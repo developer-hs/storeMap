@@ -7,7 +7,7 @@
   border-bottom: 1px solid #eee;
   background-color: var(--color-main-bg);
   z-index: 1;
-  justify-content: space-between;
+  justify-content: right;
   padding: 0 24px;
 }
 

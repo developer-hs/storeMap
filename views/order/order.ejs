@@ -1,6 +1,12 @@
 ﻿<link rel="stylesheet" type="text/css" href="/css/order/order.css" />
 
-<div class="order_area">
+<div class="order_area" id="content">
+  <div class="page_title">
+    <div class="title_ct">
+      <span class="title">STORE MANAGEMENT</span>
+      <span class="sub_title">결제하기</span>
+    </div>
+  </div>
   <div class="payment_area">
     <% for (var i = 0; i < products.length; i++){ %>
     <div class="card <% if(products[i].name === '30,000 POINT') { %> recommend <% } %>">

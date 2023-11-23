@@ -1,3 +1,7 @@
+.page_title .title {
+  width: max-content;
+  position: relative;
+}
 #content {
   height: 100%;
   padding-bottom: 36px;
@@ -81,6 +85,9 @@
 
 .prd_cnt {
   font-size: 2.375rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .product_ct {
@@ -94,6 +101,7 @@
 }
 
 .product_ct .right {
+  padding-top: 166px;
   width: 40%;
   top: 0;
   height: max-content;
@@ -101,9 +109,7 @@
 
 .product_ct .right.sticky {
   position: sticky;
-  top: 50%;
   right: 0;
-  transform: translate3d(0, -50%, 0);
 }
 
 .emtpy_product {
@@ -123,10 +129,14 @@
   font-weight: 500;
 }
 
+.filter_ct {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
 .filter_ct .text-field {
   display: flex;
   justify-content: right;
-  margin-bottom: 24px;
   height: 50px;
 }
 
@@ -193,7 +203,6 @@ body .filter_ct .search_prd_num {
 
 .api_limit_ct .limit span,
 .api_limit_ct .limit .title {
-  font-family: 'SBAggro';
   font-weight: 500;
   font-size: 1rem;
   color: var(--color-l-black);

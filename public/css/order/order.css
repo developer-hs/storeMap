@@ -1,12 +1,16 @@
-.order_area {
-  height: calc(100% - 84px - 75px);
-  padding: var(--top-margin) 60px 0;
+.order_area#content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  height: 100%;
+  padding-left: 60px;
+  padding-right: 60px;
 }
 .payment_area {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 100%;
 }
 
 .order_area .payment_area > .card {
@@ -111,6 +115,7 @@
 }
 
 .notice {
+  width: 100%;
   line-height: 20px;
 }
 .notice p {

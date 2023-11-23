@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 30px;
+  height: var(--header-h);
 }
 #sideNavCt .logo_ct > a {
   font-size: 1.5rem;
@@ -27,6 +27,9 @@
   align-items: center;
   box-sizing: border-box;
 }
+#sideNavCt .cate:nth-of-type(1) {
+  margin-top: 0;
+}
 #sideNavCt .cate > a {
   color: #b5b5b5;
   padding: 16px 0;
@@ -39,6 +42,9 @@
   width: 100%;
 }
 
+#sideNavCt .cate:nth-of-type(1) > a {
+  padding-top: 0;
+}
 #sideNavCt .cate.on {
   border-radius: var(--lg-radius);
 }
