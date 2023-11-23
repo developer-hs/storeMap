@@ -208,6 +208,7 @@ input#excelUploadBtn {
 
 .excel_btn_area .create_btn {
   color: var(--color-excel);
+  margin-right: 16px;
 }
 
 .excel_btn_area .create_btn,

@@ -94,6 +94,10 @@
   margin-left: calc(var(--spacer) * 3) !important;
 }
 
+.br-30 {
+  border-radius: 30px !important;
+}
+
 .c-white {
   color: #fff !important;
 }
@@ -224,6 +228,12 @@ div[class*='btn'] > a {
 
 div[class*='btn'] > a svg {
   margin-right: 8px;
+}
+.bd-black {
+  border: 1px solid #000 !important;
+}
+.bd-excel {
+  border: 1px solid var(--color-excel) !important;
 }
 .bd-success {
   border: 1px solid var(--color-success) !important;

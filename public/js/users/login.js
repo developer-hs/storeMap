@@ -83,9 +83,6 @@ window.addEventListener('DOMContentLoaded', async () => {
       });
     });
     initInputElmsValue();
-    document.getElementById('storeMapMallID').value = 'rlagudtjq2016';
-    document.getElementById('storeMapPW').value = 'as7315850!';
-    document.getElementById('storeUserID').value = 'dev';
   };
 
   const initInputElmsValue = () => {

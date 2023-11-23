@@ -58,18 +58,24 @@
       </div>
       <div class="mb-4 head_right">
         <div class="head_btn_area mb-3">
-          <div class="active-btn bd-success" id="storeCreateBtn">
-            <a class="c-success" href="/stores/store?type=c">
+          <div class="active-btn bg-success" id="storeCreateBtn">
+            <a class="c-white" href="/stores/store?type=c">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <g clip-path="url(#clip0_143_5)">
-                  <path d="M16 4L12 0L2 10L0 16L6 14L16 4ZM4.8 11.6667L11.6667 4.8L12.9333 6.06667L6.06667 12.9333L4.8 11.6667ZM15.0667 4L13.4667 5.6L10.4 2.53333L12 0.933333L15.0667 4ZM9.93333 3.06667L11.2 4.33333L4.33333 11.2L3.06667 9.93333L9.93333 3.06667ZM1.06667 14.9333L1.6 13.4L2.66667 14.4667L1.06667 14.9333ZM3.33333 14.2L1.8 12.6667L2.53333 10.4L5.6 13.4667L3.33333 14.2Z" fill="#4bb0a0"/>
-                  <path d="M5.33325 15.3333H13.3333V16H5.33325V15.3333Z" fill="#4bb0a0"/>
-                  <path d="M14.6667 15.3333H16.0001V16H14.6667V15.3333Z" fill="#4bb0a0"/>
+                  <path d="M16 4L12 0L2 10L0 16L6 14L16 4ZM4.8 11.6667L11.6667 4.8L12.9333 6.06667L6.06667 12.9333L4.8 11.6667ZM15.0667 4L13.4667 5.6L10.4 2.53333L12 0.933333L15.0667 4ZM9.93333 3.06667L11.2 4.33333L4.33333 11.2L3.06667 9.93333L9.93333 3.06667ZM1.06667 14.9333L1.6 13.4L2.66667 14.4667L1.06667 14.9333ZM3.33333 14.2L1.8 12.6667L2.53333 10.4L5.6 13.4667L3.33333 14.2Z" fill="#ffffff"/>
+                  <path d="M5.33325 15.3333H13.3333V16H5.33325V15.3333Z" fill="#ffffff"/>
+                  <path d="M14.6667 15.3333H16.0001V16H14.6667V15.3333Z" fill="#ffffff"/>
                 </g>
               </svg>
               매장 생성
             </a>
           </div>
+        </div>
+        <div class="search_area text-field flex">
+          <form action="/stores" method="get">
+            <input class="bd-primary br-30" name="search" type="text" id="search" />
+            <label for="search">검색</label>
+          </form>
           <div> 
             <% if (stores.length > 0) { %>
             <div class="area filter_btn_ct">
@@ -77,7 +83,6 @@
                 <svg class="filter_icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M0 0V2.94L6.31605 9.35V16L9.68395 13.86V9.34L16 2.93V0H0ZM15.0506 0.94V2.28H0.939413V0.94H15.0506ZM8.73454 8.97V13.35L7.24547 14.3V8.97L1.58901 3.21H14.401L8.73454 8.96V8.97Z" fill="#6288fd"/>
                 </svg>
-                Filter
               </div>
             </div>
             <% } %>
@@ -91,24 +96,18 @@
               <li class="drop_menu " id="coordSetBtn">
                   모든 스토어 좌표 설정
               </li>
-              <li class="drop_menu export_excel_btn" id="exportExcelBtn">
-                  엑셀로 내보내기
-              </li>
               <li class="drop_menu activate_all_btn" id="activateAllBtn">
                   모든 스토어 활성화
               </li>
               <li class="drop_menu delete_all_btn" id="deleteAllBtn">
                   모든 스토어 삭제
               </li>
+              <li class="drop_menu export_excel_btn" id="exportExcelBtn">
+                  엑셀로 내보내기
+              </li>
             </ul>
           </div>
           <% } %>
-        </div>
-        <div class="search_area text-field">
-          <form action="/stores" method="get">
-            <input class="bd-primary" name="search" type="text" id="search" />
-            <label for="search">검색</label>
-          </form>
         </div>
       </div>
     </div>
