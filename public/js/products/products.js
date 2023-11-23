@@ -34,11 +34,13 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (res.status === 200) {
         L_PRODUCTS_LIST = res.data;
         getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
+        return true;
       }
     } catch (error) {
       console.error(error);
       alert('세션이 만료되었습니다 다시 접속해 주세요.');
       window.location.href = `https://${mallId}.cafe24.com/disp/admin/shop1/myapps/list`;
+      return false;
     }
   };
 
@@ -186,13 +188,12 @@ window.addEventListener('DOMContentLoaded', async () => {
           useStatusElm.parentNode.parentNode.classList.remove('use');
         }
         useStatusElm.checked = useStatus;
-        // utils.removeLoadingGuard(loadingGuard);
+
         utils.onAlertModal('설정이 완료되었습니다.');
       }
     } catch (error) {
       console.error(error);
       utils.onAlertModal(error.message);
-      // utils.removeLoadingGuard(loadingGuard);
     }
   };
 
@@ -272,10 +273,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const processInit = async () => {
-    await getProducts();
-    paintProducts();
-    activeProductInit();
-    searchPrdNumInit();
+    if (await getProducts()) {
+      paintProducts();
+      activeProductInit();
+      searchPrdNumInit();
+    }
   };
 
   const init = async () => {

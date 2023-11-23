@@ -9,6 +9,7 @@ body #content {
   height: 100%;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin: var(--top-margin) 0 30px 0;
 }
 
 .widget_ct > .left > .card,
@@ -277,7 +278,7 @@ body #content {
 }
 
 .marker_img_area {
-  margin-top: 30px;
+  margin-bottom: 60px;
   -webkit-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);

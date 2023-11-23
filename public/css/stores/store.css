@@ -1,5 +1,6 @@
-.title_cd {
-  display: flex;
+.page_title .title_ct {
+  justify-content: right;
+  flex-direction: initial;
 }
 input#excelUploadBtn {
   opacity: 0;
@@ -49,7 +50,7 @@ input#excelUploadBtn {
 .store_ct > .right.product_ct .title > span {
   font-size: 1.25rem;
   font-weight: 400;
-  color: var(--color-black);
+  color: #000;
 }
 
 .store_ct > .right.product_ct .title .faq_area::before {
@@ -76,9 +77,19 @@ input#excelUploadBtn {
 .store_ct .btn_area > div[class*='btn']:last-child {
   margin-right: 0px;
 }
+
 .store_ct .btn_area #deleteBtn {
   font-size: 14px;
   color: #a1a1a1;
+  background: linear-gradient(to right, var(--color-danger) 50%, transparent 50%);
+  background-size: 200% 100%;
+  background-position: 100%;
+  transition: background-position 0.5s ease, color 0.25s ease;
+  border: none;
+}
+.store_ct .btn_area #deleteBtn:hover {
+  color: #fff;
+  background-position: 0;
 }
 
 #excelBtnCt {
@@ -96,7 +107,7 @@ input#excelUploadBtn {
 #excelBtnCt,
 #smapleExcelDwldBtn {
   cursor: pointer;
-  border-radius: var(--default-radius);
+  border-radius: var(--sm-radius);
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -207,12 +218,11 @@ input#excelUploadBtn {
 }
 
 .excel_btn_area .sample_dwld_btn > a {
-  font-family: 'SBAggro';
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: initial;
+  height: initial;
   font-size: 1rem;
 }
 
@@ -404,4 +414,46 @@ input#excelUploadBtn {
   background: #353535;
   color: #fff;
   box-sizing: border-box;
+}
+
+.add_user_modal_btn {
+  cursor: pointer;
+  max-width: 200px;
+  min-height: 50px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 6px;
+  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.1);
+}
+
+.add_user_modal_btn span {
+  font-size: 1rem;
+}
+
+.add_user_modal_btn > svg {
+  margin-right: 8px;
+}
+
+.add_store_user_modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.add_store_user_area {
+  min-width: 430px;
+  background-color: #fff;
+}
+
+.add_store_user_area .title {
+  font-size: 20px;
 }

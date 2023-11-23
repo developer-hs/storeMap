@@ -1,9 +1,6 @@
-#content-area {
-  padding: 42px 80px;
-}
-
 .order_area {
   height: calc(100% - 84px - 75px);
+  padding: var(--top-margin) 60px 0;
 }
 .payment_area {
   display: flex;
@@ -18,7 +15,7 @@
   position: relative;
   padding: 22px 32px;
   width: 20%;
-  min-height: 325px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -148,5 +145,76 @@
   }
   .order_area .payment_area .section {
     padding: 0 22px;
+  }
+}
+
+@media all and (max-width: 1756px) {
+  .order_area .payment_area > .card {
+    min-height: 270px;
+    padding: 22px 22px;
+  }
+  .order_area {
+    padding: var(--top-margin) 30px 0;
+  }
+
+  .order_area .payment_area .origin_price .price {
+    font-size: 1.25rem;
+  }
+  .order_area .payment_area .sell_price {
+    font-size: 1.5rem;
+  }
+  .order_area .payment_area .product_name {
+    font-size: 1.5rem;
+  }
+  .order_area .payment_area .disc {
+    font-size: 0.875rem;
+  }
+  .order_area .payment_area .section {
+    padding: 0 22px;
+  }
+}
+
+@media all and (max-width: 1500px) {
+  .order_area .payment_area > .card {
+    min-height: 230px;
+    padding: 22px 22px;
+  }
+  .order_area {
+    padding: var(--top-margin) 30px 0;
+  }
+
+  .order_area .payment_area .origin_price .price {
+    font-size: 1rem;
+  }
+  .order_area .payment_area .sell_price {
+    font-size: 1.125rem;
+  }
+  .order_area .payment_area .product_name {
+    font-size: 1.25rem;
+  }
+  .order_area .payment_area .disc {
+    font-size: 0.875rem;
+  }
+  .order_area .payment_area .section {
+    padding: 0 22px;
+  }
+  .order_area .payment_area .order_btn {
+    font-size: 1rem;
+  }
+}
+
+@media all and (max-width: 950px) {
+  .order_area .payment_area .origin_price .price {
+    margin-right: 8px;
+  }
+  .order_area .payment_area .origin_price {
+    justify-content: center;
+  }
+  .payment_area {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  .order_area .payment_area > .card {
+    width: 40%;
   }
 }

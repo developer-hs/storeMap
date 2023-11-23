@@ -16,10 +16,10 @@
   </head>
   <body>
     <%- include("./alert.ejs") %>
-    <%- include("./top_nav.ejs") %>
     <div id="content-ct">
       <%- include("./side_nav.ejs") %>
       <div id="content-area">
+        <%- include("./top_nav.ejs") %>
         <%- defineContent('body') %>
       </div>
     </div>

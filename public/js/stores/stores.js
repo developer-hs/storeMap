@@ -89,7 +89,7 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @return {Number}
    */
   const getStoreTotalCnt = () => {
-    return Number(document.getElementById('storeCount').innerText);
+    return Number(document.getElementById('storesCount').innerText);
   };
 
   /**

@@ -1,12 +1,19 @@
 <div id="header">
-  <div class="logo_ct"><a href="/stores">STORE MAP</a></div>
+  <div class="page_title_area">
+    <div class="page_title">
+      <%- pageTitle -%>
+    </div>
+    <div class="page_sub_title">
+      <%- pageSubTitle -%>
+    </div>
+  </div>
   <div class="member_info_ct">
     <div class="mall_name">
-      <%- mallId %>
+      <%- mallId -%>
     </div>
     <div>
       <span class="point">
-        <%- point.toLocaleString("Ko-kr") %>
+        <%- point.toLocaleString("Ko-kr") -%>
       </span>
       <span>POINT</span>
     </div>

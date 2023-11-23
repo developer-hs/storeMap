@@ -59,7 +59,7 @@
 }
 
 #products .product.use::before {
-  background-color: var(--color-primary);
+  background-color: var(--color-success);
 }
 
 #products .product .prd_img {
@@ -80,12 +80,6 @@
 }
 
 .prd_cnt {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.prd_cnt {
   font-size: 2.375rem;
 }
 
@@ -96,7 +90,7 @@
 }
 
 .product_ct .left {
-  width: 50%;
+  width: 55%;
 }
 
 .product_ct .right {

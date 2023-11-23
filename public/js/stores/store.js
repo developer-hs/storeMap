@@ -4,8 +4,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   const type = param.get('type');
   const getStoreUserIdElm = () => document.getElementById('storeUserID');
   const getStoreUserPwElm = () => document.getElementById('storeUserPW');
-  const createStoreUserBtnElm = () => document.getElementById('createStoreUserBtn');
-
+  const getaddStoreUserBtnElm = () => document.getElementById('addStoreUserBtn');
+  const getAddUserModalBtnElm = () => document.getElementById('addUserModalBtn');
+  const getAddStoreUserModalElm = () => document.getElementById('addStoreUserModal');
   if (!type) {
     alert('잘못된 접근입니다.');
     window.location.href = '/stores';
@@ -253,7 +254,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     closeExcelModal();
   };
 
-  const onCreateStoreUser = async () => {
+  const onAddStoreUser = async () => {
     const storeUserIdElm = getStoreUserIdElm();
     const storeUserPwElm = getStoreUserPwElm();
     if (!storeUserIdElm.value) {
@@ -276,8 +277,35 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  const onCreateStoreUserHandler = () => {
-    createStoreUserBtnElm().addEventListener('click', onCreateStoreUser);
+  const addStoreUserHandler = () => {
+    getaddStoreUserBtnElm().addEventListener('click', onAddStoreUser);
+  };
+
+  const toggleAddUserModal = () => {
+    getAddStoreUserModalElm().classList.toggle('displaynone');
+  };
+
+  const addUserModalBtnHandler = () => {
+    getAddUserModalBtnElm().addEventListener('click', toggleAddUserModal);
+  };
+
+  const hideAddStoreUserModal = (target) => {
+    const addStoreUserModalElm = getAddStoreUserModalElm();
+    if (target === addStoreUserModalElm) {
+      addStoreUserModalElm.classList.add('displaynone');
+    }
+  };
+
+  const addStoreUserModalHandler = () => {
+    getAddStoreUserModalElm().addEventListener('click', (e) => {
+      hideAddStoreUserModal(e.target);
+    });
+  };
+
+  const addUserHander = () => {
+    addUserModalBtnHandler();
+    addStoreUserHandler();
+    addStoreUserModalHandler();
   };
 
   const init = () => {
@@ -285,7 +313,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       createManyHandler();
       toggleExcelModal();
     } else if (type === 'u') {
-      onCreateStoreUserHandler();
+      addUserHander();
       deleteBtnHandler();
       quantityBtnHandler();
     }

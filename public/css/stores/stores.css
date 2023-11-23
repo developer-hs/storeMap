@@ -53,7 +53,7 @@ body {
 }
 
 .store.use::before {
-  background-color: var(--color-primary);
+  background-color: #6288fd;
 }
 
 .store div {
@@ -114,11 +114,11 @@ body {
 .addr {
   display: flex;
   align-items: center;
-  width: 67%;
+  width: 62%;
 }
 .use_status {
   display: flex;
-  width: 10%;
+  width: 15%;
   justify-content: center;
   align-items: center;
 }
@@ -292,11 +292,10 @@ body {
 }
 
 .area.filter_btn_ct #filterBtn {
-  font-family: 'SBAggro';
   position: relative;
   cursor: pointer;
-  border: 1px solid var(--color-primary);
-  color: var(--color-primary);
+  border: 1px solid var(--color-accent-dull);
+  color: var(--color-accent-dull);
   font-weight: 500;
   font-size: 1.125rem;
   text-transform: uppercase;
@@ -305,15 +304,12 @@ body {
   align-items: center;
   width: calc((var(--btn-default-wd) * 2) + (12px * 3) + 44px);
   height: var(--btn-default-ht);
-  border-radius: var(--default-radius);
+  border-radius: var(--sm-radius);
 }
 
 .area.filter_btn_ct .filter_icon {
-  position: absolute;
-  stroke: #3040d6;
-  left: calc(var(--btn-default-wd) - 40px);
-  width: 16px;
-  height: 16px;
+  margin-right: 8px;
+  fill: var(--color-accent-dull);
 }
 
 .filter_ct {
@@ -444,17 +440,17 @@ body {
 .use_status .icon.on::before {
   content: 'SHOWING';
   font-weight: 500;
-  padding: 8px 12px;
-  border-radius: var(--default-radius);
-  background-color: var(--color-l-primary);
-  color: var(--color-primary);
+  padding: 4px 16px;
+  border-radius: var(--sm-radius);
+  background-color: #e7eeff;
+  color: #6288fd;
 }
 
 .use_status .icon.off::before {
   content: 'NOT SHOWING';
   font-weight: 500;
-  padding: 4px 8px;
-  border-radius: var(--default-radius);
+  padding: 4px 16px;
+  border-radius: var(--sm-radius);
   background-color: var(--color-l-danger);
   color: var(--color-danger);
 }
@@ -519,11 +515,10 @@ body {
 }
 
 .drop_menus li {
-  font-family: 'SBAggro';
   box-sizing: border-box;
   font-size: 1rem;
   padding: 12px 18px;
-  font-weight: 300;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -544,4 +539,13 @@ body {
 
 .drop_menus li.activate_all_btn {
   color: var(--color-primary);
+}
+
+.content-head .area {
+  justify-content: right;
+  position: relative;
+}
+.summary_area {
+  position: absolute;
+  left: 0;
 }
