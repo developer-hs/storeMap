@@ -63,19 +63,18 @@
 #sideNavCt .icon {
   position: absolute;
   left: 15px;
-  width: 25px;
+  width: 24px;
 }
 
 #sideNavCt svg {
   position: absolute;
   left: 15px;
-  width: 25px;
+  width: 24px;
 }
 
-#sideNavCt .cate svg [class*='cls'] {
+#sideNavCt .cate svg .fill_path {
   fill: #b5b5b5;
 }
-
-#sideNavCt .cate.on svg [class*='cls'] {
-  fill: #000;
+#sideNavCt .cate.on svg .fill_path {
+  fill: #007eff;
 }

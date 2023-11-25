@@ -6,9 +6,12 @@
     <title>Document</title>
   </head>
   <body>
+    <div id="message" data-res-data="<%- message -%>"></div>
+    <div id="redirectURI" data-res-data="<%- redirectURI -%>"></div>
+    
     <script>
-      alert('잘못된 접근입니다.');
-      window.location.href = '/users/login';
+      alert(message.dataset.resData);
+      window.location.href = redirectURI.dataset.resData
     </script>
   </body>
 </html>

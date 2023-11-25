@@ -382,9 +382,16 @@ const searchTypeHandler = () => {
   });
 };
 
-const searchStoreIsValid = () => {
+const searchStoreIsValid = async () => {
   const store = findStoreBySearched();
   if (!store) {
+    try {
+      const res = await axios.get('/api/v1/stores/search/address');
+      if (res.status === 200) {
+        const searchNaverCoord = createNaverCoord(res.data.mapx, res.data.mapy);
+        createUserMarker(searchNaverCoord);
+      }
+    } catch (error) {}
     return false;
   }
 
@@ -739,12 +746,12 @@ const createStoreMarker = (store) => {
   return marker;
 };
 
-const createUserMarker = () => {
+const createUserMarker = (naverCoord) => {
   userMarkers.forEach((userMarker) => {
     userMarker.setMap(null);
   });
   const markerImgURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/current_location.gif';
-  const userMarker = createNaverMarker(L_USER_NAVER_COORD, markerImgURI);
+  const userMarker = createNaverMarker(naverCoord, markerImgURI);
 
   // 마커가 지도 위에 표시되도록 설정합니다
   userMarker.setMap(L_MAP);
@@ -943,6 +950,7 @@ const geoLocationPickupInit = () => {
   createUserMarker(L_USER_NAVER_COORD);
   setDistance(L_USER_NAVER_COORD);
   storeListUp();
+  renewBtnHandler();
 };
 
 const pickupInit = () => {

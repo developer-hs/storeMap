@@ -8,6 +8,7 @@
   --ui-address-text-color: #e1e1e1;
   --ui-map-title-text-color: #fff;
   --ui-map-address-text-color: #e1e1e1;
+  --ui-map-renew-btn-color: #fff;
   --ui-quicksearch-title-text-color: #666666;
   --ui-quicksearch-distance-text-color: #979797;
   --ui-quicksearch-address-text-color: #979797;
@@ -187,6 +188,7 @@ code {
   color: inherit;
 }
 #pickupStore #mapTitle .title {
+  position: relative;
   padding: 14px 12px;
 }
 
@@ -494,7 +496,19 @@ body #pickupStore .store_list_ct .swiper-pagination {
   height: 100%;
   background-color: rgba(255, 255, 255, 0.3);
 }
-
+.map_renew_btn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
+.map_renew_btn svg {
+  fill: var(--ui-map-renew-btn-color);
+}
 @font-face {
   font-family: 'AppleSD';
   font-weight: 100;

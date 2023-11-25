@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getMapAddressTextColor = () => {
     return document.getElementById('uiMapAddressTextColorCt').dataset.color;
   };
+  const getMapRenewBtnColor = () => {
+    return document.getElementById('uiMapRenewBtnColorCt').dataset.color;
+  };
   const getQuickSearchTitleTextColor = () => {
     return document.getElementById('uiQuickSearchTitleTextColorCt').dataset.color;
   };
@@ -94,6 +97,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
   const getDistanceTextElm = () => {
     return document.getElementById('uiDistanceTextColorCt');
+  };
+  const getMapRenewBtnColorCtElm = () => {
+    return document.getElementById('uiMapRenewBtnColorCt');
   };
   const getSubmitBtn = () => {
     return document.getElementById('submitBtn');
@@ -131,6 +137,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getMapAddressElm = () => {
     return document.getElementById('storeAddress');
   };
+  const getMapRenewBtnElm = () => {
+    return document.querySelector('#mapRenewBtn svg');
+  };
   const getSubmitBtnElm = () => {
     return document.getElementById('submit');
   };
@@ -151,6 +160,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
   const getStoreListSection = () => {
     return document.getElementById('storeListSection');
+  };
+  const getMapStyleSection = () => {
+    return document.getElementById('mapStyleSection');
   };
   const getRenewBtnElm = () => {
     return document.getElementById('renewBtn');
@@ -217,6 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       distanceTextColor: { prev: getDistanceTextColor(), cur: getDistanceTextColor() },
       mapTitleTextColor: { prev: getMapTitleTextColor(), cur: getMapTitleTextColor() },
       mapAddressTextColor: { prev: getMapAddressTextColor(), cur: getMapAddressTextColor() },
+      mapRenewBtnColor: { prev: getMapRenewBtnColor(), cur: getMapRenewBtnColor() },
       quickSearchTitleTextColor: { prev: getQuickSearchTitleTextColor(), cur: getQuickSearchTitleTextColor() },
       quickSearchDistanceTextColor: { prev: getQuickSearchDistanceTextColor(), cur: getQuickSearchDistanceTextColor() },
       quickSearchAddressTextColor: { prev: getQuickSearchAddressTextColor(), cur: getQuickSearchAddressTextColor() },
@@ -314,6 +327,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const distanceTextColorPickr = Pickr.create(createPickrConfig('#uiDistanceTextColor', getDistanceTextColor()));
     const mapTitleTextColorPickr = Pickr.create(createPickrConfig('#uiMapTitleTextColor', getMapTitleTextColor()));
     const mapAddressTextColorPickr = Pickr.create(createPickrConfig('#uiMapAddressTextColor', getMapAddressTextColor()));
+    const mapRenewBtnColorPickr = Pickr.create(createPickrConfig('#uiMapRenewBtnColor', getMapRenewBtnColor()));
     const mapQuickSearchTitleTextColorPickr = Pickr.create(
       createPickrConfig('#uiQuickSearchTitleTextColor', getQuickSearchTitleTextColor())
     );
@@ -416,6 +430,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     });
 
+    mapRenewBtnColorPickr.on('save', (color, instance) => {
+      pickrSave(() => {
+        const selectedColor = colorToString(color);
+        widgetStatus.mapRenewBtnColor.cur = selectedColor;
+        getMapRenewBtnElm().style.fill = selectedColor;
+      });
+    });
+
     mapQuickSearchTitleTextColorPickr.on('save', (color, instance) => {
       pickrSave(() => {
         const selectedColor = colorToString(color);
@@ -499,6 +521,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       distanceTextColorPickr.setColor('#979797');
       mapTitleTextColorPickr.setColor('#ffffff');
       mapAddressTextColorPickr.setColor('#e1e1e1');
+      mapRenewBtnColorPickr.setColor('ffffff');
       mapQuickSearchTitleTextColorPickr.setColor('#666666');
       quickSearchTitleTextHoverColorPickr.setColor('#000000');
       quickSearchDistanceTextColorPickr.setColor('#979797');
@@ -519,22 +542,32 @@ document.addEventListener('DOMContentLoaded', async () => {
   const onUI = () => {
     const UIType = getUIType();
     const distanceElms = document.querySelectorAll('#pickupStore .distance');
+    const mapRenewBtnElm = document.getElementById('mapRenewBtn');
 
     if (UIType === 'default') {
       distanceElms.forEach((distanceElm) => {
         distanceElm.classList.add('displaynone');
+        mapRenewBtnElm.classList.add('displaynone');
       });
       getDistanceTextElm().parentNode.classList.add('displaynone');
+      getMapRenewBtnColorCtElm().parentNode.classList.add('displaynone');
     } else {
       distanceElms.forEach((distanceElm) => {
         distanceElm.classList.remove('displaynone');
+        mapRenewBtnElm.classList.remove('displaynone');
       });
       getDistanceTextElm().parentNode.classList.remove('displaynone');
+      getMapRenewBtnColorCtElm().parentNode.classList.remove('displaynone');
     }
 
     // UI Type 에 따라 거리 옵션이 사라지기 때문에 해당 옵션 박스 크기가 안맞아서 OFF 시킴
-    if (getStoreListSection().parentNode.classList.contains('tab_on')) {
-      getStoreListSection().click();
+    if (getStoreListSection().classList.contains('tab_on')) {
+      getStoreListSection().querySelector('.section_title').click();
+    }
+
+    if (getMapStyleSection().classList.contains('tab_on')) {
+      console.log(getMapStyleSection().classList);
+      getMapStyleSection().querySelector('.section_title').click();
     }
 
     widgetStatus.ui.cur = UIType;
@@ -558,6 +591,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       distanceTextColor: widgetStatus.distanceTextColor.cur,
       mapTitleTextColor: widgetStatus.mapTitleTextColor.cur,
       mapAddressTextColor: widgetStatus.mapAddressTextColor.cur,
+      mapRenewBtnColor: widgetStatus.mapRenewBtnColor.cur,
       quickSearchTitleTextColor: widgetStatus.quickSearchTitleTextColor.cur,
       quickSearchDistanceTextColor: widgetStatus.quickSearchDistanceTextColor.cur,
       quickSearchAddressTextColor: widgetStatus.quickSearchAddressTextColor.cur,
@@ -583,6 +617,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         widgetStatus.distanceTextColor.prev = widgetStatus.distanceTextColor.cur;
         widgetStatus.mapTitleTextColor.prev = widgetStatus.mapTitleTextColor.cur;
         widgetStatus.mapAddressTextColor.prev = widgetStatus.mapAddressTextColor.cur;
+        widgetStatus.mapRenewBtnColor.prev = widgetStatus.mapRenewBtnColor.cur;
         widgetStatus.quickSearchTitleTextColor.prev = widgetStatus.quickSearchTitleTextColor.cur;
         widgetStatus.quickSearchDistanceTextColor.prev = widgetStatus.quickSearchDistanceTextColor.cur;
         widgetStatus.quickSearchAddressTextColor.prev = widgetStatus.quickSearchAddressTextColor.cur;

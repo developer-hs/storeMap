@@ -66,8 +66,8 @@
           </div>
         </div>
 
-        <div class="section_ct">
-          <div class="section_title" id="storeListSection">매장 리스트 스타일</div>
+        <div class="section_ct" id="storeListSection">
+          <div class="section_title">매장 리스트 스타일</div>
           <div class="section_content">
             <div class="section">
               <div class="pickr_ct" id="uiTitleTextColorCt" data-color="<%- widget.titleTextColor %>">
@@ -132,7 +132,7 @@
           </div>
         </div>
 
-        <div class="section_ct">
+        <div class="section_ct" id="mapStyleSection">
           <div class="section_title">지도 스타일</div>
           <div class="section_content">
             <div class="section">
@@ -145,6 +145,12 @@
               <div class="pickr_ct" id="uiMapAddressTextColorCt" data-color="<%- widget.mapAddressTextColor %>">
                 <span>매장주소 색상</span>
                 <div class="" id="uiMapAddressTextColor"></div>
+              </div>
+            </div>
+            <div class="section <% if (widget.ui === 'default') { %> displaynone <% } %>">
+              <div class="pickr_ct" id="uiMapRenewBtnColorCt" data-color="<%- widget.mapRenewBtnColor %>">
+                <span>매장 새로고침 버튼 색상</span>
+                <div class="" id="uiMapRenewBtnColor"></div>
               </div>
             </div>
           </div>
@@ -307,6 +313,30 @@
             <div class="selected_store_name" style="color: <%- widget.mapTitleTextColor %>">
               <span class="pickup_store">픽업 매장</span>
               <span id="storeName">카페24</span>
+              <div class="map_renew_btn <% if (widget.ui === 'default') { %> displaynone <% } %>" id="mapRenewBtn">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="16"
+                  viewBox="0 0 20 16"
+                  style="fill: <%- widget.mapRenewBtnColor %>"
+                >
+                  <g clip-path="url(#clip0_164_201)">
+                    <path
+                      d="M2.58741 3.73332C2.48595 3.54666 2.3084 3.54666 2.20694 3.73332L0.0509449 7.65332C-0.0505135 7.83999 0.0382626 7.99999 0.24118 7.99999H4.55316C4.75608 7.99999 4.84486 7.83999 4.7434 7.65332L2.58741 3.73332Z"
+                    />
+                    <path
+                      d="M17.8062 12.2667C17.7047 12.4533 17.5271 12.4533 17.4257 12.2667L15.2697 8.34667C15.1682 8.16 15.257 8 15.4599 8H19.7719C19.9748 8 20.0636 8.16 19.9621 8.34667L17.8062 12.2667Z"
+                    />
+                    <path
+                      d="M10.0064 14.7734C6.45531 14.7734 3.56374 11.7334 3.56374 8.00002C3.56374 7.32002 3.69057 6.68002 3.86812 6.06669L3.0945 4.66669C2.65062 5.68002 2.39697 6.81335 2.39697 8.00002C2.39697 12.4134 5.80851 16 10.0064 16C11.0336 16 11.9975 15.7867 12.8979 15.4L12.3019 14.3067C11.5916 14.6 10.818 14.7734 10.019 14.7734H10.0064Z"
+                    />
+                    <path
+                      d="M17.6159 8C17.6159 3.58667 14.2044 0 10.0065 0C9.06806 0 8.16761 0.186667 7.34326 0.52L7.95201 1.62667C8.59881 1.38667 9.28365 1.24 10.0192 1.24C13.5703 1.24 16.4618 4.28 16.4618 8.01333C16.4618 8.69333 16.335 9.33333 16.1575 9.94667L16.9311 11.3467C17.375 10.3333 17.6286 9.2 17.6286 8.01333L17.6159 8Z"
+                    />
+                  </g>
+                </svg>
+              </div>
             </div>
             <div>
               <span id="storeAddress" style="color: <%- widget.mapAddressTitleTextColor %>">서울특별시 동작구 보라매로5길 15</span>

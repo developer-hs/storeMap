@@ -1,4 +1,5 @@
 **/head.ejs
 views/index.ejs
+views/wrong.ejs
 **/redirect_login.ejs
 **/refresh.ejs
