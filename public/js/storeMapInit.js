@@ -269,3 +269,5 @@ class StoreMapInitAPI {
 const storeMapInit = (elm) => {
   new StoreMapInitAPI(elm);
 };
+
+storeMapInit(storeMap);

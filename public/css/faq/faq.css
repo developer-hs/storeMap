@@ -1,9 +1,12 @@
 .faq_ct {
   padding: 60px 0;
 }
-
+.faq_ct .section_ct {
+  margin-bottom: 22px;
+}
 .faq_ct .section_ct.fold .section_title {
   border: none;
+  font-size: 1.25rem;
 }
 
 .faq_ct .section_ct.card {
@@ -11,4 +14,48 @@
 }
 .faq_ct .section_ct.fold .section_content .section {
   margin: 20px 20px;
+}
+.faq_ct .section_ct.fold .section_content .section div,
+.faq_ct .section_ct.fold .section_content .section span {
+  font-size: 1rem;
+}
+
+.faq_ct .code_area {
+  position: relative;
+  width: max-content;
+}
+
+.faq_ct .code_area .copy {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+code div,
+code span,
+code a,
+code p {
+  font-size: 1rem;
+}
+
+pre {
+  display: flex;
+}
+
+.faq_ct code[class*='language-'],
+.faq_ct pre[class*='language-'] {
+  font-family: initial;
+}
+
+.faq_ct .use_status {
+  display: inline-block;
+}
+.faq_ct .use_status .icon.on::before {
+  content: 'SHOWING';
+  font-weight: 500;
+  padding: 4px 16px;
+  margin: 0 4px;
+  border-radius: var(--sm-radius);
+  background-color: var(--color-l-primary);
+  color: var(--color-primary);
 }
