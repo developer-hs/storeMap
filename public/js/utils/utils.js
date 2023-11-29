@@ -152,3 +152,28 @@ export const logoutHandler = (elm) => {
 
   logoutBtn.addEventListener('click', logout);
 };
+
+export const styleSectionToggleInit = () => {
+  const sectionCtElms = document.querySelectorAll('.section_ct.fold');
+  sectionCtElms.forEach((sectionCtElm) => {
+    const sectionTitle = sectionCtElm.querySelector('.section_title');
+    const sectionStyle = getComputedStyle(sectionCtElm.querySelector('.section'));
+    const sectionContent = sectionCtElm.querySelector('.section_content');
+    const sectionMargin = parseInt(sectionStyle.margin.split(' ')[0].replace('px', ''));
+    const sectionPadding = parseInt(sectionStyle.padding.split(' ')[0].replace('px', ''));
+    const sectionHeight = parseInt(sectionStyle.height.replace('px', ''));
+    sectionTitle.addEventListener('click', () => {
+      if (sectionCtElm.classList.contains('tab_on')) {
+        sectionCtElm.classList.remove('tab_on');
+        slideUp(sectionContent, 300);
+      } else {
+        const sectionContentHeight =
+          (sectionMargin + sectionHeight + sectionPadding) * sectionContent.querySelectorAll('.section:not(.displaynone)').length +
+          sectionMargin;
+
+        sectionCtElm.classList.add('tab_on');
+        slideDown(sectionContent, sectionContentHeight, 300);
+      }
+    });
+  });
+};

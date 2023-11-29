@@ -14,6 +14,7 @@ import storeRoutes from './app/stores/routes/index.js';
 import widgetRoutes from './app/widgets/routes/index.js';
 import productRoutes from './app/products/routes/index.js';
 import orderRoutes from './app/orders/routes/index.js';
+import faqRoutes from './app/faq/routes/index.js';
 
 import { User } from './app/users/models/user.js';
 import { CAFE24_AUTH } from './app/config/index.js';
@@ -88,7 +89,7 @@ const appRouting = async () => {
   widgetRoutes(app);
   productRoutes(app);
   orderRoutes(app);
-
+  faqRoutes(app);
   app.get('/', (req, res) => {
     return res.sendFile(__dirname + '/views/index.html');
   });

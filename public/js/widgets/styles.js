@@ -155,9 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getQuickSearchStoreElm = () => {
     return document.querySelector('#searchListCt .store');
   };
-  const getSectionCtElms = () => {
-    return document.querySelectorAll('.section_ct');
-  };
+
   const getStoreListSection = () => {
     return document.getElementById('storeListSection');
   };
@@ -521,7 +519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       distanceTextColorPickr.setColor('#979797');
       mapTitleTextColorPickr.setColor('#ffffff');
       mapAddressTextColorPickr.setColor('#e1e1e1');
-      mapRenewBtnColorPickr.setColor('ffffff');
+      mapRenewBtnColorPickr.setColor('#ffffff');
       mapQuickSearchTitleTextColorPickr.setColor('#666666');
       quickSearchTitleTextHoverColorPickr.setColor('#000000');
       quickSearchDistanceTextColorPickr.setColor('#979797');
@@ -542,32 +540,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   const onUI = () => {
     const UIType = getUIType();
     const distanceElms = document.querySelectorAll('#pickupStore .distance');
-    const mapRenewBtnElm = document.getElementById('mapRenewBtn');
 
     if (UIType === 'default') {
       distanceElms.forEach((distanceElm) => {
         distanceElm.classList.add('displaynone');
-        mapRenewBtnElm.classList.add('displaynone');
       });
       getDistanceTextElm().parentNode.classList.add('displaynone');
-      getMapRenewBtnColorCtElm().parentNode.classList.add('displaynone');
     } else {
       distanceElms.forEach((distanceElm) => {
         distanceElm.classList.remove('displaynone');
-        mapRenewBtnElm.classList.remove('displaynone');
       });
       getDistanceTextElm().parentNode.classList.remove('displaynone');
-      getMapRenewBtnColorCtElm().parentNode.classList.remove('displaynone');
     }
 
     // UI Type 에 따라 거리 옵션이 사라지기 때문에 해당 옵션 박스 크기가 안맞아서 OFF 시킴
     if (getStoreListSection().classList.contains('tab_on')) {
       getStoreListSection().querySelector('.section_title').click();
-    }
-
-    if (getMapStyleSection().classList.contains('tab_on')) {
-      console.log(getMapStyleSection().classList);
-      getMapStyleSection().querySelector('.section_title').click();
     }
 
     widgetStatus.ui.cur = UIType;
@@ -633,29 +621,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.error(error);
       utils.onAlertModal('저장에 실패하였습니다.');
     }
-  };
-
-  const styleSectionToggleInit = () => {
-    const sectionCtElms = getSectionCtElms();
-    sectionCtElms.forEach((sectionCtElm) => {
-      const sectionTitle = sectionCtElm.querySelector('.section_title');
-      const sectionStyle = getComputedStyle(sectionCtElm.querySelector('.section'));
-      const sectionContent = sectionCtElm.querySelector('.section_content');
-      const sectionMargin = parseInt(sectionStyle.margin.split(' ')[0].replace('px', ''));
-      const sectionHeight = parseInt(sectionStyle.height.replace('px', ''));
-      sectionTitle.addEventListener('click', () => {
-        if (sectionCtElm.classList.contains('tab_on')) {
-          sectionCtElm.classList.remove('tab_on');
-          utils.slideUp(sectionContent, 300);
-        } else {
-          const sectionContentHeight =
-            (sectionMargin + sectionHeight) * sectionContent.querySelectorAll('.section:not(.displaynone)').length + sectionMargin;
-
-          sectionCtElm.classList.add('tab_on');
-          utils.slideDown(sectionContent, sectionContentHeight, 300);
-        }
-      });
-    });
   };
 
   const submitBtnHandler = () => {
@@ -813,7 +778,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const reactiveStyles = () => {
     UITypeHandler();
-    styleSectionToggleInit();
+    utils.styleSectionToggleInit();
   };
   const init = () => {
     theFirstUIType = getUIType();

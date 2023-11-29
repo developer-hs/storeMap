@@ -48,7 +48,7 @@
           </div>
         </div>
 
-        <div class="section_ct">
+        <div class="section_ct fold">
           <div class="section_title">검색 타입 스타일</div>
           <div class="section_content">
             <div class="section">
@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div class="section_ct" id="storeListSection">
+        <div class="section_ct fold" id="storeListSection">
           <div class="section_title">매장 리스트 스타일</div>
           <div class="section_content">
             <div class="section">
@@ -90,7 +90,7 @@
           </div>
         </div>
 
-        <div class="section_ct">
+        <div class="section_ct fold">
           <div class="section_title">자동완성 검색어 스타일</div>
           <div class="section_content">
             <div class="section">
@@ -132,7 +132,7 @@
           </div>
         </div>
 
-        <div class="section_ct" id="mapStyleSection">
+        <div class="section_ct fold" id="mapStyleSection">
           <div class="section_title">지도 스타일</div>
           <div class="section_content">
             <div class="section">
@@ -147,7 +147,7 @@
                 <div class="" id="uiMapAddressTextColor"></div>
               </div>
             </div>
-            <div class="section <% if (widget.ui === 'default') { %> displaynone <% } %>">
+            <div class="section">
               <div class="pickr_ct" id="uiMapRenewBtnColorCt" data-color="<%- widget.mapRenewBtnColor %>">
                 <span>매장 새로고침 버튼 색상</span>
                 <div class="" id="uiMapRenewBtnColor"></div>
@@ -156,7 +156,7 @@
           </div>
         </div>
 
-        <div class="section_ct">
+        <div class="section_ct fold">
           <div class="section_title">지도 오버레이 스타일</div>
           <div class="section_content">
             <div class="section">
@@ -313,7 +313,7 @@
             <div class="selected_store_name" style="color: <%- widget.mapTitleTextColor %>">
               <span class="pickup_store">픽업 매장</span>
               <span id="storeName">카페24</span>
-              <div class="map_renew_btn <% if (widget.ui === 'default') { %> displaynone <% } %>" id="mapRenewBtn">
+              <div class="map_renew_btn" id="mapRenewBtn">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"

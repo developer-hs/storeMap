@@ -1,0 +1,14 @@
+.faq_ct {
+  padding: 60px 0;
+}
+
+.faq_ct .section_ct.fold .section_title {
+  border: none;
+}
+
+.faq_ct .section_ct.card {
+  padding: 16px 12px;
+}
+.faq_ct .section_ct.fold .section_content .section {
+  margin: 20px 20px;
+}

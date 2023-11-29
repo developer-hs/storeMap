@@ -292,10 +292,10 @@ const createNaverMap = () => {
 // 매장정보(enter , search)검색 시 작동하는 함수
 const searchHandler = () => {
   // 검색어 입력창에서 Enter 키를 눌렀을 때 좌표 검색 함수를 실행한다
-  getAddrElm().addEventListener('keydown', (e) => {
+  getAddrElm().addEventListener('keydown', async (e) => {
     const keyCode = e.keyCode || e.which;
     if (keyCode === 13) {
-      if (!searchStoreIsValid()) {
+      if (!(await searchStoreIsValid())) {
         // 비슷한 검색어 조차 찾을 수 없을경우
         return;
       }
@@ -303,9 +303,9 @@ const searchHandler = () => {
     }
   });
   // 검색 버튼을 클릭했을 때 좌표 검색 함수를 실행한다
-  getSubmitElm().addEventListener('click', (e) => {
+  getSubmitElm().addEventListener('click', async (e) => {
     e.preventDefault();
-    if (!searchStoreIsValid()) {
+    if (!(await searchStoreIsValid())) {
       // 비슷한 검색어 조차 찾을 수 없을경우
       return;
     }
@@ -382,16 +382,51 @@ const searchTypeHandler = () => {
   });
 };
 
+const getGeocodeAddr = (addr) => {
+  return new Promise((resolve, reject) => {
+    naver.maps.Service.geocode({ query: addr }, async function (status, response) {
+      if (response.v2.meta.totalCount === 0) return false;
+
+      resolve(response.v2.addresses[0]);
+    });
+  });
+};
+
 const searchStoreIsValid = async () => {
   const store = findStoreBySearched();
+  let y, x;
   if (!store) {
-    try {
-      const res = await axios.get('/api/v1/stores/search/address');
-      if (res.status === 200) {
-        const searchNaverCoord = createNaverCoord(res.data.mapx, res.data.mapy);
-        createUserMarker(searchNaverCoord);
+    if (getSearchedAddr().length < 2) {
+      window.parent.postMessage({ alertMessage: '2글자 이상 입력해 주세요.' }, '*');
+      return false;
+    }
+
+    naver.maps.Service.geocode({ query: getSearchedAddr() }, async function (status, response) {
+      if (response.v2.meta.totalCount === 0) {
+        try {
+          const res = await axios.get(`/api/v1/stores/search/address?search=${getSearchedAddr()}`);
+          if (res.status === 200 && res.data.items.length > 0) {
+            const geocodeAddr = await getGeocodeAddr(res.data.items[0].address);
+            if (!geocodeAddr) return;
+
+            x = geocodeAddr.x;
+            y = geocodeAddr.y;
+          }
+        } catch (error) {
+          return;
+        }
+      } else {
+        x = response.v2.addresses[0].x;
+        y = response.v2.addresses[0].y;
       }
-    } catch (error) {}
+
+      const naverCoord = new naver.maps.LatLng(y, x);
+
+      createUserMarker(naverCoord);
+      setDistance(naverCoord);
+      paintStoreList();
+    });
+
     return false;
   }
 
@@ -412,9 +447,9 @@ const pickupBtnHandler = (storePickupBtnElm, store) => {
  * @param {Boolean} pickBtn
  * @returns {Boolean?}
  */
-const pickup = (store, pick = true) => {
+const pickup = async (store) => {
   setSearchAddrValue(store); // 주소 입력창에 정보를 채워줌
-  if (!searchStoreIsValid()) {
+  if (!(await searchStoreIsValid())) {
     return false;
   }
 
@@ -462,6 +497,22 @@ const mapHandler = () => {
   });
 };
 
+const onRenewUserMarker = () => {
+  createUserMarker(L_USER_NAVER_COORD);
+  setDistance(L_USER_NAVER_COORD);
+  paintStoreList();
+};
+
+const renewBtnHandler = () => {
+  const renewBtnElm = document.getElementById('mapRenewBtn');
+  renewBtnElm.addEventListener('click', onRenewUserMarker);
+};
+
+const removeRenewBtn = () => {
+  const renewBtnElm = document.getElementById('mapRenewBtn');
+  renewBtnElm.remove();
+};
+
 const createStoreChildElmAsString = (store) => {
   const result =
     `<div class="left">` +
@@ -507,7 +558,7 @@ const paintStoreList = () => {
   let cnt = 0;
   let swiperSlide = createNewSlide(); // 슬라이더 생성
   let storeList = [...L_STORE_LIST];
-
+  console.log(storeList);
   if (L_GEOLOCATION_WIDGET) {
     storeList.forEach((store) => {
       store.naverCoord = createNaverCoord(store.latitude, store.longitude);
@@ -891,7 +942,7 @@ const createInfoWindow = (store) => {
     '  </div>',
     '   <div class="btn-box">',
     `   	<div class="close-btn" onclick=\"closeOpenedInfoWindow()\">닫기</div>`,
-    `   	<div class="pickup-btn" onclick=\"pickup(findStoreBySearched())\">여기서픽업</div>`,
+    `   	<div class="pickup-btn" onclick=\"pickup(${store})\">여기서픽업</div>`,
     '   </div>',
     '</div>',
   ].join('');
@@ -925,6 +976,13 @@ const createNaverCoord = (latitude, longitude) => {
   return new naver.maps.LatLng(latitude, longitude);
 };
 
+const fromTM128ToLatLng = (mapx, mapy) => {
+  const point = new naver.maps.Point(mapx, mapy);
+  console.log(point);
+  const latLng = naver.maps.TransCoord.fromTM128ToLatLng(point);
+  return latLng;
+};
+
 /**
  * @description UI 가 distance 일때 사용되는 함수 기준이되는 거리를 받아서 스토어 리스트에 거리를 생성 후 거리순으로 정렬
  * @param {naverCoord} targetNaverCoord
@@ -950,7 +1008,6 @@ const geoLocationPickupInit = () => {
   createUserMarker(L_USER_NAVER_COORD);
   setDistance(L_USER_NAVER_COORD);
   storeListUp();
-  renewBtnHandler();
 };
 
 const pickupInit = () => {
@@ -966,6 +1023,7 @@ const onPickupStoreBtn = async () => {
   const pickUpStore = document.getElementById('pickupStore');
   pickUpStore.classList.add('on');
   getPickupStoreBtnElm().remove();
+  renewBtnHandler();
 
   if (L_GEOLOCATION_WIDGET) {
     geoLocationPickupInit();
@@ -975,6 +1033,7 @@ const onPickupStoreBtn = async () => {
 };
 const pickupStoreBtnHandler = (storeMapAPI) => {
   const pickupStoreBtn = getPickupStoreBtnElm();
+
   if (L_GEOLOCATION_WIDGET) {
     const pickupStoreBtnMutionObv = new MutationObserver((mutations) => {
       if (!pickupStoreBtn.classList.contains('loading')) {
