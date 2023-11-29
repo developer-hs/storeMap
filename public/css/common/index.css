@@ -808,10 +808,10 @@ img.icon-20 {
   width: 20px;
 }
 
-.faq_area {
+.notice_area {
   position: relative;
 }
-.faq_area::before {
+.notice_area::before {
   font-family: 'SCoreDream', sans-serif;
   content: '?';
   padding: 4px;
@@ -828,11 +828,11 @@ img.icon-20 {
   cursor: pointer;
 }
 
-.faq_area:hover .faq {
+.notice_area:hover .notice {
   display: block;
 }
 
-.faq {
+.notice {
   display: none;
   font-family: 'SCoreDream', sans-serif;
   font-weight: 700;
@@ -848,7 +848,7 @@ img.icon-20 {
   line-height: 20px;
 }
 
-.faq:after {
+.notice:after {
   content: '';
   position: absolute;
   border-style: solid;

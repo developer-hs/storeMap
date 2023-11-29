@@ -224,11 +224,18 @@
     <% if (type === "u" && inventory.length > 0) { %>
     <div class="right product_ct card">
       <div class="title">
-        <span>상품 재고 설정</span>
-        <div class="faq_area">
-          <div class="faq">
-            <p>재고 등록 시 해당 스토어에 대한</p>
-            <p>&lt;바로픽업&gt; 이 활성화 됩니다.</p>
+        <div class="align-center">
+          <span>상품 재고 설정</span>
+          <div class="notice_area">
+            <div class="notice">
+              <p>재고 등록 시 해당 스토어에 대한</p>
+              <p>&lt;바로픽업&gt; 이 활성화 됩니다.</p>
+            </div>
+          </div>
+        </div>
+        <div class="search_ct">
+          <div class="text-field">
+            <input type="text" id="search" placeholder="상품명을 입력해 주세요." />
           </div>
         </div>
       </div>
@@ -237,8 +244,8 @@
         <div class="prd_name_area"><span>상품명</span></div>
         <div class="prd_quantity_area">
           <span>재고</span>
-          <div class="faq_area">
-            <div class="faq">
+          <div class="notice_area">
+            <div class="notice">
               <p>취소/반품/환불의 경우 재고가</p>
               <p>반환되지 않으니 유의하여 주세요.</p>
             </div>
@@ -246,7 +253,7 @@
         </div>
       </div>
       <% for(var i = 0; i < inventory.length; i++){ %>
-      <div class="product_area">
+      <div class="product_area" data-product-name="<%- inventory[i].productDetails.name -%>">
         <div class="prd_id">
           <span>
             <%- inventory[i].productDetails.product_id %>
@@ -282,10 +289,6 @@
         <div class="description">
           <span class="circle">⦁</span>
           <span>매장명은 고객들에게 노출시킬 이름입니다.</span>
-        </div>
-        <div class="description">
-          <span class="circle">⦁</span>
-          <span>노출여부 설정은 매장 생성 후 바로 지도에 노출여부를 결정합니다.</span>
         </div>
         <div class="description">
           <span class="circle">⦁</span>

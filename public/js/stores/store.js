@@ -2,11 +2,13 @@ window.addEventListener('DOMContentLoaded', async () => {
   const utils = await import('../utils/utils.js');
   const param = new URLSearchParams(window.location.search);
   const type = param.get('type');
+  const productAreaElmArr = Array.from(document.querySelectorAll('.product_area'));
   const getStoreUserIdElm = () => document.getElementById('storeUserID');
   const getStoreUserPwElm = () => document.getElementById('storeUserPW');
   const getaddStoreUserBtnElm = () => document.getElementById('addStoreUserBtn');
   const getAddUserModalBtnElm = () => document.getElementById('addUserModalBtn');
   const getAddStoreUserModalElm = () => document.getElementById('addStoreUserModal');
+
   if (!type) {
     alert('잘못된 접근입니다.');
     window.location.href = '/stores';
@@ -302,6 +304,24 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
+  const onSearch = (keyword) => {
+    productAreaElmArr.forEach((element) => {
+      const productName = element.dataset.productName;
+      if (!productName.includes(keyword)) {
+        element.classList.add('displaynone');
+      } else {
+        element.classList.remove('displaynone');
+      }
+    });
+  };
+
+  const searchHandler = () => {
+    const searchElm = document.getElementById('search');
+    searchElm.addEventListener('input', () => {
+      onSearch(searchElm.value);
+    });
+  };
+
   const addUserHander = () => {
     addUserModalBtnHandler();
     addStoreUserHandler();
@@ -316,6 +336,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       addUserHander();
       deleteBtnHandler();
       quantityBtnHandler();
+      searchHandler();
     }
     submitHandler();
   };

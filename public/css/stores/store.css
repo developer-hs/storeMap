@@ -47,15 +47,17 @@ input#excelUploadBtn {
   left: 28px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 56px);
 }
 
-.store_ct > .right.product_ct .title > span {
+.store_ct > .right.product_ct .title span {
   font-size: 1.25rem;
   font-weight: 400;
   color: #000;
 }
 
-.store_ct > .right.product_ct .title .faq_area::before {
+.store_ct > .right.product_ct .title .notice_area::before {
   width: 16px;
   height: 16px;
   font-size: 1rem;
@@ -323,7 +325,7 @@ input#excelUploadBtn {
   display: flex;
 }
 .product_table_head.card {
-  margin-top: 58px;
+  margin-top: 90px;
   border-radius: var(--sm-radius);
   box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.05);
   padding: 12px 18px;
@@ -462,4 +464,8 @@ input#excelUploadBtn {
 
 .add_store_user_area .title {
   font-size: 20px;
+}
+
+.product_ct .title .text-field input[type='text'] {
+  height: 40px;
 }
