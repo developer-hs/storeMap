@@ -114,18 +114,18 @@
   box-shadow: 0px 2px 25px 0px rgba(98, 136, 253, 0.15);
 }
 
-.notice {
+.notice_ct {
   width: 100%;
   line-height: 20px;
 }
-.notice p {
+.notice_ct p {
   display: flex;
   align-items: center;
 }
-.notice p span {
+.notice_ct p span {
   margin: 0 4px;
 }
-.notice p:before {
+.notice_ct p:before {
   content: '';
   width: 6px;
   height: 6px;

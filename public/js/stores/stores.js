@@ -199,39 +199,27 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const onCoordSet = async () => {
-    let geoRes;
     const loadingGuard = utils.createLoadingGaurd();
     utils.paintLoadingGuard(loadingGuard);
 
     try {
-      geoRes = await axios.get('/stores/geocode/many', {});
-      if (geoRes.status === 202) {
-        console.warn(geoRes.data.message);
-        loadingGuard.remove();
-        utils.onAlertModal(geoRes.data.message);
+      const updateRes = await axios.put('/stores/geocode/many');
+      if (updateRes.status === 202) {
+        utils.onAlertModal(updateRes.data.message);
+      }
+      if (updateRes.status === 200) {
+        utils.reload();
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       if (error.response.status === 404) {
         alert(error.response.data.message);
         console.error(error);
-        loadingGuard.remove();
-        utils.reload();
       }
+      utils.reload();
     }
 
-    if (!geoRes) return;
-    if (geoRes.status === 200) {
-      try {
-        const updateRes = await axios.put('/stores/geocode/many', geoRes.data);
-        if (updateRes.status === 200) {
-          utils.reload();
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
+    loadingGuard.remove();
     return;
   };
 

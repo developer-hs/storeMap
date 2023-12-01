@@ -152,24 +152,30 @@ input#excelUploadBtn {
   position: relative;
   display: flex;
   flex-direction: column;
-  border-radius: var(--lg-radius);
+  border-radius: var(--sm-radius);
   background-color: #fff;
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
-  width: 570px;
-  height: 250px;
+  width: max-content;
+  height: max-content;
   padding: 26px 24px;
   z-index: 1000;
 }
 #excelUploadModalBg > #excelUploadModal label[for='excelUploadBtn'] {
+  flex-direction: column;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 500px;
+  height: 140px;
   border-radius: var(--default-radius);
   border: 1px solid var(--color-excel);
   font-size: 1rem;
   cursor: pointer;
+  color: var(--color-excel);
+}
+
+#excelUploadModalBg > #excelUploadModal label[for='excelUploadBtn'] > div {
   color: var(--color-excel);
 }
 
@@ -257,7 +263,7 @@ input#excelUploadBtn {
 }
 
 #excelUploadModal .description_ct {
-  margin: 24px 0 12px;
+  margin: 52px 0 0;
   font-size: 1rem;
 }
 
@@ -265,10 +271,13 @@ input#excelUploadBtn {
   font-size: 0.875rem;
   color: var(--color-l-black);
 }
-
+#excelUploadModal .title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
 .icon_upload {
-  position: absolute;
-  left: 20px;
+  width: 100px;
 }
 
 .eye_icon {

@@ -1,4 +1,4 @@
-export const onAlertModal = (message, width = 'max-content', height = 60, duration = 1300, bgColor = '#000', color = '#fff') => {
+export const onAlertModal = (message, width = 'max-content', height = 60, duration = 1300, bgColor = '#353535', color = '#fff') => {
   const body = document.querySelector('body');
   const alertModal = document.createElement('div');
   const alertContent = document.createElement('div');

@@ -558,7 +558,7 @@ const paintStoreList = () => {
   let cnt = 0;
   let swiperSlide = createNewSlide(); // 슬라이더 생성
   let storeList = [...L_STORE_LIST];
-  console.log(storeList);
+
   if (L_GEOLOCATION_WIDGET) {
     storeList.forEach((store) => {
       store.naverCoord = createNaverCoord(store.latitude, store.longitude);
@@ -978,7 +978,7 @@ const createNaverCoord = (latitude, longitude) => {
 
 const fromTM128ToLatLng = (mapx, mapy) => {
   const point = new naver.maps.Point(mapx, mapy);
-  console.log(point);
+
   const latLng = naver.maps.TransCoord.fromTM128ToLatLng(point);
   return latLng;
 };

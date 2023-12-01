@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axios.get(`/api/products/${mallId}?since_product_no=${sinceProductNo}`);
       if (res.status === 200) {
+        console.log(res.data);
         L_PRODUCTS_LIST = res.data;
         getPrdCntElm().innerText = L_PRODUCTS_LIST.length;
         return true;
@@ -97,6 +98,8 @@ window.addEventListener('DOMContentLoaded', async () => {
         getSwitchElm.parentNode.parentNode.classList.add('use');
         getSwitchElm.checked = true;
       } else {
+        // 스토어맵을 사용하는 상품으로 등록되었지만 받아온 카페24 상품데이터에 존재 하지 않는경우
+        // 카페24 어드민 페이지에서 상품이 삭제 되었을 때
         try {
           const res = await axios.delete(`/products/product/${product.product_id}`);
         } catch (error) {

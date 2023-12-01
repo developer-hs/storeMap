@@ -82,6 +82,9 @@ window.addEventListener('DOMContentLoaded', async () => {
    * @return {void}
    */
   const storeCreateMany = async () => {
+    const loadingGuard = utils.createLoadingGaurd();
+    utils.paintLoadingGuard(loadingGuard);
+
     const fileInput = getexcelUploadBtnElm();
     const file = fileInput.files[0];
 
@@ -103,6 +106,8 @@ window.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
       console.error(error);
     }
+
+    loadingGuard.remove();
   };
 
   const storeUpdate = async (form) => {
@@ -113,6 +118,8 @@ window.addEventListener('DOMContentLoaded', async () => {
 
       if (res.status === 201) {
         window.location.href = '/stores';
+      } else if (res.status == 202) {
+        utils.onAlertModal(res.data.message);
       }
     } catch (err) {
       console.log(`stores put request err : ${err}`);
@@ -127,7 +134,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '/stores';
       }
     } catch (err) {
-      utils.onAlertModal(err.response.data.message);
+      utils.onAlertModal(err.response.data.message, 'max-content', 60, 2500);
     }
   };
   /**
@@ -149,14 +156,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     }
 
-    const coord = await getCoord(address);
-
-    if (!coord) {
-      alert('입력하신 주소를 다시 한번 확인해 주세요');
-      return;
-    }
-
-    const form = { ...getDatas(), ...coord };
+    const form = { ...getDatas() };
 
     if (type === 'u') {
       // update 일 경우
@@ -191,27 +191,6 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  const getCoord = async (address) => {
-    if (!address) {
-      return;
-    }
-
-    try {
-      const res = await axios.get('/stores/geocode', { params: { address } });
-      if (res.status === 200) {
-        return res.data;
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 502) {
-        console.error('네이버에 등록되지 않은 주소', error);
-      } else {
-        console.error(error);
-      }
-    }
-
-    return false;
-  };
-
   const onDelete = async () => {
     const res = await axios.delete(`/stores/store/${getStoreId()}`);
     if (res.status === 200) {
@@ -232,6 +211,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const res = await axios.put(`/stores/store/${getStoreId()}`, quantityForm);
+
       if (res.status === 201) {
         utils.onAlertModal(res.data.message);
       }
@@ -268,7 +248,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const form = { id: storeUserIdElm.value, password: storeUserPwElm.value };
-      console.log(form);
+
       const res = await axios.post(`/api/v1/users/store/${getStoreId()}`, form);
       if (res.status === 201) {
         utils.onAlertModal('해당 매장의 관리자 계정이 생성 되었습니다.');

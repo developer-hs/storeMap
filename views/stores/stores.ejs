@@ -71,13 +71,13 @@
             </a>
           </div>
         </div>
+        <% if (stores.length > 0) { %>
         <div class="search_area text-field flex">
           <form action="/stores" method="get">
             <input class="" name="search" type="text" id="search" />
             <label for="search">검색</label>
           </form>
           <div> 
-            <% if (stores.length > 0) { %>
             <div class="area filter_btn_ct">
               <div id="filterBtn">
                 <svg class="filter_icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
@@ -85,9 +85,7 @@
                 </svg>
               </div>
             </div>
-            <% } %>
           </div>
-          <% if (stores.length > 0) { %>
           <div class="drop_box" id="dropBox">
             <div class="drop_menu_btn" id="dropMenuBtn">
               <img src="/icons/arrow_up.svg" />
@@ -107,8 +105,8 @@
               </li>
             </ul>
           </div>
-          <% } %>
         </div>
+        <% } %>
       </div>
     </div>
   </div>
@@ -156,8 +154,8 @@
           <div id="btnMenu"><i class="xi xi-apps"></i></div>
           <div class="btn-area" id="actionMenuBox">
             <div id="checkedDeleteBtn" class="card">삭제</div>
-            <div id="checkedUseStatusOnBtn" class="card">노출</div>
-            <div id="checkedUseStatusOffBtn" class="card">비노출</div>
+            <div id="checkedUseStatusOnBtn" class="card">활성화</div>
+            <div id="checkedUseStatusOffBtn" class="card">비활성화</div>
           </div>
         </div>
       </div>
