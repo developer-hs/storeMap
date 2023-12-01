@@ -147,7 +147,7 @@ body {
   width: 70px;
   height: 70px;
   border-radius: 100%;
-  background-color: #f3f3f3;
+  background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -189,11 +189,11 @@ body {
   visibility: visible;
   z-index: 0;
   padding: 0px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
 }
 
 #stores .btn_area_ct .btn-area > #checkedDeleteBtn {
-  border: 1px solid var(--color-danger);
+  background-color: #fff;
   color: var(--color-danger);
   transform: translate3d(0, 0, 0);
   transition: all 0.25s ease;
@@ -201,7 +201,7 @@ body {
 }
 
 #stores .btn_area_ct .btn-area > #checkedUseStatusOffBtn {
-  border: 1px solid var(--color-l-black);
+  background-color: #fff;
   color: var(--color-l-black);
   transform: translate3d(0, 0, 0);
   transition: all 0.45s ease;
@@ -209,7 +209,7 @@ body {
 }
 
 #stores .btn_area_ct .btn-area > #checkedUseStatusOnBtn {
-  border: 1px solid var(--color-success);
+  background-color: #fff;
   color: var(--color-success);
   transform: translate3d(0, 0, 0);
   transition: all 0.65s ease;
@@ -507,7 +507,7 @@ body {
   width: max-content;
   position: absolute;
   left: 50%;
-  bottom: -170px;
+  top: 50%;
   transform: translate3d(-50%, 10%, 0);
   padding: 12px 8px;
   box-sizing: border-box;
@@ -520,7 +520,7 @@ body {
   font-weight: 500;
   cursor: pointer;
   display: flex;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
   border-bottom: 1px solid #eee;
 }

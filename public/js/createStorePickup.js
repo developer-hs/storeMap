@@ -13,6 +13,9 @@ let PREV_MARKER, L_MAP;
 
 let userMarkers = [];
 
+const initLatLng = new naver.maps.LatLng(37.3595316, 127.1052133);
+const initZoom = 3;
+
 class StoreMapAPI {
   constructor() {
     this.init();
@@ -39,6 +42,7 @@ class StoreMapAPI {
     document.documentElement.style.setProperty('--ui-address-text-color', this.widgets.widget.addressTextColor);
     document.documentElement.style.setProperty('--ui-map-title-text-color', this.widgets.widget.mapTitleTextColor);
     document.documentElement.style.setProperty('--ui-map-address-text-color', this.widgets.widget.mapAddressTextColor);
+    document.documentElement.style.setProperty('--ui-map-renew-btn-color', this.widgets.widget.mapRenewBtnColor);
     document.documentElement.style.setProperty('--ui-quicksearch-title-text-color', this.widgets.widget.quickSearchTitleTextColor);
     document.documentElement.style.setProperty('--ui-quicksearch-title-hover-color', this.widgets.widget.quickSearchTitleTextHoverColor);
     document.documentElement.style.setProperty('--ui-quicksearch-distance-text-color', this.widgets.widget.quickSearchDistanceTextColor);
@@ -279,8 +283,8 @@ const initSearchedAddr = () => {
 const createNaverMap = () => {
   const mapElm = getMapElm(); // 지도를 표시할 div
   const mapOption = {
-    center: new naver.maps.LatLng(37.3595316, 127.1052133), // 지도의 중심좌표
-    zoom: 3, // 지도의 확대 레벨
+    center: initLatLng, // 지도의 중심좌표
+    zoom: initZoom, // 지도의 확대 레벨
   };
 
   // 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
@@ -498,19 +502,20 @@ const mapHandler = () => {
 };
 
 const onRenewUserMarker = () => {
-  createUserMarker(L_USER_NAVER_COORD);
-  setDistance(L_USER_NAVER_COORD);
-  paintStoreList();
+  if (L_GEOLOCATION_WIDGET) {
+    createUserMarker(L_USER_NAVER_COORD);
+    setDistance(L_USER_NAVER_COORD);
+    paintStoreList();
+  } else {
+    L_MAP.setCenter(initLatLng);
+    L_MAP.setZoom(initZoom);
+    closeOpenedInfoWindow();
+  }
 };
 
 const renewBtnHandler = () => {
   const renewBtnElm = document.getElementById('mapRenewBtn');
   renewBtnElm.addEventListener('click', onRenewUserMarker);
-};
-
-const removeRenewBtn = () => {
-  const renewBtnElm = document.getElementById('mapRenewBtn');
-  renewBtnElm.remove();
 };
 
 const createStoreChildElmAsString = (store) => {
@@ -941,8 +946,8 @@ const createInfoWindow = (store) => {
     `      	 <p style="margin-top:5px; margin-bottom:0; font-size:0.875rem;">${store.address}</p>`,
     '  </div>',
     '   <div class="btn-box">',
-    `   	<div class="close-btn" onclick=\"closeOpenedInfoWindow()\">닫기</div>`,
-    `   	<div class="pickup-btn" onclick=\"pickup(${store})\">여기서픽업</div>`,
+    `   	<div class="close-btn" onclick=>닫기</div>`,
+    `   	<div class="pickup-btn" >여기서픽업</div>`,
     '   </div>',
     '</div>',
   ].join('');
@@ -957,6 +962,14 @@ const createInfoWindow = (store) => {
     anchorSkew: true,
     anchorColor: '#fff',
     pixelOffset: new naver.maps.Point(0, -20),
+  });
+
+  const closeBtnElm = overlay.contentElement.querySelector('.close-btn');
+  const pickupBtnElm = overlay.contentElement.querySelector('.pickup-btn');
+
+  closeBtnElm.addEventListener('click', closeOpenedInfoWindow);
+  pickupBtnElm.addEventListener('click', () => {
+    pickup(store);
   });
 
   return overlay;
@@ -978,7 +991,7 @@ const createNaverCoord = (latitude, longitude) => {
 
 const fromTM128ToLatLng = (mapx, mapy) => {
   const point = new naver.maps.Point(mapx, mapy);
-
+  console.log(point);
   const latLng = naver.maps.TransCoord.fromTM128ToLatLng(point);
   return latLng;
 };

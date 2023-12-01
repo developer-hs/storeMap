@@ -196,6 +196,18 @@ class StoreMapInitAPI {
     );
   };
 
+  receiveAlertMessage = () => {
+    window.addEventListener(
+      'message',
+      function (e) {
+        const { alertMessage } = e.data;
+        if (alertMessage) {
+          this.onAlertModal(alertMessage);
+        }
+      }.bind(this)
+    );
+  };
+
   receiveFrameHeight = () => {
     window.addEventListener(
       'message',
@@ -223,6 +235,7 @@ class StoreMapInitAPI {
     this.receiveStoresEmpty();
     this.receiveFrameHeight();
     this.receiveTrigger();
+    this.receiveAlertMessage();
 
     this.storeMapElm.appendChild(this.iframe);
 
