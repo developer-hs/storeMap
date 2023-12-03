@@ -21,9 +21,13 @@
           <span class="title"><%- inventory[0].storeName -%></span>
           <div id="logoutBtn">LOGOUT</div>
         </div>
+        <div class="text-field">
+          <input class="" name="search" type="text" id="search" placeholder="상품명을 입력해 주세요" />
+          <label for="search">검색</label>
+        </div>
         <div class="product_content card">
           <% for(var i = 0; i < inventory.length; i++){ %>
-          <div class="product_area card">
+          <div class="product_area card" data-product-name="<%- inventory[i].productDetails.name -%>">
             <div class="prd_img_area">
               <img src="<%- inventory[i].productDetails.thumbnail %>" />
             </div>

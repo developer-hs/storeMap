@@ -2,6 +2,7 @@
   background-color: #fff;
   width: var(--side-nav-w);
   height: 100%;
+  position: relative;
 }
 
 #sideNavCt .logo_ct {
@@ -77,4 +78,15 @@
 }
 #sideNavCt .cate.on svg .fill_path {
   fill: #007eff;
+}
+
+#sideNavCt #logoutBtn {
+  font-weight: 300;
+  font-size: 16px;
+  position: absolute;
+  color: #a1a1a1;
+  cursor: pointer;
+  left: 50%;
+  bottom: 60px;
+  transform: translate3d(-50%, 0, 0);
 }

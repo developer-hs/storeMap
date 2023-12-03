@@ -1,4 +1,5 @@
 window.addEventListener('DOMContentLoaded', async () => {
+  const productAreaElmArr = Array.from(document.querySelectorAll('.product_area'));
   const utils = await import('../../utils/utils.js');
 
   const getStoreId = () => {
@@ -37,6 +38,24 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
+  const onSearch = (keyword) => {
+    productAreaElmArr.forEach((element) => {
+      const productName = element.dataset.productName;
+      if (!productName.includes(keyword)) {
+        element.classList.add('displaynone');
+      } else {
+        element.classList.remove('displaynone');
+      }
+    });
+  };
+  const searchHandler = () => {
+    const searchElm = document.getElementById('search');
+    searchElm.addEventListener('input', () => {
+      onSearch(searchElm.value);
+    });
+  };
+
+  searchHandler();
   quantityBtnHandler();
   utils.logoutHandler();
 });

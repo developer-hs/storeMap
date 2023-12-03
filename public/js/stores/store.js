@@ -254,7 +254,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         return;
       }
 
-      const res = await axios.post(`/api/v1/users/store/${getStoreId()}`, form);
+      const res = await axios.post(`/users/storeuser/${getStoreId()}`, form);
       if (res.status === 201) {
         utils.onAlertModal('해당 매장의 관리자 계정이 생성 되었습니다.');
       }
@@ -273,6 +273,9 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const addUserModalBtnHandler = () => {
+    const addUserMdoalBtnElm = getAddUserModalBtnElm();
+    if (!addUserMdoalBtnElm) return;
+
     getAddUserModalBtnElm().addEventListener('click', toggleAddUserModal);
   };
 

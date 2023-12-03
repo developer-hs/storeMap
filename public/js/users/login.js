@@ -54,7 +54,7 @@ window.addEventListener('DOMContentLoaded', async () => {
           break;
       }
     } catch (error) {
-      if (error.response.data.message) {
+      if (error.response?.data.message) {
         onAlertModal(`${error.response.data.message}`);
       }
 

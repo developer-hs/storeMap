@@ -46,7 +46,7 @@
         <label for="storeUserPW">매장 관리자 비밀번호</label>
       </div>
 
-      <div class="md-btn bg-primary" id="addStoreUserBtn">submit</div>
+      <div class="md-btn bg-primary" id="addStoreUserBtn">관리자 생성</div>
     </form>
   </div>
 </div>
@@ -83,7 +83,7 @@
               <span>관리자 생성</span>
             </div>
             <% } else { %>
-            <a href="/users/storeuser/<%- storeuserId -%>">
+            <a href="/users/storeuser/<%- store._id -%>">
               <svg
                 class="ml-2 exist_user"
                 id="existUser"
