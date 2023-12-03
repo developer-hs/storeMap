@@ -36,16 +36,18 @@
     <div class="title">
       <%- store.name -%>
     </div>
-    <div class="text-field">
-      <input type="text" id="storeUserID" placeholder="id" />
-      <label for="storeUserID">매장 관리자 아이디</label>
-    </div>
-    <div class="text-field">
-      <input type="password" id="storeUserPW" placeholder="password" />
-      <label for="storeUserPW">매장 관리자 비밀번호</label>
-    </div>
+    <form>
+      <div class="text-field">
+        <input type="text" id="storeUserID" placeholder="영문과 숫자만 입력해주세요" />
+        <label for="storeUserID">매장 관리자 아이디</label>
+      </div>
+      <div class="text-field">
+        <input type="password" id="storeUserPW" placeholder="비밀번호" />
+        <label for="storeUserPW">매장 관리자 비밀번호</label>
+      </div>
 
-    <div class="md-btn bg-primary" id="addStoreUserBtn">submit</div>
+      <div class="md-btn bg-primary" id="addStoreUserBtn">submit</div>
+    </form>
   </div>
 </div>
 <% } %>
@@ -56,7 +58,8 @@
         <div class="title_ct">
           <div class="title">
             STORES MANAGEMENT
-            <% if (type === "u") { %>
+            <% if (type === "u" ) { %>
+            <% if (!store.store_user) { %>
             <div class="add_user_modal_btn" id="addUserModalBtn">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
                 <g clip-path="url(#clip0_135_865)">
@@ -79,6 +82,34 @@
               </svg>
               <span>관리자 생성</span>
             </div>
+            <% } else { %>
+            <a href="/users/storeuser/<%- storeuserId -%>">
+              <svg
+                class="ml-2 exist_user"
+                id="existUser"
+                xmlns="http://www.w3.org/2000/svg"
+                width="30"
+                height="30"
+                viewBox="0 0 30 30"
+                fill="none"
+              >
+                <g clip-path="url(#clip0_212_13)">
+                  <path
+                    d="M30 15C30 6.71573 23.2843 0 15 0C6.71573 0 0 6.71573 0 15C0 23.2843 6.71573 30 15 30C23.2843 30 30 23.2843 30 15Z"
+                    fill="#4DB994"
+                  />
+                  <path
+                    d="M15.0001 14.74C14.1801 14.74 13.3701 14.43 12.7201 13.81C11.5801 12.72 10.5201 10.77 10.7401 8.88001C10.7901 8.41001 10.9201 7.71001 11.4401 7.01001C12.2901 5.87001 13.5801 5.21001 14.9801 5.20001H14.9901C16.3901 5.20001 17.6901 5.86001 18.5601 7.00001C19.0801 7.70001 19.2101 8.37001 19.2701 8.88001V8.90001C19.4301 10.56 18.6301 12.53 17.2801 13.81C16.6301 14.43 15.8101 14.74 15.0001 14.74ZM15.0001 7.38001C14.3001 7.38001 13.6401 7.72001 13.2101 8.31001C13.0501 8.53001 12.9701 8.76001 12.9301 9.12001C12.8101 10.21 13.5001 11.51 14.2501 12.23C14.7101 12.67 15.3401 12.67 15.8001 12.23C16.6601 11.41 17.2101 10.11 17.1201 9.11001C17.0801 8.75001 17.0001 8.53001 16.8401 8.31001C16.4001 7.72001 15.7301 7.38001 15.0201 7.38001H15.0001Z"
+                    fill="white"
+                  />
+                  <path
+                    d="M18.7602 24.8H11.2402C9.5602 24.8 8.2002 23.43 8.2002 21.76V21.2C8.2002 19.46 9.0102 17.89 10.3702 17C11.1902 16.46 12.1402 16.18 13.1202 16.18H16.8902C17.8702 16.18 18.8202 16.46 19.6402 17C21.0002 17.89 21.8102 19.46 21.8102 21.2V21.76C21.8102 23.44 20.4402 24.8 18.7702 24.8H18.7602ZM13.1202 18.35C12.5702 18.35 12.0302 18.51 11.5702 18.81C10.8402 19.29 10.3902 20.2 10.3902 21.19V21.75C10.3902 22.22 10.7802 22.61 11.2502 22.61H18.7702C19.2402 22.61 19.6302 22.22 19.6302 21.75V21.19C19.6302 20.2 19.1802 19.29 18.4502 18.81C17.9902 18.51 17.4502 18.35 16.9002 18.35H13.1302H13.1202Z"
+                    fill="white"
+                  />
+                </g>
+              </svg>
+            </a>
+            <% } %>
             <% } %>
           </div>
           <div class="sub_title">매장 관리 페이지</div>

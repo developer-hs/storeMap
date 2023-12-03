@@ -248,6 +248,11 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     try {
       const form = { id: storeUserIdElm.value, password: storeUserPwElm.value };
+      const regex = /^[A-Za-z0-9]+$/;
+      if (!regex.test(form['id'])) {
+        utils.onAlertModal('영문과 숫자만 입력해 주세요.');
+        return;
+      }
 
       const res = await axios.post(`/api/v1/users/store/${getStoreId()}`, form);
       if (res.status === 201) {

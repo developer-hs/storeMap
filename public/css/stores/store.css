@@ -478,3 +478,7 @@ input#excelUploadBtn {
 .product_ct .title .text-field input[type='text'] {
   height: 40px;
 }
+
+.exist_user {
+  cursor: pointer;
+}
