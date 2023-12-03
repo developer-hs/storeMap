@@ -189,9 +189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const getNowMkUploadInputElm = () => {
     return document.getElementById('nowMarkerUpload');
   };
-  const getUploadSubmitBtnElm = () => {
-    return document.getElementById('markerSubmit');
-  };
+
   const getMarkerUploadInputElms = () => {
     return [getNormalMkUploadInputElm(), getNowMkUploadInputElm()];
   };
@@ -669,14 +667,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           widgetStatus.nowMarker.prev = widgetStatus.nowMarker.cur;
           nowMarkerFileInput.value = '';
         }
+
+        createDummyMarker();
       }
     } catch (err) {
-      console.log(err);
-      if (err.response.status === 500) {
+      if (err.response?.status === 500) {
         return utils.onAlertModal('알수없는 오류로 업로드에 실패하였습니다.');
       }
       return utils.onAlertModal(
-        '파일형식 : PNG , JPG\n파일 사이즈 : 156*150 으로 1MB 이하의\n이미지 파일을 등록 해주세요.',
+        '파일형식 : PNG , JPG , SVG\n파일 사이즈 : 156*150 이하, 1MB 미만의\n이미지 파일을 등록 해주세요.',
         'max-content',
         80,
         2500
@@ -700,9 +699,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 이미지가 할당 되었을 때 제한사항을 통과 한다면 reader 를 통해 파일을 읽음
         img.onload = function () {
-          if (this.width > 156 || this.height > 150) {
+          if (this.width > 157 || this.height > 151) {
             utils.onAlertModal(
-              '파일형식 : PNG , JPG\n파일 사이즈 : 156*150 으로 1MB 이하의\n이미지 파일을 등록 해주세요.',
+              '파일형식 : PNG , JPG , SVG\n파일 사이즈 : 156*150 으로 1MB 이하의\n이미지 파일을 등록 해주세요.',
               'max-content',
               80,
               2500
@@ -728,7 +727,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const uploadBtnHandler = () => {
-    getUploadSubmitBtnElm().addEventListener('click', (e) => {
+    const uploadSubmitBtnElm = document.getElementById('markerSubmit');
+    uploadSubmitBtnElm.addEventListener('click', (e) => {
       e.preventDefault();
       upload();
     });
@@ -741,10 +741,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (res.status === 200) {
           const initNormalMarkerURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/store_marker.svg';
           const initNowMarkerURI = 'https://rlagudtjq2016.cafe24.com/assets/icon/now_store_pick.svg';
+
           getNormalMarkerImgElm().src = initNormalMarkerURI;
           getNowMarkerImgElm().src = initNowMarkerURI;
           getNormalMkUploadInputElm().value = '';
           getNowMkUploadInputElm().value = '';
+
+          createDummyMarker();
 
           widgetStatus.normalMarker.cur = initNormalMarkerURI;
           widgetStatus.nowMarker.cur = initNowMarkerURI;
@@ -761,6 +764,45 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const markerInitBtnHandler = () => {
     getMarkerInitBtnElm().addEventListener('click', onMarkerInit);
+  };
+
+  /**
+   *
+   * @param {HTMLClass} classStr
+   */
+  const clearTagThatHaveClass = (classStr) => {
+    const dommyMarkerElms = document.querySelectorAll(classStr);
+    dommyMarkerElms.forEach((dommyMarkerElm) => {
+      dommyMarkerElm.remove();
+    });
+  };
+
+  const paintDummyMarkerImg = (imgUrl, count, unique) => {
+    const sampleMapCtELm = document.getElementById('map');
+    const maxWidth = sampleMapCtELm.clientWidth - 26;
+    const maxHeight = sampleMapCtELm.clientHeight - 28;
+
+    for (let i = 0; i < count; i++) {
+      const img = document.createElement('img');
+      const left = Math.floor(Math.random() * maxWidth);
+      const top = Math.floor(Math.random() * maxHeight);
+      img.classList.add('dummy_marker');
+      img.classList.add(unique);
+      img.style.cssText = `position:absolute; width:26px !important; height:28px !important; left:${left}px; top : ${top}px`;
+      img.src = imgUrl;
+      sampleMapCtELm.appendChild(img);
+    }
+  };
+
+  const createDummyMarker = () => {
+    const pickupMarkerImg = document.getElementById('pickupMarkerImg');
+    const nowPickupMarkerImg = document.getElementById('nowPickupMarkerImg');
+
+    clearTagThatHaveClass('.dummy_pickupmarker');
+    clearTagThatHaveClass('.dummy_nowpickupmarker');
+
+    paintDummyMarkerImg(pickupMarkerImg.src, 20, 'dummy_pickupmarker');
+    paintDummyMarkerImg(nowPickupMarkerImg.src, 10, 'dummy_nowpickupmarker');
   };
 
   const widgetStyleInit = () => {
@@ -784,6 +826,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     theFirstUIType = getUIType();
     widgetStyleInit();
     reactiveStyles();
+    createDummyMarker();
   };
 
   init();

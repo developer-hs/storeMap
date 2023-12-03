@@ -189,28 +189,52 @@
           <div class="md-btn md-btn bg-success" id="submitBtn">저장</div>
         </div>
       </div>
-      <div class="marker_img_area card">
+      <div class="marker_img_area section_notice_parent card">
         <div class="renew_btn" id="markerInitBtn">
           <i class="xi-renew"></i>
         </div>
+        <div class="head_title">마커등록</div>
         <div class="marker_img_upload_area">
           <div class="marker_img_upload_box">
             <div class="title">기본마커</div>
             <input type="file" name="image" id="markerUpload" data-marker-type="normalMarker" />
             <label for="markerUpload">
-              <img src="<%- marker.pickupMarker %>" alt="" />
+              <img src="<%- marker.pickupMarker %>" id="pickupMarkerImg" alt="" />
             </label>
           </div>
           <div class="marker_img_upload_box">
             <div class="title">바로픽업 마커</div>
             <input type="file" name="image" id="nowMarkerUpload" data-marker-type="nowMarker" />
             <label for="nowMarkerUpload">
-              <img src="<%- marker.nowPickupMarker %>" alt="" />
+              <img src="<%- marker.nowPickupMarker %>" id="nowPickupMarkerImg" alt="" />
             </label>
           </div>
         </div>
         <div class="marker_submit_box">
           <div class="md-btn md-btn bg-success" id="markerSubmit">마커 설정</div>
+        </div>
+        <div class="section_notice_area">
+          <div class="section_notice">
+            <div class="section_notice_title">마커 이미지 제한사항</div>
+            <ul class="section_notice_content">
+              <li>
+                <span class="bold">1MB 미만</span>
+                의 이미지 파일만 업로드 가능합니다.
+              </li>
+              <li>
+                <span class="bold">JPG , PNG , SVG 파일</span>
+                만 업로드 가능합니다.
+              </li>
+              <li>
+                <span class="bold">156 x 150 사이즈 이하</span>
+                의 이미지 파일만 업로드 가능합니다.
+              </li>
+              <li>
+                <span class="bold">권장 이미지 사이즈는 52 x 56</span>
+                입니다.
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -344,7 +368,7 @@
           </div>
         </div>
         <div class="sample_map_ct" id="map">
-          <img src="/imgs/sample_map.png" alt="맵 이미지" />
+          <img src="/imgs/sample_map.jpg" alt="맵 이미지" />
           <div class="iw_inner" style="border-color: <%- widget.uiColor %>">
             <div class="content">
               <h3 id="overlayTitle" style="color: <%- widget.overlayTitleTextColor %>; font-size: 1rem; margin: 0">카페 24</h3>
