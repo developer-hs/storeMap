@@ -267,3 +267,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     }
   })();
 });
+
+const sideNavCtElm = document.getElementById('sideNavCt');
+const headerElm = document.getElementById('header');
+const contentElm = document.getElementById('content');
+
+sideNavCtElm.remove();
+headerElm.remove();
+contentElm.remove();

@@ -11,7 +11,6 @@
 
 .login_area {
   border-radius: 6px;
-  overflow: hidden;
   position: relative;
   box-sizing: border-box;
   padding: 0 24px 30px 24px;
@@ -115,4 +114,12 @@
 #loginBtn {
   margin-top: 22px;
   border-radius: 4px;
+}
+
+.login_ct .section_notice_area {
+  left: initial;
+  right: 0;
+  top: 0;
+  bottom: initial;
+  transform: translate3d(100%, 0, 0);
 }

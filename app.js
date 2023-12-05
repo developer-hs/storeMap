@@ -161,6 +161,7 @@ const appRouting = async () => {
               password: mallId,
               mallId: mallId,
               platform: 'cafe24',
+              point: 1000,
             };
             // 유저가 존재하지 않을경우 -> 첫방문일 경우 생성
             user = new User(userForm);
