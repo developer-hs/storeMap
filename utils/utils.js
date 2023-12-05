@@ -29,19 +29,17 @@ export const setToken = async (res, user, accessToken, refreshToken) => {
   user.refresh_token = refreshToken;
 };
 
-export const setCafe24Token = async (res, user, accessToken, refreshToken) => {
-  user.cafe24_refresh_token = refreshToken;
-
-  res.cookie('cafe24_ac', accessToken, {
+export const setCafe24Token = async (res, data) => {
+  res.cookie('cafe24_ac', data.access_token, {
     httpOnly: true,
     secure: true,
-    expires: new Date(Date.now() + 7200000), // 2시간
+    expires: new Date(data.expires_at),
   });
 
-  res.cookie('cafe24_rt', refreshToken, {
+  res.cookie('cafe24_rt', data.refresh_token, {
     httpOnly: true,
     secure: true,
-    expires: new Date(Date.now() + 3600000 * 48), // 2일
+    expires: new Date(data.refresh_token_expires_at),
   });
 
   return { ok: true, message: '성공적으로 저장 되었습니다.' };

@@ -16,6 +16,51 @@
     <div id="storeId" data-store-id="<%- storeId -%>"></div>
     <% if (inventory.length > 0 && inventory[0].storeName) { %>
     <div class="content_ct">
+      <div class="order_detail_modal_area">
+        <div class="order_detail_modal">
+          <div class="order_detail_haed">
+            <div class="order_id">주문번호 20231205-0000035</div>
+            <div class="order_status_area">
+              <div class="order_status_card">
+                <div class="title">주문자</div>
+                <div class="order_status_content" id="buyer">김형섭</div>
+              </div>
+              <div class="order_status_card" data-status="입금전">
+                <div class="title">입금상태</div>
+                <div class="order_status_content" id="depositStatus">입금전</div>
+              </div>
+              <div class="order_status_card" data-status="정상">
+                <div class="title">주문상태</div>
+                <div class="order_status_content" id="orderStatus">정상</div>
+              </div>
+            </div>
+          </div>
+          <div class="order_detail_content">
+            <div class="table_head">
+              <div class="product_id">상품 아이디</div>
+              <div class="product_image">상품 이미지</div>
+              <div class="product_name">상품 이름</div>
+              <div class="product_options">상품 옵션</div>
+              <div class="product_order_quantity">구매 수량</div>
+            </div>
+            <div class="table_content">
+              <div class="product_id">15</div>
+              <div class="product_image">
+                <img src="https://rlagudtjq2016.cafe24.com//web/product/big/202312/b141ba0ac119a4844e91876c246f4282.jpg" />
+              </div>
+              <div class="product_name">Cosmetic</div>
+              <div class="product_options">
+                <p>1</p>
+                <p>1</p>
+                <p>1</p>
+                <p>1</p>
+                <p>1</p>
+              </div>
+              <div class="product_order_quantity">1</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="content">
         <div class="page_title">
           <span class="title"><%- inventory[0].storeName -%></span>
@@ -49,6 +94,16 @@
             </div>
           </div>
           <% } %>
+        </div>
+      </div>
+      <div class="order_search_area">
+        <div class="order_search_ct card">
+          <div class="title">주문번호 검색</div>
+          <div class="text-field">
+            <input type="text" id="orderId" placeholder="20231205-0000035" />
+            <label for="orderId" name="order"></label>
+            <div class="full-btn" id="orderSearchBtn">검색</div>
+          </div>
         </div>
       </div>
     </div>

@@ -926,10 +926,12 @@ img.icon-20 {
 .section_notice_parent:hover .section_notice_area .section_notice {
   height: max-content;
   overflow: initial;
+  opacity: 1;
 }
 .section_notice_area {
   position: absolute;
   left: 0;
+  opacity: 0;
   bottom: 10px;
   transform: translate3d(0, 100%, 0);
   background-color: #fff;

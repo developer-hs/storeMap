@@ -99,17 +99,17 @@ window.addEventListener('DOMContentLoaded', async () => {
           errors[key].message = '도메인을 입력해 주세요.';
         }
       } else {
-        if (getRequiredEmail() && key === 'email' && !utils.emailIsValid(form.email)) {
+        if (getRequiredEmail().length > 0 && key === 'email' && !utils.emailIsValid(form.email)) {
           // 값에 빈값은 없지만 그 값이 유효한지 검사
           errors['email'].ok = false;
           errors['email'].message = '이메일 형식이 잘못 되었습니다.';
         }
-        if (getRequiredPW() && key === 'password' && !utils.passwordIsValid(form.password)) {
+        if (getRequiredPW().length > 0 && key === 'password' && !utils.passwordIsValid(form.password)) {
           // 값에 빈값은 없지만 그 값이 유효한지 검사
           errors['password'].ok = false;
           errors['password'].message = '비밀번호 형식이 잘못 되었습니다.';
         }
-        if (getRequiredDomain() && key === 'origin' && !utils.originIsValid(form.origin)) {
+        if (getRequiredDomain().length > 0 && key === 'origin' && !utils.originIsValid(form.origin)) {
           // 값에 빈값은 없지만 그 값이 유효한지 검사
           errors['origin'].ok = false;
           errors['origin'].message = '도메인 형식이 잘못 되었습니다.';

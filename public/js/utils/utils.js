@@ -117,7 +117,7 @@ export const emailIsValid = (email) => {
 };
 
 export const originIsValid = (origin) => {
-  const URL_PATTERN = /^https:\/\/([^/]+)(\/[^/.]+)*$/;
+  const URL_PATTERN = /^https:\/\/(([A-Za-z0-9-가-힣]{1,63}\.)+([A-Za-z0-9-가-힣]+))[^\/]$/;
   return URL_PATTERN.test(origin);
 };
 

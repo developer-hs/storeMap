@@ -48,6 +48,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       }
     });
   };
+
   const searchHandler = () => {
     const searchElm = document.getElementById('search');
     searchElm.addEventListener('input', () => {
@@ -55,7 +56,50 @@ window.addEventListener('DOMContentLoaded', async () => {
     });
   };
 
-  searchHandler();
-  quantityBtnHandler();
-  utils.logoutHandler();
+  const getOrderItems = async () => {
+    const orderId = document.getElementById('orderId').value;
+
+    if (!orderId) return;
+    try {
+      const orderDetailRes = await axios.get(`/api/v1/cafe24/order/detail?order_id=${orderId}`);
+      if (orderDetailRes.status === 200) {
+        const { orderItems, retrieveAnOrder } = orderDetailRes.data;
+        console.log(retrieveAnOrder);
+
+        if (!orderItems.length) return utils.onAlertModal('구매한 상품이 조회되지 않습니다.');
+
+        const billingName = orderDetailRes.billing_name;
+        const paymentMethods = orderDetailRes.payment_method_name; // Array
+        const orderData = orderDetailRes.order_date;
+        orderItems.forEach((orderItem) => {
+          const depositStatus = orderItem.status_text;
+          const orderStatusCode = orderItem.status_code;
+          let productOptions = orderItem.option_value;
+          let productAddOptions = orderItem.additional_option_value;
+          if (productOptions.includes(';')) {
+            productOptions = productOptions.split(';').join(',');
+          }
+          if (productAddOptions.includes(';')) {
+            productAddOptions = productAddOptions.split(';').join(',');
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const orderSearchBtnHandler = () => {
+    const orderSearchBtnElm = document.getElementById('orderSearchBtn');
+    orderSearchBtnElm.addEventListener('click', getOrderItems);
+  };
+
+  const init = () => {
+    searchHandler();
+    orderSearchBtnHandler();
+    quantityBtnHandler();
+    utils.logoutHandler();
+  };
+
+  init();
 });

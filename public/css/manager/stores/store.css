@@ -50,3 +50,174 @@ body#manager {
   color: #a1a1a1;
   cursor: pointer;
 }
+
+.order_search_area {
+  position: fixed;
+  min-width: 400px;
+  top: 50%;
+  right: 15%;
+  transform: translate3d(50%, -50%, 0);
+}
+
+.order_search_area .order_search_ct {
+  background-color: #fff;
+}
+
+.order_search_ct .title {
+  font-size: 16px;
+}
+.order_search_ct .full-btn {
+  margin-top: 24px;
+  background-color: #353535;
+  color: #fff;
+}
+
+.order_search_area .text-field:nth-last-child(1) {
+  margin-bottom: 0;
+}
+
+.order_detail_modal_area {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.order_detail_modal {
+  min-width: 800px;
+  width: max-content;
+  height: max-content;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px 12px;
+}
+
+.order_detail_haed {
+  padding-bottom: 66px;
+}
+.order_detail_haed div {
+  color: #000;
+}
+
+.order_detail_haed .order_id {
+  font-size: 14px;
+  color: #353535;
+  padding-bottom: 38px;
+}
+
+.order_status_area {
+  display: flex;
+}
+
+.order_status_area .order_status_card {
+  margin: 0 15px;
+  background-color: #fff;
+  padding: 0 10px;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+.order_status_area .order_status_card:nth-child(1) {
+  margin-left: 0;
+}
+.order_status_area .order_status_card:nth-last-child(1) {
+  margin-right: 0;
+}
+
+.order_status_area .order_status_card .title {
+  text-align: center;
+  font-size: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.order_status_area .order_status_card .order_status_content {
+  font-size: 20px;
+  padding: 24px 38px;
+}
+
+.order_status_area .order_status_card[data-status='입금전'] {
+  background-color: var(--color-danger);
+}
+
+.order_status_area .order_status_card[data-status='입금전'] .order_status_content,
+.order_status_area .order_status_card[data-status='입금전'] .title {
+  border-color: #fff;
+  color: #fff;
+}
+
+.order_status_area .order_status_card[data-status='정상'] {
+  background-color: var(--color-success);
+}
+
+.order_status_area .order_status_card[data-status='정상'] .order_status_content,
+.order_status_area .order_status_card[data-status='정상'] .title {
+  border-color: #fff;
+  color: #fff;
+}
+
+.table_head {
+  width: 100%;
+  margin-bottom: 18px;
+  background-color: #f5f5f5;
+  display: flex;
+  padding: 12px 10px;
+  border-radius: 6px;
+}
+
+.order_detail_modal_area .product_id {
+  width: 20%;
+}
+.order_detail_modal_area .product_image {
+  width: 100px;
+}
+.order_detail_modal_area .product_name {
+  width: 30%;
+}
+
+.order_detail_modal_area .product_options {
+  width: 25%;
+}
+.order_detail_modal_area .product_order_quantity {
+  flex: 1;
+}
+
+.order_detail_modal_area .product_id,
+.order_detail_modal_area .product_image,
+.order_detail_modal_area .product_name,
+.order_detail_modal_area .product_options,
+.order_detail_modal_area .product_order_quantity {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+}
+.order_detail_modal_area .table_content {
+  display: flex;
+  border-radius: var(--default-radius);
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+  padding: 12px 10px;
+}
+.order_detail_modal_area .table_content .product_image {
+  font-size: 0px;
+}
+
+.order_detail_modal_area .table_content .product_image img {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--default-radius);
+}
+
+.order_detail_modal_area .table_content .product_options {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  text-align: start;
+}

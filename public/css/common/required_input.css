@@ -47,7 +47,7 @@
 .required_setting_modal .full-btn {
   font-size: 1rem;
 }
-.pw_pattern {
+.reqiured_notice {
   display: none;
   position: absolute;
   right: 0;
@@ -60,23 +60,23 @@
   box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 }
-.pw_pattern > .title {
+.reqiured_notice > .title {
   padding: 0 0 14px 20px;
 }
-.pw_pattern > div {
+.reqiured_notice > div {
   padding-left: 20px;
 }
-.pw_pattern > div:not(.title) {
+.reqiured_notice > div:not(.title) {
   line-height: 21px;
   transition: all 0.3s ease;
   color: #858585;
   background: url('../../icons/false.svg') no-repeat 1px center / 10px 10px;
 }
-.pw_pattern > div.c-success {
+.reqiured_notice > div.c-success {
   background: url('../../icons/true.svg') no-repeat 1px center / 10px 10px;
 }
 
-#requiredPassword:focus ~ .pw_pattern {
+[id*='required']:focus ~ .reqiured_notice {
   display: block;
 }
 
@@ -94,4 +94,16 @@
 
 .text-field input.clear + label {
   color: var(--color-success);
+}
+
+#domainTextFeild .reqiured_notice > .title {
+  padding: 0;
+}
+
+.required_setting_modal_ct .page_title .sub_title {
+  margin: 0;
+}
+
+.required_setting_modal_ct .required_ct {
+  margin-bottom: 28px;
 }

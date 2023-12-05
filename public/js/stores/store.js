@@ -257,6 +257,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       const res = await axios.post(`/users/storeuser/${getStoreId()}`, form);
       if (res.status === 201) {
         utils.onAlertModal('해당 매장의 관리자 계정이 생성 되었습니다.');
+        setTimeout(utils.reload, 1000);
       }
     } catch (error) {
       utils.onAlertModal('관리자 계정 생성에 실패하였습니다.');
