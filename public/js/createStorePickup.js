@@ -1,6 +1,5 @@
 const L_HEIGHT = 80;
 const API_BASE_URL = 'https://storemap.store';
-
 let L_GEOLOCATION_WIDGET = Boolean,
   L_STORE_LIST = [],
   L_SHOWING_INFOWINDOW,
@@ -230,7 +229,7 @@ const getSearchedAddr = () => {
  * @param {String} name
  */
 const postMsgOptValue = (store) => {
-  window.parent.postMessage({ storeMapOptValue: `${store.name} - ${store.address}` }, '*');
+  window.parent.postMessage({ storeMapOptValue: `${store.name} - ${store.address} || ${store._id}` }, '*');
 };
 
 /**

@@ -22,7 +22,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     try {
       const res = await axios.post(`/cafe24/oauth/${mallId}`, form);
       if (res.status === 200) {
-        window.location.href = '/stores';
+        window.location.href = '/users/login';
       }
     } catch (error) {
       console.error(error);

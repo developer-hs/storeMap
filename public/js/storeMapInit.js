@@ -98,7 +98,7 @@ class StoreMapInitAPI {
             }
           } else {
             console.error(
-              '카페24 태그 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n utilityapp@naver.com으로 문의하시길 바랍니다.'
+              '카페24 HTML 구조가 변경되어서 스토어 맵 앱을 실행할 수 없습니다.\n utilityapp@naver.com으로 문의하시길 바랍니다.'
             );
           }
         });
@@ -283,4 +283,8 @@ const storeMapInit = (elm) => {
   new StoreMapInitAPI(elm);
 };
 
-storeMapInit(storeMap);
+window.addEventListener('DOMContentLoaded', async () => {
+  const axios = await import('https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js');
+
+  storeMapInit(storeMap);
+});

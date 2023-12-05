@@ -176,9 +176,6 @@ const appRouting = async () => {
         }
 
         setCafe24Token(res, user, tokenRes.data.access_token, tokenRes.data.refresh_token);
-        user.generateToken((accessToken, refreshToken) => {
-          setToken(res, user, accessToken, refreshToken);
-        });
 
         await user.save();
 
