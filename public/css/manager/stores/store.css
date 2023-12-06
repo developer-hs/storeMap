@@ -90,16 +90,17 @@ body#manager {
 }
 
 .order_detail_modal {
-  min-width: 800px;
+  min-width: 1200px;
   width: max-content;
   height: max-content;
   background-color: #fff;
   border-radius: 8px;
-  padding: 20px 12px;
+  padding: 0 0 32px;
+  max-height: 90%;
+  overflow-y: scroll;
 }
 
 .order_detail_haed {
-  padding-bottom: 66px;
 }
 .order_detail_haed div {
   color: #000;
@@ -107,11 +108,20 @@ body#manager {
 
 .order_detail_haed .order_id {
   font-size: 14px;
-  color: #353535;
-  padding-bottom: 38px;
+  background-color: #353535;
+  color: #fff;
+  padding: 12px 20px;
+  margin-bottom: 40px;
 }
 
 .order_status_area {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 0 30px;
+}
+
+.order_status_area > div {
   display: flex;
 }
 
@@ -119,8 +129,9 @@ body#manager {
   margin: 0 15px;
   background-color: #fff;
   padding: 0 10px;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  height: max-content;
 }
 
 .order_status_area .order_status_card:nth-child(1) {
@@ -138,12 +149,17 @@ body#manager {
 }
 
 .order_status_area .order_status_card .order_status_content {
-  font-size: 20px;
-  padding: 24px 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  min-width: 130px;
+  min-height: 50px;
 }
 
 .order_status_area .order_status_card[data-status='입금전'] {
   background-color: var(--color-danger);
+  border-color: var(--color-danger);
 }
 
 .order_status_area .order_status_card[data-status='입금전'] .order_status_content,
@@ -154,6 +170,7 @@ body#manager {
 
 .order_status_area .order_status_card[data-status='정상'] {
   background-color: var(--color-success);
+  border-color: var(--color-success);
 }
 
 .order_status_area .order_status_card[data-status='정상'] .order_status_content,
@@ -162,7 +179,7 @@ body#manager {
   color: #fff;
 }
 
-.table_head {
+.order_detail_modal_area .table_head {
   width: 100%;
   margin-bottom: 18px;
   background-color: #f5f5f5;
@@ -171,6 +188,9 @@ body#manager {
   border-radius: 6px;
 }
 
+.order_detail_modal_area .table_head > div {
+  color: #000;
+}
 .order_detail_modal_area .product_id {
   width: 20%;
 }
@@ -204,6 +224,12 @@ body#manager {
   border-radius: var(--default-radius);
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
   padding: 12px 10px;
+  margin-bottom: 24px;
+  position: relative;
+  height: 100%;
+}
+.order_detail_modal_area .table_content :nth-last-child(1) {
+  margin: 0;
 }
 .order_detail_modal_area .table_content .product_image {
   font-size: 0px;
@@ -220,4 +246,55 @@ body#manager {
   flex-direction: column;
   align-items: start;
   text-align: start;
+}
+.order_detail_modal_area .table_content .product_options > p {
+  padding: 4px 0;
+}
+.order_detail_modal_area .order_detail_content {
+  padding: 0 30px;
+}
+
+.order_detail_modal_area .section_wraning_area {
+  position: absolute;
+}
+
+.order_detail_modal_area .section_notice_area.right {
+  right: 70px;
+  width: max-content;
+}
+
+.order_detail_modal_area .section_notice_area .section_notice {
+  width: max-content;
+}
+
+.order_detail_modal_area #errMsg {
+  font-size: 16px;
+}
+.grid_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 30px 30px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    'c1 c2'
+    'c3 c3';
+}
+
+.c1 {
+  grid-area: c1;
+}
+
+.c2 {
+  grid-area: c2;
+}
+
+.c3 {
+  grid-area: c3;
+}
+
+.error_icon {
+  position: absolute;
+  left: -14px;
+  top: -14px;
 }

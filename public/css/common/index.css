@@ -965,6 +965,14 @@ img.icon-20 {
 .section_notice_area li::marker {
   padding-left: 20px;
 }
+
+.section_notice_area.right {
+  left: initial;
+  right: 0;
+  top: 0;
+  bottom: initial;
+  transform: translate3d(100%, 0, 0);
+}
 @font-face {
   font-family: 'Outfit';
   font-weight: 100;

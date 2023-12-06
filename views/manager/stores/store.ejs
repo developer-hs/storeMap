@@ -16,47 +16,56 @@
     <div id="storeId" data-store-id="<%- storeId -%>"></div>
     <% if (inventory.length > 0 && inventory[0].storeName) { %>
     <div class="content_ct">
-      <div class="order_detail_modal_area">
+      <div class="order_detail_modal_area displaynone" id="orderDetailModalArea">
         <div class="order_detail_modal">
           <div class="order_detail_haed">
             <div class="order_id">주문번호 20231205-0000035</div>
             <div class="order_status_area">
-              <div class="order_status_card">
-                <div class="title">주문자</div>
-                <div class="order_status_content" id="buyer">김형섭</div>
+              <div>
+                <div class="order_status_card">
+                  <div class="title">주문자</div>
+                  <div class="order_status_content" id="buyer">김형섭</div>
+                </div>
+                <div class="order_status_card">
+                  <div class="title">주문 방법</div>
+                  <div class="order_status_content" id="paymentMethod">무통장 입금</div>
+                </div>
+                <div class="order_status_card">
+                  <div class="title">주문 일자</div>
+                  <div class="order_status_content" id="orderDate">2023.12.05</div>
+                </div>
               </div>
-              <div class="order_status_card" data-status="입금전">
-                <div class="title">입금상태</div>
-                <div class="order_status_content" id="depositStatus">입금전</div>
-              </div>
-              <div class="order_status_card" data-status="정상">
-                <div class="title">주문상태</div>
-                <div class="order_status_content" id="orderStatus">정상</div>
+              <div>
+                <div class="grid_container">
+                  <div class="c1">
+                    <div class="order_status_card" data-status="입금전">
+                      <div class="title">입금상태</div>
+                      <div class="order_status_content" id="depositStatus">입금전</div>
+                    </div>
+                  </div>
+                  <div class="c2">
+                    <div class="order_status_card" data-status="정상">
+                      <div class="title">주문상태</div>
+                      <div class="order_status_content" id="orderStatus">정상</div>
+                    </div>
+                  </div>
+                  <div class="c3">
+                    <div class="order_status_card displaynone" id="errorCard">
+                      <div class="title">에러 메시지</div>
+                      <div class="order_status_content" id="errMsg"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
           <div class="order_detail_content">
             <div class="table_head">
-              <div class="product_id">상품 아이디</div>
+              <div class="product_id">상품 번호</div>
               <div class="product_image">상품 이미지</div>
               <div class="product_name">상품 이름</div>
               <div class="product_options">상품 옵션</div>
               <div class="product_order_quantity">구매 수량</div>
-            </div>
-            <div class="table_content">
-              <div class="product_id">15</div>
-              <div class="product_image">
-                <img src="https://rlagudtjq2016.cafe24.com//web/product/big/202312/b141ba0ac119a4844e91876c246f4282.jpg" />
-              </div>
-              <div class="product_name">Cosmetic</div>
-              <div class="product_options">
-                <p>1</p>
-                <p>1</p>
-                <p>1</p>
-                <p>1</p>
-                <p>1</p>
-              </div>
-              <div class="product_order_quantity">1</div>
             </div>
           </div>
         </div>
@@ -74,7 +83,7 @@
           <% for(var i = 0; i < inventory.length; i++){ %>
           <div class="product_area card" data-product-name="<%- inventory[i].productDetails.name -%>">
             <div class="prd_img_area">
-              <img src="<%- inventory[i].productDetails.thumbnail %>" />
+              <img src="<%- inventory[i].productDetails.thumbnail %>" data-product-no="<%- inventory[i].productDetails.product_id -%>" />
             </div>
             <div class="prd_name_area">
               <span><%- inventory[i].productDetails.name %></span>
@@ -100,7 +109,7 @@
         <div class="order_search_ct card">
           <div class="title">주문번호 검색</div>
           <div class="text-field">
-            <input type="text" id="orderId" placeholder="20231205-0000035" />
+            <input type="text" id="orderId" placeholder="20231205-0000035" value="20231205-0000035" />
             <label for="orderId" name="order"></label>
             <div class="full-btn" id="orderSearchBtn">검색</div>
           </div>
